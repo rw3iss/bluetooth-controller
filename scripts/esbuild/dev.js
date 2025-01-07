@@ -16,6 +16,8 @@ const scssPlugin = require('./plugins/scssPlugin.ts');
 const transformHtmlTemplatePlugin = require("./plugins/transformHtmlTemplatePlugin.ts");
 const copyPlugin = require("./plugins/copyPlugin.ts");
 const { createServer } = require("http");
+const postcss = require('postcss');
+const autoprefixer = require('autoprefixer');
 //const gzipPlugin = require('@luncheon/esbuild-plugin-gzip');
 
 // Config params (relative to where npm/script is called from):
@@ -85,21 +87,16 @@ async function dev() {
             tsconfig: "tsconfig.json",
             mainFields: ["browser", "module", "main"],
             plugins: [
-                //nodeExternalsPlugin(),
                 sassPlugin({
                     cache: pluginCache,
-                    // importMapper: (path) => {
-                    //     //console.log(`import`, path);
-                    //     return path.replace(/(src\/styles\/includes)/g, `./src/styles/includes.scss`);
-                    // },
                     loadPaths: [`${CWD}`],
-                    // precompile: (source, pathname) => {
-                    //     const basedir = path.dirname(pathname);
-                    //     return source.replace(/(src\/styles\/includes)/g, `${CWD}/src/styles/includes.scss`);
-                    // }
+                    async transform(source) {
+                        const { css } = await postcss([autoprefixer]).process(source);
+                        return css;
+                    },
+                    type: 'lit-css'
                 }),
                 copyPlugin,
-                //liveReload,
                 {
                     name: 'rebuild-notify',
                     setup(build) {
@@ -107,16 +104,8 @@ async function dev() {
                             console.log(`build ended with ${result.errors.length} errors`);
                             // HERE: somehow restart the server from here, e.g., by sending a signal that you trap and react to inside the server.
                         })
-                    },
+                    }
                 }
-                // gzipPlugin({
-                //     uncompressed: true,
-                //     gzip: true,
-                //     brotli: true,
-                //     onEnd: ({ outputFiles }) => {
-                //         // outputFiles.forEach(({ path, contents }) => {})
-                //     }
-                // })
             ],
             //write: false, // necessary for gzipPlugin
             define: { ...define, global: "window" },

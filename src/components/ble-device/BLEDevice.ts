@@ -4,6 +4,7 @@ import { property } from 'lit/decorators.js';
 import styles from './BLEDevice.scss';
 
 export class BLEDevice extends LitElement {
+
     static get styles() {
         return css`${unsafeCSS(styles)}`;
     }
@@ -19,7 +20,9 @@ export class BLEDevice extends LitElement {
     render() {
         return html`
 
-        BLE DEVICE SELECT
+        <h4>BLE DEVICE SELECT</h4>
+
+        <wc-button label="Select Bluetooth Device"></wc-button>
 
         `;
     }
