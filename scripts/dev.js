@@ -86,7 +86,7 @@ async function dev() {
             mainFields: ["browser", "module", "main"],
             plugins: [
                 //nodeExternalsPlugin(),
-                scssPlugin,
+                //scssPlugin,
                 sassPlugin({
                     cache: pluginCache,
                     // importMapper: (path) => {
