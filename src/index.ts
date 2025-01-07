@@ -1,5 +1,5 @@
-import { AppShell } from './app-shell.ts';
-import { BluetoothController } from './components/bluetooth-controller/BluetoothController.js';
+import { AppShell } from './components/app-shell/AppShell.js';
+import { BLEDevice } from './components/ble-device/BLEDevice.js';
 
 customElements.define('app-shell', AppShell);
-customElements.define('bluetooth-controller', BluetoothController);
+customElements.define('ble-device', BLEDevice);
