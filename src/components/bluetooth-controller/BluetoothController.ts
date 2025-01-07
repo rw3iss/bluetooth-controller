@@ -18,7 +18,8 @@ export class BluetoothController extends LitElement {
 
     render() {
         return html`
-      <h2>${this.header} Nr. ${this.counter}!</h2>
+        Counter: ${this.counter}
+        <br />
       <button @click=${this.__increment}>increment</button>
     `;
     }

@@ -39,15 +39,15 @@ const CWD = path.resolve('./');
 
 const clients = [];
 
-// const liveReload = {
-//     name: 'liveReload',
-//     setup: (build) => {
-//         build.onEnd(result => {
-//             clients.forEach((res) => res.write("data: update\n\n"));
-//             clients.length = 0;
-//         });
-//     }
-// };
+const liveReload = {
+    name: 'liveReload',
+    setup: (build) => {
+        build.onEnd(result => {
+            clients.forEach((res) => res.write("data: update\n\n"));
+            clients.length = 0;
+        });
+    }
+};
 
 // Main bundling function.
 async function dev() {
@@ -86,7 +86,6 @@ async function dev() {
             mainFields: ["browser", "module", "main"],
             plugins: [
                 //nodeExternalsPlugin(),
-                //scssPlugin,
                 sassPlugin({
                     cache: pluginCache,
                     // importMapper: (path) => {
@@ -100,6 +99,16 @@ async function dev() {
                     // }
                 }),
                 copyPlugin,
+                //liveReload,
+                {
+                    name: 'rebuild-notify',
+                    setup(build) {
+                        build.onEnd(result => {
+                            console.log(`build ended with ${result.errors.length} errors`);
+                            // HERE: somehow restart the server from here, e.g., by sending a signal that you trap and react to inside the server.
+                        })
+                    },
+                }
                 // gzipPlugin({
                 //     uncompressed: true,
                 //     gzip: true,
@@ -117,18 +126,7 @@ async function dev() {
         })
         .catch(() => process.exit(1));
 
-    await ctx.watch()
-        .catch(() => process.exit(1));
-
-    console.log(`\nServing frontend build/ ...`);
-    let { host, port } = await ctx.serve({
-        servedir: 'build',
-        fallback: 'build/index.html',
-        // keyfile: 'config/certs/blobs.key',
-        // certfile: 'config/certs/blobs.cert'
-    })
-        .catch(() => process.exit(1));
-
+    await ctx.watch();
     // createServer((req, res) => {
     //     return clients.push(
     //         res.writeHead(200, {

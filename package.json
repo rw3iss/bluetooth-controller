@@ -8,11 +8,10 @@
         "node": ">=20"
     },
     "scripts": {
-        "dev": "node scripts/dev.js --config tsconfig.json",
-        "build": "node scripts/build.js --config tsconfig.json",
+        "dev": "concurrently -k -r \"node scripts/esbuild/dev.js --config tsconfig.json\" \"web-dev-server --config scripts/web-dev-server.config.js\"",
+        "build": "rm -rf build && node scripts/esbuild/build.js --config tsconfig.json",
         "analyze": "cem analyze --litelement",
-        "start": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
-        "serve": "web-dev-server "
+        "start": "web-dev-server --config scripts/web-dev-server.config.js"
     },
     "dependencies": {
         "dotenv": "^16.4.7",
