@@ -1,7 +1,7 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import styles from './AppShell.scss';
+import styles from './AppShell.module.scss';
 
 //@customElement('app-shell')
 export class AppShell extends LitElement {
