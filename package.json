@@ -1,0 +1,31 @@
+{
+  "name": "app-shell",
+  "description": "Webcomponent app-shell following open-wc recommendations",
+  "license": "MIT",
+  "author": "app-shell",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "node scripts/dev.js --config tsconfig.json",
+    "build": "node scripts/build.js --config tsconfig.json",
+    "analyze": "cem analyze --litelement",
+    "start": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
+    "serve": "web-dev-server"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "lit": "^3.1.4",
+    "node-sass": "^9.0.0"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.3",
+    "@web/dev-server": "^0.4.6",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.24.2",
+    "esbuild-node-externals": "^1.16.0",
+    "esbuild-sass-plugin": "^3.3.1",
+    "fs-extra": "^11.2.0",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3"
+  },
+  "customElements": "custom-elements.json"
+}

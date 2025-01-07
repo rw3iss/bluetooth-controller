@@ -1,0 +1,10 @@
+:host {
+    display: block;
+    padding: 25px;
+    color: var(--bluetooth-controller-text-color, #000);
+
+    h2 {
+        color: blue;
+        font-size: 20pt;
+    }
+}
