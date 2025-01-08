@@ -1,13 +1,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import Router from 'routes';
-
-const routes = {
-    "/": (r) => `<page-home/>`,
-    "/settings": (r) => `<page-settings/>`,
-    "/device/:id": (r) => `<page-device id="${r.params.id}"/>`,
-    "/page-not-found": (r) => `<page-not-found/>`,
-};
+import { routes } from '../../../routes.js';
 
 class Rrr {
 
@@ -18,10 +12,9 @@ class Rrr {
     constructor(onChangeCallback?) {
         if (onChangeCallback) this.onChangeCallback = onChangeCallback;
         this.router = Router();
-        this.loadRoutes();
+        this.registerRoutes(routes);
 
         window.addEventListener("popstate", (e) => {
-            console.log(`pop state`, e.state)
             if (e.state?.url) {
                 this.loadRoute(e.state?.url);
             }
@@ -32,8 +25,8 @@ class Rrr {
         this.onChangeCallback = cb;
     }
 
+    // change page url and load the route
     public navigate = (url) => {
-        console.log(`navigate`, url);
         if (!this.loadRoute(url) && url != '/page-not-found') {
             this.navigate('/page-not-found');
         } else {
@@ -41,7 +34,7 @@ class Rrr {
         }
     }
 
-    private loadRoutes = () => {
+    private registerRoutes = (routes) => {
         if (this.router) {
             Object.keys(routes).forEach(r => this.router.addRoute(r, this.onRouteChange));
         }
@@ -56,18 +49,10 @@ class Rrr {
         } else {
             return false;
         }
-        // if (r) {
-        //     console.log(`loadRoute`, url, r);
-        //     r.fn(r);
-        //     return true;
-        // } else {
-        //     return false;
-        // }
     }
 
     // auto-change handler from url change.
     onRouteChange = (r) => {
-        console.log(`onRouteChange`, r)
         this.route = r.route;
         if (this.onChangeCallback) this.onChangeCallback(r.route, r);
     }
@@ -89,7 +74,6 @@ export class AppRouter extends LitElement {
 
         if (router) {
             router.setRouteChangedCallback(this.onRouteChanged);
-            console.log(`AppRouter connected`, location.pathname);
             router.navigate(location.pathname);
         }
     }
@@ -100,7 +84,6 @@ export class AppRouter extends LitElement {
 
     // auto-change handler from url change.
     onRouteChanged = (url, r) => {
-        console.log(`onRouteChanged`, url, r)
         if (r?.route && routes[r.route]) {
             this.route = r.route;
             this.component = routes[r.route]();
