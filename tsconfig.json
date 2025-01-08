@@ -15,7 +15,11 @@
     "inlineSources": true,
     "rootDir": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["**/*.ts","**/*.js"]
 }

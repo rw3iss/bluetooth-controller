@@ -15,5 +15,6 @@
     color: white;
     cursor: pointer;
     text-align: center;
-    background: lighten(#aa3, 15%);
+    //background: lighten(#aa3, 15%);
+    box-shadow: inset 1px 1px 40px lighten(#aa3, 20%);
 }
