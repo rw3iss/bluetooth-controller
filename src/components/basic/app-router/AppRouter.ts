@@ -16,7 +16,7 @@ class Rrr {
 
         window.addEventListener("popstate", (e) => {
             if (e.state?.url) {
-                this.loadRoute(e.state?.url);
+                this.loadUrl(e.state?.url);
             }
         });
     }
@@ -27,11 +27,9 @@ class Rrr {
 
     // change page url and load the route
     public navigate = (url) => {
-        if (!this.loadRoute(url) && url != '/page-not-found') {
-            this.navigate('/page-not-found');
-        } else {
-            window.history.pushState({ url }, "", url);
-        }
+        let r = this.loadUrl(url);
+        if (!r && url != '/page-not-found') return this.navigate('/page-not-found');
+        window.history.pushState({ url, params: r.params }, "", url);
     }
 
     private registerRoutes = (routes) => {
@@ -41,11 +39,11 @@ class Rrr {
     }
 
     // load the given (already changed) url route
-    public loadRoute = (url) => {
+    public loadUrl = (url) => {
         let r = this.router.match(url);
         if (r) {
             r.fn(r);
-            return true;
+            return r;
         } else {
             return false;
         }
@@ -54,7 +52,8 @@ class Rrr {
     // auto-change handler from url change.
     onRouteChange = (r) => {
         this.route = r.route;
-        if (this.onChangeCallback) this.onChangeCallback(r.route, r);
+        //console.log(`onRouteChange`, r)
+        if (this.onChangeCallback) this.onChangeCallback(r);
     }
 }
 
@@ -83,10 +82,11 @@ export class AppRouter extends LitElement {
     }
 
     // auto-change handler from url change.
-    onRouteChanged = (url, r) => {
+    onRouteChanged = (r) => {
+        //console.log(`onRouteChanged`, r)
         if (r?.route && routes[r.route]) {
             this.route = r.route;
-            this.component = routes[r.route]();
+            this.component = routes[r.route](r);
         } else {
             this.component = undefined;
             //this.component = "<span>Not Found</span>";
