@@ -5,11 +5,17 @@ import { AppContext } from './components/basic/AppContext/AppContext';
 import { Link } from './components/basic/link/Link';
 import { BLEDevice } from './components/ble-device/BLEDevice.js';
 import { PageHome } from './components/page-home/PageHome';
+import { PageNotFound } from './components/page-not-found/PageNotFound.js';
+import { PageSettings } from './components/page-settings/PageSettings.js';
 
 customElements.define('app-shell', AppShell);
 customElements.define('app-context', AppContext);
 customElements.define('app-router', AppRouter);
 customElements.define('app-header', AppHeader);
-customElements.define('ble-device', BLEDevice);
-customElements.define('page-home', PageHome);
 customElements.define('app-link', Link);
+
+customElements.define('page-home', PageHome);
+customElements.define('page-settings', PageSettings);
+customElements.define('page-not-found', PageNotFound);
+
+customElements.define('ble-device', BLEDevice);

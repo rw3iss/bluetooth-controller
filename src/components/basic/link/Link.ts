@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
+import { router } from '../app-router/AppRouter.js';
 
 export class Link extends LitElement {
 
@@ -8,9 +9,7 @@ export class Link extends LitElement {
     onClick(e) {
         e.stopPropagation();
         e.preventDefault();
-        console.log(`link click`, this.to)
-        // signal to router to change url..
-        location.pathname = this.to;
+        router.navigate(this.to);
         return false;
     }
 

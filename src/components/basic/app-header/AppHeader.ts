@@ -14,6 +14,7 @@ export class AppHeader extends LitElement {
         HEADER
 
         <app-link to="/">Home</app-link>
+        <app-link to="/devices">Devices</app-link>
         <app-link to="/settings">Settings</app-link>
 
       </header>
