@@ -8,6 +8,11 @@ export class AppHeader extends LitElement {
         return css`${unsafeCSS(styles)}`;
     }
 
+    constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+    }
+
     render() {
         return html`
       <header class="app-header">

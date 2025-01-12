@@ -12,6 +12,10 @@ export class AppShell extends LitElement {
         return css`${unsafeCSS(styles)}`;
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     render() {
         return html`
       <main class="app-shell">

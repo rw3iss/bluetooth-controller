@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, customElement } from 'lit/decorators.js';
 import { router } from '../app-router/AppRouter.js';
 
 export class Link extends LitElement {
@@ -7,8 +7,13 @@ export class Link extends LitElement {
     @property({ type: String }) to = '';
 
     static styles = css`
-        //a { color: white; text-decoration: none; }
+        :host { all: initial; }
     `;
+    constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+    }
+    static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
     connectedCallback() {
         super.connectedCallback()
@@ -19,7 +24,6 @@ export class Link extends LitElement {
         super.disconnectedCallback()
         this.removeEventListener('click', this.onClick);
     }
-
 
     onClick(e) {
         console.log(`click`)
