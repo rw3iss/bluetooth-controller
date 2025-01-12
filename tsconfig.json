@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
     "target": "es2021",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -10,7 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "outDir": "out-tsc",
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "./",
@@ -19,7 +20,21 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "paths": {
+        "*": [
+            "./*"
+        ],
+        "app/*": [
+            "./*"
+        ],
+        "lib/*": [
+            "./lib/*"
+        ],
+        "components/*": [
+            "./components/*"
+        ]
+    }
   },
   "include": ["**/*.ts","**/*.js"]
 }

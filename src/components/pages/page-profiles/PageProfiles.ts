@@ -1,8 +1,8 @@
 import { css, html, LitElement, unsafeCSS } from 'lit';
 
-import styles from './PageSettings.scss';
+import styles from './PageProfiles.scss';
 
-export class PageSettings extends LitElement {
+export class PageProfiles extends LitElement {
 
     static get styles() {
         return css`${unsafeCSS(styles)}`;
@@ -11,7 +11,7 @@ export class PageSettings extends LitElement {
     render() {
         return html`
 
-        <h4>SETTINGS</h4>
+        <h4>PROFILES</h4>
 
         `;
     }
