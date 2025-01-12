@@ -5,6 +5,7 @@ import styles from './AppShell.scss';
 
 //@customElement('app-shell')
 export class AppShell extends LitElement {
+
     @property({ type: String }) header = 'Bluetooth Controller';
 
     static get styles() {

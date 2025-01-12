@@ -1,7 +1,7 @@
+import { routes } from 'app/config/routes.js';
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import Router from 'routes';
-import { routes } from '../../../routes.js';
 
 class Rrr {
 
@@ -21,6 +21,7 @@ class Rrr {
         });
     }
 
+    // register a parent method to call when the route changes
     public setRouteChangedCallback = (cb) => {
         this.onChangeCallback = cb;
     }

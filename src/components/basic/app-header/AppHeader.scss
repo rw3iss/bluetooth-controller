@@ -3,6 +3,15 @@
     display: flex;
     align-items: flex-start;
     background: #123;
-    padding: 10px;
+    padding: 10px 10px 10px 0;
     color: white;
+
+    app-link {
+        padding: 20px;
+
+        &.logo {
+            padding: 10px;
+            font-size: 1.25rem;
+        }
+    }
 }

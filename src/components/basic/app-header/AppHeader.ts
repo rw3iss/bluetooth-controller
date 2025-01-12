@@ -11,12 +11,11 @@ export class AppHeader extends LitElement {
     render() {
         return html`
       <header class="app-header">
-        HEADER
-
-        <app-link to="/">Home</app-link>
-        <app-link to="/device/1">Devices</app-link>
-        <app-link to="/settings">Settings</app-link>
-
+        <app-link to="/" class="logo">Rrroast</app-link>
+        <app-link to="/roast">Roast</app-link>
+        <app-link to="/profiles">Profiles</app-link>
+        <app-link to="/history">History</app-link>
+        <app-link to="/config">Config</app-link>
       </header>
     `;
     }
