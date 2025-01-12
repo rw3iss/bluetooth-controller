@@ -11,11 +11,15 @@ export class BLEDevice extends LitElement {
 
     @property({ type: String }) header = 'BLE Device Select';
 
+    device = undefined;
+
     async _handleClick() {
         if (navigator.bluetooth) {
             navigator.bluetooth.requestDevice({ acceptAllDevices: true })
                 .then(device => {
                     console.log(`Got device:`, device)
+                    // todo: save state so refresh restores?
+                    this.device = device;
                 })
                 .catch(error => { console.error(error); });
         } else {
