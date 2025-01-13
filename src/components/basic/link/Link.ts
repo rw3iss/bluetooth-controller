@@ -12,10 +12,12 @@ export class Link extends LitElement {
             text-decoration: inherit;
         }
     `;
+
     constructor() {
         super();
-        const shadow = this.attachShadow({ mode: 'open' });
+        //const shadow = this.attachShadow({ mode: 'open' });
     }
+
     static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
     connectedCallback() {
@@ -29,7 +31,7 @@ export class Link extends LitElement {
     }
 
     onClick(e) {
-        console.log(`click`)
+        console.log(`click`);
         if (e.getModifierState('Control') || e.getModifierState('Meta')) return; // allow control-click or cmd-click (mac) to work as usual
         e?.preventDefault();
         console.log(this.to);

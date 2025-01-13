@@ -6,9 +6,9 @@ import { RouteController } from './RouteController';
 
 class Rrr {
 
+    route = undefined;
     router: Router | undefined = undefined;
     onChangeCallback: ((r) => void) | undefined = undefined;
-    route = undefined;
 
     constructor(onChangeCallback?) {
         if (onChangeCallback) this.onChangeCallback = onChangeCallback;
@@ -55,7 +55,7 @@ class Rrr {
     // auto-change handler from url change.
     onRouteChange = (r) => {
         this.route = r.route;
-        //console.log(`onRouteChange`, r)
+        console.log(`onRouteChange`, r)
         if (this.onChangeCallback) this.onChangeCallback(r);
     }
 }
@@ -93,7 +93,6 @@ export class AppRouter extends LitElement {
             this.component = routes[r.route](r);
         } else {
             this.component = undefined;
-            //this.component = "<span>Not Found</span>";
         }
     }
 
