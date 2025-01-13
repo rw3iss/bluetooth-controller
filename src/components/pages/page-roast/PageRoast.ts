@@ -28,7 +28,17 @@ export class PageRoast extends LitElement {
         return css`${unsafeCSS(styles)}`;
     }
 
-    private handleMenuClick(e: CustomEvent) {
+    connectedCallback() {
+        super.connectedCallback()
+        //this.viewState = loadViewState('page-roast');
+        //this.requestUpdate();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback()
+    }
+
+    private handleSectionClick(e: CustomEvent) {
         console.log(`menu item click`, e.detail.key);
         this.viewState.sections[e.detail.key].isOpen = !this.viewState.sections[e.detail.key].isOpen;
         this.requestUpdate();
@@ -36,7 +46,7 @@ export class PageRoast extends LitElement {
 
     private isOpen = (s) => this.viewState.sections[s].isOpen;
 
-    renderMenuItem = (s) => html`<accordian-item .open=${this.isOpen(s)} .key=${s} .title=${capitalize(s)}>
+    renderMenuItem = (s) => html`<accordian-item .open=${this.isOpen(s)} .key=${s} .title=${capitalize(s)} @item-clicked=${this.handleSectionClick}>
         ${s} content
     </accordian-item>`;
 
@@ -45,7 +55,7 @@ export class PageRoast extends LitElement {
         <h4>ROAST</h4>
 
         <div class="panel-menu">
-            <accordian-list @item-clicked=${this.handleMenuClick}>
+            <accordian-list>
                 ${Object.keys(this.viewState.sections).map(s => this.renderMenuItem(s))}
             </accordian-list>
         </div>

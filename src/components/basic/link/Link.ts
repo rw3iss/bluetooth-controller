@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { router } from '../app-router/AppRouter.js';
 
 export class Link extends LitElement {
@@ -7,7 +7,10 @@ export class Link extends LitElement {
     @property({ type: String }) to = '';
 
     static styles = css`
-        :host { all: initial; }
+        :host a {
+            color: inherit;
+            text-decoration: inherit;
+        }
     `;
     constructor() {
         super();

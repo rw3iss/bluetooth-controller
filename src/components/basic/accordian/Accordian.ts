@@ -27,7 +27,7 @@ export class Accordian extends LitElement {
 
     render() {
         return html`
-      <div class="accordian">
+      <div class="accordian" @item-clicked=${(e) => this.dispatchEvent(e)}>
         <slot @slotchange=${this.handleSlotchange}></slot>
       </div>
     `;

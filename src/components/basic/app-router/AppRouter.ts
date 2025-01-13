@@ -2,6 +2,7 @@ import { routes } from 'app/config/routes.js';
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import Router from 'routes';
+import { RouteController } from './RouteController';
 
 class Rrr {
 
@@ -31,6 +32,7 @@ class Rrr {
         let r = this.loadUrl(url);
         if (!r && url != '/page-not-found') return this.navigate('/page-not-found');
         window.history.pushState({ url, params: r.params }, "", url);
+        //this.dispatchEvent();
     }
 
     private registerRoutes = (routes) => {
@@ -63,6 +65,7 @@ export const router = new Rrr();
 
 export class AppRouter extends LitElement {
 
+    private ctrl = new RouteController(this);
     router: Router = undefined;
 
     @property({ type: String }) route = '/';

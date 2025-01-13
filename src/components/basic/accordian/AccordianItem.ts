@@ -17,7 +17,7 @@ export class AccordianItem extends LitElement {
         console.log(`item click`, section);
         //this.viewState.sections[section].isOpen = !this.viewState.sections[section].isOpen;
         this.dispatchEvent(new CustomEvent("item-clicked", { detail: { key: this.key } }));
-        //this.requestUpdate();
+        this.requestUpdate();
     }
 
     render() {
