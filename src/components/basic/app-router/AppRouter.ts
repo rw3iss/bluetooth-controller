@@ -3,6 +3,8 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import Router from 'routes';
 import { RouteController } from './RouteController';
+import { ContextConsumer } from '@lit/context';
+import { appContext } from '../AppContext/AppContext.js';
 
 class Rrr {
 
@@ -20,6 +22,7 @@ class Rrr {
                 this.loadUrl(e.state?.url);
             }
         });
+
     }
 
     // register a parent method to call when the route changes

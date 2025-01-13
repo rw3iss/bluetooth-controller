@@ -1,7 +1,10 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { provide } from '@lit/context';
+
 
 import styles from './AppShell.scss';
+import { AppContext, appContext } from '../AppContext/AppContext.js';
 
 //@customElement('app-shell')
 export class AppShell extends LitElement {
@@ -16,17 +19,16 @@ export class AppShell extends LitElement {
         return this;
     }
 
+    @provide({ context: appContext })
+    app = new AppContext();
+
     render() {
         return html`
       <main class="app-shell">
 
-        <app-context>
+        <app-header></app-header>
 
-            <app-header></app-header>
-
-            <app-router></app-router>
-
-        </app-context>
+        <app-router></app-router>
 
       </main>
     `;

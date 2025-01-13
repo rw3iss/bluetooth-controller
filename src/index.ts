@@ -14,7 +14,6 @@ import { PageRoastHistory } from './components/pages/page-roast-history/PageRoas
 import { PageRoast } from './components/pages/page-roast/PageRoast.js';
 
 customElements.define('app-shell', AppShell);
-customElements.define('app-context', AppContext);
 customElements.define('app-router', AppRouter);
 customElements.define('app-header', AppHeader);
 customElements.define('app-link', Link);
