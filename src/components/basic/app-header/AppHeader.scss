@@ -13,15 +13,19 @@
             display: block;
             height: 20px;
             background: #123;
-            color: white;
+            color: rgb(75, 149, 75);
+            text-decoration: none;
             cursor: pointer;
             margin: 0;
 
             a {
-                padding: 0;
+                display: block;
+                padding: 10px;
+                text-decoration: none;
                 display: inline-flex;
                 align-items: center;
                 margin: 0;
+                border: 3px solid red;
                 color: red;
             }
 
