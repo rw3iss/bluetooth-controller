@@ -1,13 +1,17 @@
 import { routes } from 'app/config/routes.js';
 import EventService from 'lib/EventService';
 import { router } from 'lib/Router';
-import { LitElement } from 'lit';
+import { LitElement, css } from 'lit';
 import { property } from 'lit/decorators.js';
 
 // subscribes to the global router and renders the current route output
 export class RouteContext extends LitElement {
 
     @property({ type: String }) route = '';
+
+    static get styles() {
+        return css`:host { flex: 1 0 100%; height: 100%; }`;
+    }
 
     // rendered route action/component
     component: string | undefined = undefined;
@@ -28,7 +32,7 @@ export class RouteContext extends LitElement {
     // auto-change handler from url change.
     onRouteChange = (e) => {
         const r = e.target;
-        //console.log(`onRouteChange`, r)
+        console.log(`onRouteChange`, r)
         if (r?.route && routes[r.route]) {
             this.route = r.route;
             this.component = routes[r.route](r);

@@ -59,13 +59,15 @@ async function dev() {
         .context({
             platform: "browser",
             entryPoints: [
-                `${INPUT_DIR}/index.ts`,
+                `${INPUT_DIR}/index.tsx`,
                 //`${INPUT_DIR}/styles/app.scss`
             ],
             //entryFile: `${INPUT_DIR}/index.tsx`,
             outfile: `${OUTPUT_DIR}/app.js`,
             bundle: true,
             format: "esm",
+            jsxFactory: "v",
+            inject: ["src/lib/h.ts"],
             globalName: GLOBAL_NAME,
             loader: { // built-in loaders: js, jsx, ts, tsx, css, json, text, base64, dataurl, file, binary
                 '.ttf': 'file',

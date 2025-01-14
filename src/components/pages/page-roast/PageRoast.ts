@@ -48,46 +48,47 @@ export class PageRoast extends LitElement {
         return css`${unsafeCSS(styles)}`;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback()
-        const load = async () => {
-            const s = await vs.load();
-            console.log(`See state:`, s)
-            if (s) {
-                this.viewState = s;
-                this.requestUpdate();
-            }
+        const s = await vs.load();
+        if (s) {
+            this.viewState = s;
+            this.requestUpdate();
         }
-        load();
     }
 
     disconnectedCallback() {
         super.disconnectedCallback()
     }
 
-    private async handleSectionClick(e: CustomEvent) {
-        console.log(`menu item click`, e.detail.key);
+    private async onSectionClick(e: CustomEvent) {
         this.viewState.sections[e.detail.key].isOpen = !this.viewState.sections[e.detail.key].isOpen;
         await vs.save(this.viewState);
-        const s = await vs.load();
-        console.log(`saved?`, s)
         this.requestUpdate();
     }
 
-    private isOpen = (s) => this.viewState.sections[s].isOpen;
-
-    renderMenuItem = (s) => html`<accordian-item .open=${this.isOpen(s)} .key=${s} .title=${capitalize(s)} @item-clicked=${this.handleSectionClick}>
-        ${s} content
+    renderMenuItem = (s) => html`<accordian-item
+            .key=${s}
+            .open=${this.viewState.sections[s].isOpen}
+            .title=${capitalize(s)}
+            @item-clicked=${this.onSectionClick}>
+                ${s} content
     </accordian-item>`;
 
     render() {
         return html`
-        <h4>ROAST</h4>
 
-        <div class="panel-menu">
-            <accordian-list>
-                ${Object.keys(this.viewState.sections).map(s => this.renderMenuItem(s))}
-            </accordian-list>
+        <page-header>Roast</page-header>
+
+        <div class="dashboard">
+            <div class="col-a">
+                <accordian-list>
+                    ${Object.keys(this.viewState.sections).map(s => this.renderMenuItem(s))}
+                </accordian-list>
+            </div>
+            <div class="col-b">
+                COL B
+            </div>
         </div>
 
         `;
