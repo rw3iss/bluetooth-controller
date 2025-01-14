@@ -34,17 +34,17 @@ export function v(type, props, ...children) {
     const componentProps = { ...props, children: (props.children || []).concat(children) };
     //console.log("component props", componentProps);
 
-    // if argument is a component, instantiate it, and return it's rendered string
+    // argument is a Component, instantiate it, and return it's rendered string
     if (typeof type == 'function') {
         // todo: check if Class vs function?
         const component = new type(componentProps);
-        const element = component.render(componentProps);
+        const element = component.render();
         return element;
     }
 
+    // native element
     const element = document.createElement(type);
     Object.entries(props).forEach(([name, value]) => {
-        console.log("prop", name, value);
         if (name === 'children') {
             //console.log("append children?",value);
             return (value as [])
@@ -56,7 +56,6 @@ export function v(type, props, ...children) {
 
         const eventName = getEventName(name);
         console.log("adding event", name, eventName, value)
-
         element.addEventListener(eventName, value);
     });
 

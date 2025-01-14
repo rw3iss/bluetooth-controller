@@ -8,7 +8,7 @@ export default class Component {
         this.state = state || {};
     }
 
-    render(props) {
+    render() {
         throw new ReferenceError('You must define your own render function.');
     }
 
