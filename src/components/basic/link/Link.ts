@@ -1,8 +1,6 @@
+import { router } from 'components/app/App.js';
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { router } from '../app-router/AppRouter.js';
-import { consume } from '@lit/context';
-import { AppContext, appContext } from '../AppContext/AppContext.js';
 
 export class Link extends LitElement {
 
@@ -32,15 +30,10 @@ export class Link extends LitElement {
         this.removeEventListener('click', this.onClick);
     }
 
-    @consume({ context: appContext })
-    @property({ attribute: false })
-    public app?: AppContext;
-
     onClick(e) {
         console.log(`click`, this.app);
         if (e.getModifierState('Control') || e.getModifierState('Meta')) return; // allow control-click or cmd-click (mac) to work as usual
         e?.preventDefault();
-        console.log(this.to);
         router.navigate(this.to);
         return false;
     }
