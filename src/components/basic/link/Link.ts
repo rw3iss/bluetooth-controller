@@ -1,4 +1,4 @@
-import { router } from 'components/app/App.js';
+import { router } from 'lib/Router';
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
@@ -13,10 +13,9 @@ export class Link extends LitElement {
         }
     `;
 
-    constructor() {
-        super();
-        //const shadow = this.attachShadow({ mode: 'open' });
-    }
+    // constructor() {
+    //     super();
+    // }
 
     static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
@@ -31,7 +30,6 @@ export class Link extends LitElement {
     }
 
     onClick(e) {
-        console.log(`click`, this.app);
         if (e.getModifierState('Control') || e.getModifierState('Meta')) return; // allow control-click or cmd-click (mac) to work as usual
         e?.preventDefault();
         router.navigate(this.to);

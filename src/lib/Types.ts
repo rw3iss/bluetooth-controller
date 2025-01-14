@@ -1,0 +1,1 @@
+export type Fn = (...a: any) => any;

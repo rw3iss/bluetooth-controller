@@ -1,3 +1,7 @@
+import { LitElement, css } from 'lit';
+import { property } from 'lit/decorators.js';
+
+class WC extends LitElement {
 
     @property({ type: Boolean }) open = false;
 
@@ -5,16 +9,20 @@
         return css`${unsafeCSS(styles)}`;
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     connectedCallback() {
         super.connectedCallback()
-        const slot = this.shadowRoot.querySelector('slot');
-        console.log(`slots`, this.shadowRoot);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback()
     }
 
-    createRenderRoot() {
-        return this;
-      }
+    handleSlotchange(e) {
+        console.log(this.shadowRoot.querySelector('accordian-item'));
+    }
+
+}

@@ -57,7 +57,8 @@ export class Router {
         this.route = r.route;
         // todo: fire event
         EventService.dispatch('route-change', r);
-        console.log(`onRouteChange`, r)
         if (this.onChangeCallback) this.onChangeCallback(r);
     }
 }
+
+export const router = new Router();

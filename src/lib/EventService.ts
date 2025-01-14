@@ -22,6 +22,5 @@ class _EventService {
 
 }
 
-
 const EventService = new _EventService();
 export default EventService;

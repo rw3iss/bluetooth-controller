@@ -1,8 +1,9 @@
 import { AppHeader } from './components/app/app-header/AppHeader.js';
-import { RouteContext } from './components/app/app-router/RouteContext.js';
 import { AppShell } from './components/app/app-shell/AppShell.js';
-import { App } from './components/app/App.js';
-import { BLEDevice } from './components/app/ble-device/BLEDevice.js';
+import { BLEDevice } from './components/app/BLE/ble-device/BLEDevice.js';
+import { Menu } from './components/app/menu/Menu';
+import { MenuItem } from './components/app/menu/MenuItem';
+import { RouteContext } from './components/app/route-context/RouteContext.js';
 import { Accordian } from './components/basic/accordian/Accordian.js';
 import { AccordianItem } from './components/basic/accordian/AccordianItem.js';
 import { Link } from './components/basic/link/Link.js';
@@ -15,9 +16,10 @@ import { PageRoast } from './components/pages/page-roast/PageRoast.js';
 
 customElements.define('app-header', AppHeader);
 customElements.define('app-shell', AppShell);
-customElements.define('app-wrapper', App);
 customElements.define('app-link', Link);
 customElements.define('route-context', RouteContext);
+customElements.define('x-menu', Menu);
+customElements.define('menu-item', MenuItem);
 
 customElements.define('accordian-list', Accordian);
 customElements.define('accordian-item', AccordianItem);

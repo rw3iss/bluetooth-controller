@@ -10,25 +10,18 @@ export class Accordian extends LitElement {
 
     connectedCallback() {
         super.connectedCallback()
-        const slot = this.shadowRoot.querySelector('accordian-item');
-        console.log(`slots`, this.shadowRoot);
+        // const slot = this.shadowRoot.querySelector('accordian-item');
+        // console.log(`slots`, slot);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback()
     }
 
-    handleSlotchange(e) {
-        const childNodes = e.target.querySelectorAll('accordian-item');
-        console.log(`accordian slot change`, childNodes)
-
-        console.log(this.shadowRoot.querySelector('accordian-item'));
-    }
-
     render() {
         return html`
-      <div class="accordian" @item-clicked=${(e) => this.dispatchEvent(e)}>
-        <slot @slotchange=${this.handleSlotchange}></slot>
+      <div class="accordian">
+        <slot></slot>
       </div>
     `;
     }
