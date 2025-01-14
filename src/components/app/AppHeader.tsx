@@ -1,6 +1,4 @@
-var h = require('virtual-dom/h');
-
-const AppHeader = (props) => {
+const AppHeader = (props = {}) => {
 
     // constructor() {
     //     super();
@@ -17,6 +15,10 @@ const AppHeader = (props) => {
         <div class="app-header">
 
             APP HEADER
+
+            <div class="two">
+                two
+            </div>
 
         </div>
     );

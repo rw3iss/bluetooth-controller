@@ -17,7 +17,6 @@
     "rootDir": "./",
     "jsx": "react",
     "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment",
     "incremental": true,
     "skipLibCheck": true,
     "noImplicitAny": false,

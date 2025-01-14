@@ -1,7 +1,7 @@
 import AppHeader from './AppHeader';
 var h = require('virtual-dom/h');
 
-const App = (props) => {
+const App = (props = {}) => {
 
     return (
         <div id="app">
