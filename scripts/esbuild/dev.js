@@ -66,7 +66,9 @@ async function dev() {
             outfile: `${OUTPUT_DIR}/app.js`,
             bundle: true,
             format: "esm",
+            jsx: 'automatic',
             jsxFactory: "h",
+            jsxImportSource: 'virtual-dom/h',
             inject: ["virtual-dom/h"],
             globalName: GLOBAL_NAME,
             loader: { // built-in loaders: js, jsx, ts, tsx, css, json, text, base64, dataurl, file, binary
@@ -81,7 +83,7 @@ async function dev() {
                 '.js': 'js',
                 '.jsx': 'jsx',
                 '.ts': 'ts',
-                '.tsx': 'tsx',
+                '.tsx': 'jsx',
                 //'.scss': 'file'
             },
             external: ['window', 'document'],

@@ -1,30 +1,26 @@
-import Component from 'lib/Component';
-import EventService from 'lib/EventService';
-import { v } from 'lib/h.js';
+var h = require('virtual-dom/h');
 
-export default class AppHeader extends Component {
+const AppHeader = (props) => {
 
-    constructor() {
-        super();
-        this.setState({ route: 'test2' });
-        EventService.subscribe('route-change', this.onRouteChange);
-    }
+    // constructor() {
+    //     super();
+    //     this.setState({ route: 'test2' });
+    //     EventService.subscribe('route-change', this.onRouteChange);
+    // }
 
-    onRouteChange = (e) => {
-        console.log(`ROUTE CHANGE`, e)
-        this.setState({ route: e.target.route });
-    }
+    // onRouteChange = (e) => {
+    //     console.log(`ROUTE CHANGE`, e)
+    //     this.setState({ route: e.target.route });
+    // }
 
-    render() {
-        return (
-            <div class="app-header">
+    return (
+        <div class="app-header">
 
-                APP HEADER
-                <br />
-                {this.state.route}
+            APP HEADER
 
-            </div>
-        );
-    }
+        </div>
+    );
 
 }
+
+export default AppHeader;

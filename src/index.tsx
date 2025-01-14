@@ -1,7 +1,6 @@
-import { mount } from 'lib/h';
 import { AppHeader } from './components/app/app-header/AppHeader.js';
 import { AppShell } from './components/app/app-shell/AppShell.js';
-import App from './components/app/App.tsx';
+import App from './components/app/App.js';
 import { BLEDevice } from './components/app/BLE/ble-device/BLEDevice.js';
 import { Menu } from './components/app/menu/Menu.js';
 import { RouteContext } from './components/app/route-context/RouteContext.js';
@@ -34,5 +33,26 @@ customElements.define('page-profiles', PageProfiles);
 customElements.define('page-config', PageConfig);
 customElements.define('page-not-found', PageNotFound);
 
+////////////////////////////////////////////////
 
-mount(<App />, document.getElementById('app'));
+var h = require('virtual-dom/h');
+var diff = require('virtual-dom/diff');
+var patch = require('virtual-dom/patch');
+var createElement = require('virtual-dom/create-element');
+
+const render = (vNode) => {
+}
+
+let tree = <App />;
+var rootNode = createElement(<App />);     // Create an initial root DOM node ...
+
+const mount = document.querySelector('#app');
+if (mount) mount.appendChild(rootNode);
+
+// 3: Wire up the update logic
+setInterval(function () {
+    var newTree = <App />;
+    var patches = diff(tree, newTree);
+    rootNode = patch(rootNode, patches);
+    tree = newTree;
+}, 1000);

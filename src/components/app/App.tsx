@@ -1,17 +1,18 @@
-import Component from 'lib/Component';
-import { v } from 'lib/h';
 import AppHeader from './AppHeader';
+var h = require('virtual-dom/h');
 
-export default class App extends Component {
+const App = (props) => {
 
-    render() {
-        return (
-            <div id="app">
+    return (
+        <div id="app">
 
-                <AppHeader />
+            App
 
-            </div>
-        );
-    }
+            <AppHeader />
+
+        </div>
+    );
 
 }
+
+export default App;

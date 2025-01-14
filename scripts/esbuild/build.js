@@ -66,8 +66,11 @@ async function build() {
             outfile: `${OUTPUT_DIR}/app.js`,
             bundle: true,
             format: "esm",
-            jsxFactory: "v",
-            inject: ["src/lib/h.ts"],
+            jsx: 'automatic',
+            jsxFactory: "h",
+            jsxImportSource: 'virtual-dom/h',
+            inject: ["virtual-dom/h"],
+            //inject: ["virtual-dom/h"],
             globalName: GLOBAL_NAME,
             loader: { // built-in loaders: js, jsx, ts, tsx, css, json, text, base64, dataurl, file, binary
                 '.ttf': 'file',
