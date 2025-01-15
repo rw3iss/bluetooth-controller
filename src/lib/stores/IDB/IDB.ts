@@ -24,7 +24,7 @@ import { getLogger } from "lib/utils/logging";
 // this number must be increased for new DB changes to take effect and register themselves on existing clients.
 const DB_VERSION = 1;
 
-const { log, warn } = getLogger('idb', { color: 'green', enabled: true });
+const { log, warn } = getLogger('idb', { color: 'green', enabled: false });
 
 // for some reason esbuild or browsersync don't like window
 const win: any = typeof window == 'undefined' ? {} : window;
@@ -42,7 +42,7 @@ class IDB {
     isInitialized = false   // if the stores have been instantiated
     db: any = undefined;    // underlying opened DB instance
     _storeDefs: Array<StoreDef> = [];        // the user-registered pending definitions
-    stores = {};            // the instantiated stores
+    public stores = {};            // the instantiated stores
     readyListeners = [];
 
     constructor() {

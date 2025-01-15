@@ -16,8 +16,6 @@
         padding: 20px 10px;
         border-right: 1px solid rgba(#aaa, 0.1);
         background: var(--panel-bg);
-        background: rgb(17, 34, 51);
-        background: linear-gradient(90deg, rgba(17, 34, 51, 1) 0%, rgba(21, 38, 54, 1) 50%, rgba(17, 34, 51, 1) 100%);
 
         .accordian {
             .accordian-item {
@@ -29,10 +27,15 @@
                     color: var(--button-color);
                     border-top-left-radius: var(--panel-radius);
                     border-top-right-radius: var(--panel-radius);
+                    border-bottom-left-radius: var(--panel-radius);
+                    border-bottom-right-radius: var(--panel-radius);
 
                     &:hover {
-                        background: #234;
+                        background: var(--button-bg-hover);
+                        color: var(--button-color-hover);
                         cursor: pointer;
+                        background: rgb(34, 51, 68);
+                        background: linear-gradient(180deg, rgba(34, 51, 68, 1) 0%, rgba(29, 44, 59, 1) 100%);
                     }
                 }
 
@@ -42,6 +45,26 @@
                     background: var(--panel-section-bg);
                     border-bottom-left-radius: var(--panel-radius);
                     border-bottom-right-radius: var(--panel-radius);
+
+                    .panel-content {
+                        flex: 1 0 100%;
+                        width: 10%;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+
+                &.open {
+                    .title {
+                        color: var(--button-color-hover);
+                        background: rgb(34, 51, 68);
+                        background: linear-gradient(180deg, rgba(34, 51, 68, 1) 0%, rgba(29, 44, 59, 1) 100%);
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+                        &:hover {
+                            background: rgb(34, 51, 68);
+                        }
+                    }
                 }
             }
         }
@@ -51,5 +74,25 @@
         flex: 0.8 0 80%;
         width: 80%;
         padding: 20px;
+    }
+}
+
+.read-var {
+    display: flex;
+    width: 100%;
+
+    .label {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .value {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
     }
 }

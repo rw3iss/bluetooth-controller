@@ -2,7 +2,7 @@ import BluetoothDevice from 'lib/BluetoothDevice';
 import { Fn } from 'src/lib/Types';
 
 // manages a live roast across the app, and listens for events from the connection to update the state.
-export class RoastController {
+class _RoastController {
 
     private device: BluetoothDevice | undefined = undefined;
 
@@ -27,3 +27,6 @@ export class RoastController {
     };
 
 }
+
+const RoastController = new _RoastController();
+export default RoastController;

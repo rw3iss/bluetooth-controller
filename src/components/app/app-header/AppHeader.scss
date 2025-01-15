@@ -11,7 +11,7 @@ $menuItemBg: #123;
     align-items: flex-start;
     padding: 0;
     margin: 0;
-    background: $menuItemBg;
+    background: var(--app-header-bg);
 
     a {
         display: block;
@@ -32,22 +32,14 @@ $menuItemBg: #123;
         }
 
         &.active {
-            background: rgb(21, 114, 159);
-            background: linear-gradient(180deg, rgba(21, 114, 159, 1) 72%, rgba(43, 88, 121, 0.6924894957983193) 95%);
+            background: var(--button-bg-hover);
             color: rgb(255, 216, 171);
         }
 
         &.logo {
             font-size: 0.9em;
             font-weight: bold;
-            color: white;
-        }
-
-        &.last {
-            flex: 1 0 auto;
-            background: var(--app-header-bg);
-            border-bottom-left-radius: 20px; // var(--panel-radius);
-            overflow: hidden;
+            color: rgb(255, 198, 93);
         }
     }
 }

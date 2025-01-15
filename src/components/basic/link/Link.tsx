@@ -1,26 +1,16 @@
 
 import { router } from 'lib/Router';
-import { useEffect, useRef } from 'preact/hooks';
 
-const Link = ({ to, children, target = null }) => {
-    const ref = useRef();
+const Link = ({ to, children, target = null, className = '' }) => {
 
-    useEffect(() => {
-        return () => {
-
-        };
-    });
-
-    onClick = (e) => {
+    function onClick(e) {
         if (e.getModifierState('Control') || e.getModifierState('Meta')) return; // allow control-click or cmd-click (mac) to work as usual
         e?.preventDefault();
-        console.log(`click`, e, to);
         router.navigate(to);
-        //         return false;
     }
 
     return (
-        <a href={`#${to}`} onClick={onClick} ref={ref}>{children}</a>
+        <a href={`${to}`} onClick={onClick} class={`${className}`}>{children}</a>
     );
 
 }

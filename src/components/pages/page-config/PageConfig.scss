@@ -4,24 +4,32 @@
         width: 20%;
         display: flex;
         flex-direction: column;
-        background: #012;
+        padding: 20px 0px 20px 10px;
+        background: var(--panel-bg);
+        //background: rgb(17, 34, 51);
+        //background: linear-gradient(90deg, rgba(17, 34, 51, 1) 0%, rgba(21, 38, 54, 1) 50%, rgba(17, 34, 51, 1) 100%);
 
         .menu-item {
-            padding: 10px;
-            background: #234;
-            border-bottom: 1px solid #345;
-            color: #9ab;
+            margin: 5px 0;
+            padding: 15px;
+            //background: var(--button-bg);
+            //border-bottom: 1px solid #345;
+            color: var(--button-color);
             font-weight: bold;
+            border-top-left-radius: var(--default-radius);
+            border-bottom-left-radius: var(--default-radius);
 
             &:hover {
-                background: #345;
                 cursor: pointer;
-                color: #bcd;
+                background: var(--button-bg-hover);
+                color: var(--button-color-hover);
+                background: rgb(34, 51, 68);
+                background: linear-gradient(180deg, rgba(34, 51, 68, 1) 0%, rgba(29, 44, 59, 1) 100%);
             }
 
             &.active {
-                background: #456;
-                color: white;
+                background: var(--button-bg-hover);
+                color: var(--button-color-hover);
             }
         }
     }
@@ -29,6 +37,8 @@
     .section {
         flex: 0.8 0 80%;
         width: 80%;
-        padding: 10px;
+        padding: 15px;
+        background: var(--button-bg-hover);
+        border-top-left-radius: var(--default-radius);
     }
 }

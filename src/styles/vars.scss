@@ -1,4 +1,6 @@
 :root {
+    --default-radius: 10px;
+
     // default app bg
     --app-bg: #123;
     --app-header-bg: #012;
@@ -12,5 +14,7 @@
     --page-section-bg: #234;
 
     --button-bg: #234;
-    --button-color: #def;
+    --button-bg-hover: #234;
+    --button-color: #abc;
+    --button-color-hover: #def;
 }

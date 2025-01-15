@@ -16,7 +16,7 @@ export class Router {
         window.addEventListener("popstate", (e) => {
             if (e.state?.url) {
                 this.loadUrl(e.state?.url);
-            }
+            } c
         });
     }
 
@@ -29,7 +29,6 @@ export class Router {
 
     // change page url and load the route
     public navigate = (url) => {
-        console.log(`navigate`, url);
         let r = this.loadUrl(url);
         if (!r && url != '/page-not-found') return this.navigate('/page-not-found');
         window.history.pushState({ url, params: r.params }, "", url);
@@ -51,7 +50,6 @@ export class Router {
     onRouteChange = (r) => {
         this.route = r.route;
         this.routeParams = r.params;
-        console.log(`Router.onRouteChange`, r)
         EventService.dispatch('route-change', r);
         //if (this.onChangeCallback) this.onChangeCallback(r);
     }

@@ -1,0 +1,26 @@
+.admin-tools {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    z-index: 99;
+    bottom: 0;
+    right: 0;
+    background: #012;
+    padding: 10px;
+
+    .actions {
+        display: flex;
+        flex-direction: column;
+
+        .row {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            padding-top: 5px;
+
+            .button {
+                flex: 1;
+            }
+        }
+    }
+}
