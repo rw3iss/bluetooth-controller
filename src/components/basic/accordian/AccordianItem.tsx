@@ -7,7 +7,7 @@ export function AccordianItem({ title, id, open, children, onClick }) {
             <div class="title" onClick={(e) => {
                 onClick(id);
             }}>
-                {title} {id}
+                {title}
             </div>
             <div class="content">
                 {children}

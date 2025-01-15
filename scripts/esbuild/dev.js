@@ -1,6 +1,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { globSync } = require('glob');
 const esbuild = require('esbuild');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
 //const postCssPlugin = require("esbuild-plugin-postcss2");
@@ -37,19 +38,9 @@ console.log('build.js node environment detected as: ' + NODE_ENV);
 ///////////////////////////////////////////////////////////////////////////////
 
 const pluginCache = new Map();
-const CWD = path.resolve('./');
+const cwd = path.resolve('./');
 
-const clients = [];
-
-const liveReload = {
-    name: 'liveReload',
-    setup: (build) => {
-        build.onEnd(result => {
-            clients.forEach((res) => res.write("data: update\n\n"));
-            clients.length = 0;
-        });
-    }
-};
+const watchStyles = globSync('./src/styles/**/*.scss', { ignore: "node_modules/**" });
 
 // Main bundling function.
 async function dev() {
@@ -60,10 +51,11 @@ async function dev() {
             platform: "browser",
             entryPoints: [
                 `${INPUT_DIR}/index.tsx`,
-                //`${INPUT_DIR}/styles/index.scss`
+                `${INPUT_DIR}/styles/index.scss`
             ],
+            outdir: `${OUTPUT_DIR}`,
             //entryFile: `${INPUT_DIR}/index.tsx`,
-            outfile: `${OUTPUT_DIR}/app.js`,
+            //outfile: `${OUTPUT_DIR}/app.js`,
             bundle: true,
             format: "esm",
             jsxFactory: "h",
@@ -90,20 +82,20 @@ async function dev() {
             plugins: [
                 sassPlugin({
                     cache: pluginCache,
-                    loadPaths: [`${CWD}`],
+                    loadPaths: [`${cwd}`],
                     filter: /\.scss$/,
+                    type: 'css',
                     async transform(source) {
                         const { css } = await postcss([autoprefixer]).process(source);
-                        return css;
-                    },
-                    //type: 'lit-css'
+                        return { loader: "css", contents: css, watchFiles: watchStyles };
+                    }
                 }),
                 copyPlugin,
                 {
                     name: 'rebuild-notify',
                     setup(build) {
                         build.onEnd(result => {
-                            console.log(`build ended with ${result.errors.length} errors`);
+                            console.log(`built, ${result.errors.length} errors`);
                             // HERE: somehow restart the server from here, e.g., by sending a signal that you trap and react to inside the server.
                         })
                     }

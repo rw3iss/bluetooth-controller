@@ -27,7 +27,7 @@ const AppHeader = (props = {}) => {
             <Link to="/profiles" class="">Profiles</Link>
             <Link to="/history" class="">History</Link>
             <Link to="/config" class="">Config</Link>
-            ROUTE: {route}
+            <a href="#" class="last">&nbsp;</a>
         </header>
     );
 

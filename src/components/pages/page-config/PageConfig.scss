@@ -1,2 +1,34 @@
-:host {
+#config {
+    .menu {
+        flex: 0.2 0 20%;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        background: #012;
+
+        .menu-item {
+            padding: 10px;
+            background: #234;
+            border-bottom: 1px solid #345;
+            color: #9ab;
+            font-weight: bold;
+
+            &:hover {
+                background: #345;
+                cursor: pointer;
+                color: #bcd;
+            }
+
+            &.active {
+                background: #456;
+                color: white;
+            }
+        }
+    }
+
+    .section {
+        flex: 0.8 0 80%;
+        width: 80%;
+        padding: 10px;
+    }
 }

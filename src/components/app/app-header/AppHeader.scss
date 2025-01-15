@@ -1,4 +1,8 @@
 @use "sass:color";
+@use "src/styles/vars";
+
+$menuItemColor: rgb(156, 201, 100);
+$menuItemBg: #123;
 
 .app-header {
     width: 100%;
@@ -7,15 +11,14 @@
     align-items: flex-start;
     padding: 0;
     margin: 0;
-    background: #012;
-    $linkColor: rgb(156, 201, 100);
+    background: $menuItemBg;
 
     a {
         display: block;
         padding: 15px 20px 18px 20px;
         height: 20px;
-        background: #123;
-        color: $linkColor;
+        background: $menuItemBg;
+        color: $menuItemColor;
         //background: #123;
         text-decoration: none;
         font-weight: bold;
@@ -23,8 +26,9 @@
         margin: 0;
 
         &:hover {
-            background: #234;
-            color: color.adjust($linkColor, $lightness: 15%);
+            background: rgb(40, 60, 79);
+            background: linear-gradient(180deg, rgba(40, 60, 79, 1) 19%, rgba(34, 51, 68, 1) 100%);
+            color: color.adjust($menuItemColor, $lightness: 15%);
         }
 
         &.active {
@@ -37,6 +41,13 @@
             font-size: 0.9em;
             font-weight: bold;
             color: white;
+        }
+
+        &.last {
+            flex: 1 0 auto;
+            background: var(--app-header-bg);
+            border-bottom-left-radius: 20px; // var(--panel-radius);
+            overflow: hidden;
         }
     }
 }

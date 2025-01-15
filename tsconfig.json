@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./dist",
+    "outDir": "./build",
     "target": "es2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmitOnError": true,
     "lib": ["es2021", "dom", "DOM.Iterable"],
-    "strict": false,
-    "strictNullChecks": false,
+    "strict": true,
+    "strictNullChecks": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
@@ -37,8 +37,10 @@
         "components/*": [
             "./src/components/*"
         ],
-
+        "styles/*": [
+            "./src/styles/*"
+        ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "./src/styles/*"]
 }

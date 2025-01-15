@@ -60,7 +60,7 @@ async function build() {
             platform: "browser",
             entryPoints: [
                 `${INPUT_DIR}/index.tsx`,
-                //`${INPUT_DIR}/styles/app.scss`
+                `${INPUT_DIR}/styles/index.scss`
             ],
             //entryFile: `${INPUT_DIR}/index.tsx`,
             outfile: `${OUTPUT_DIR}/app.js`,
@@ -92,13 +92,14 @@ async function build() {
             plugins: [
                 //nodeExternalsPlugin(),
                 sassPlugin({
-                    cache: pluginCache,
-                    loadPaths: [`${CWD}`],
+                    //cache: pluginCache,
+                    //loadPaths: [`${CWD}`],
+                    filter: '*.scss',
                     async transform(source) {
                         const { css } = await postcss([autoprefixer]).process(source);
                         return css;
                     },
-                    type: 'lit-css'
+                    type: 'css'
                 }),
                 copyPlugin,
                 // gzipPlugin({

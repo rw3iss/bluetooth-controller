@@ -1,3 +1,5 @@
+@use "src/styles/vars";
+
 #roast {
     display: flex;
     flex: 1 0 100%;
@@ -8,16 +10,25 @@
     height: 100%;
     background: #012;
 
-    .col-a {
+    .panel-menu {
         flex: 0.1 0 20%;
         width: 20%;
-        border-right: 3px solid #aaa;
+        padding: 20px 10px;
+        border-right: 1px solid rgba(#aaa, 0.1);
+        background: var(--panel-bg);
+        background: rgb(17, 34, 51);
+        background: linear-gradient(90deg, rgba(17, 34, 51, 1) 0%, rgba(21, 38, 54, 1) 50%, rgba(17, 34, 51, 1) 100%);
 
         .accordian {
             .accordian-item {
+                margin: 5px 0;
+
                 .title {
-                    color: white;
-                    background: #123;
+                    padding: 10px;
+                    font-weight: bold;
+                    color: var(--button-color);
+                    border-top-left-radius: var(--panel-radius);
+                    border-top-right-radius: var(--panel-radius);
 
                     &:hover {
                         background: #234;
@@ -26,15 +37,19 @@
                 }
 
                 .content {
-                    color: #333;
-                    background: #789;
+                    padding: 20px;
+                    color: white;
+                    background: var(--panel-section-bg);
+                    border-bottom-left-radius: var(--panel-radius);
+                    border-bottom-right-radius: var(--panel-radius);
                 }
             }
         }
     }
 
-    .col-b {
+    .panel-graph {
         flex: 0.8 0 80%;
         width: 80%;
+        padding: 20px;
     }
 }
