@@ -1,33 +1,23 @@
-:host {
+.accordian-item {
     display: flex;
     flex-direction: column;
     flex: 1 0 100%;
     width: 100%;
     border-bottom: 1px solid #456;
+    background: inherit;
 
-    .accordian-item {
-        background: inherit;
+    .title {
+        padding: 5px;
+    }
 
-        .title {
-            padding: 5px;
-        }
+    .content {
+        display: none;
+        padding: 5px;
+    }
 
+    &.open {
         .content {
-            display: none;
-            padding: 5px;
-        }
-
-        &:hover {
-            .title {
-                background: #234;
-                cursor: pointer;
-            }
-        }
-
-        &.open {
-            .content {
-                display: flex;
-            }
+            display: flex;
         }
     }
 }

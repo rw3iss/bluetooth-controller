@@ -5,12 +5,12 @@ import RouteParser from 'routes';
 export class Router {
 
     public route = undefined;
-    router: RouteParser | undefined = undefined;
-    onChangeCallback: ((r) => void) | undefined = undefined;
+    public routeParams = undefined;
 
-    constructor(onChangeCallback?) {
-        if (onChangeCallback) this.onChangeCallback = onChangeCallback;
-        this.router = RouteParser();
+    parser: RouteParser | undefined = undefined;
+
+    constructor() {
+        this.parser = RouteParser();
         this.registerRoutes(routes);
 
         window.addEventListener("popstate", (e) => {
@@ -18,32 +18,27 @@ export class Router {
                 this.loadUrl(e.state?.url);
             }
         });
-
     }
 
-    // register a parent method to call when the route changes
-    public setRouteChangedCallback = (cb) => {
-        this.onChangeCallback = cb;
-    }
 
     public registerRoutes = (routes) => {
-        if (this.router) {
-            Object.keys(routes).forEach(r => this.router!.addRoute(r, this.onRouteChange));
+        if (this.parser) {
+            Object.keys(routes).forEach(r => this.parser!.addRoute(r, this.onRouteChange));
         }
     }
 
     // change page url and load the route
     public navigate = (url) => {
+        console.log(`navigate`, url);
         let r = this.loadUrl(url);
         if (!r && url != '/page-not-found') return this.navigate('/page-not-found');
         window.history.pushState({ url, params: r.params }, "", url);
         //this.dispatchEvent();
     }
 
-
     // load the given (already changed) url route
     public loadUrl = (url) => {
-        let r = this.router.match(url);
+        let r = this.parser.match(url);
         if (r) {
             r.fn(r);
             return r;
@@ -55,9 +50,10 @@ export class Router {
     // auto-change handler from url change.
     onRouteChange = (r) => {
         this.route = r.route;
-        // todo: fire event
+        this.routeParams = r.params;
+        console.log(`Router.onRouteChange`, r)
         EventService.dispatch('route-change', r);
-        if (this.onChangeCallback) this.onChangeCallback(r);
+        //if (this.onChangeCallback) this.onChangeCallback(r);
     }
 }
 

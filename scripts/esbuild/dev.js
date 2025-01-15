@@ -60,14 +60,14 @@ async function dev() {
             platform: "browser",
             entryPoints: [
                 `${INPUT_DIR}/index.tsx`,
-                //`${INPUT_DIR}/styles/app.scss`
+                //`${INPUT_DIR}/styles/index.scss`
             ],
             //entryFile: `${INPUT_DIR}/index.tsx`,
             outfile: `${OUTPUT_DIR}/app.js`,
             bundle: true,
             format: "esm",
             jsxFactory: "h",
-            inject: ["virtual-dom"],
+            inject: ["preact"],
             globalName: GLOBAL_NAME,
             loader: { // built-in loaders: js, jsx, ts, tsx, css, json, text, base64, dataurl, file, binary
                 '.ttf': 'file',
@@ -81,8 +81,7 @@ async function dev() {
                 '.js': 'js',
                 '.jsx': 'jsx',
                 '.ts': 'ts',
-                '.tsx': 'jsx',
-                //'.scss': 'file'
+                '.scss': 'file'
             },
             external: ['window', 'document'],
             assetNames: 'public/[name].[hash]',
@@ -92,11 +91,12 @@ async function dev() {
                 sassPlugin({
                     cache: pluginCache,
                     loadPaths: [`${CWD}`],
+                    filter: /\.scss$/,
                     async transform(source) {
                         const { css } = await postcss([autoprefixer]).process(source);
                         return css;
                     },
-                    type: 'lit-css'
+                    //type: 'lit-css'
                 }),
                 copyPlugin,
                 {

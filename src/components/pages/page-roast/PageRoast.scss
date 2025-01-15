@@ -1,23 +1,11 @@
-:host {
+#roast {
     display: flex;
-    flex-direction: column;
-    flex: 1 0 100%;
-
-    page-header {
-        font-size: 1rem;
-        color: rgb(255, 251, 191);
-        padding: 10px;
-    }
-}
-
-.dashboard {
     flex: 1 0 100%;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     height: 100%;
-    display: flex;
     background: #012;
 
     .col-a {
@@ -29,11 +17,17 @@
             .accordian-item {
                 .title {
                     color: white;
+                    background: #123;
+
+                    &:hover {
+                        background: #234;
+                        cursor: pointer;
+                    }
                 }
 
                 .content {
-                    background: red;
-                    color: white;
+                    color: #333;
+                    background: #789;
                 }
             }
         }

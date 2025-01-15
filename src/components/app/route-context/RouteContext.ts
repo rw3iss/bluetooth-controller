@@ -1,49 +1,19 @@
-import { routes } from 'app/config/routes.js';
-import EventService from 'lib/EventService';
+import { routes } from 'config/routes';
+import { useRoute } from 'lib/hooks';
 import { router } from 'lib/Router';
-import { LitElement, css } from 'lit';
-import { property } from 'lit/decorators.js';
+import { useEffect } from 'preact/hooks';
 
-// subscribes to the global router and renders the current route output
-export class RouteContext extends LitElement {
+export function RouteContext() {
 
-    @property({ type: String }) route = '';
+    const { route, routeParams } = useRoute();
 
-    static get styles() {
-        return css`:host { flex: 1 0 100%; height: 100%; }`;
-    }
+    // tell the router to try to load the initial url
+    useEffect(() => {
+        if (!router.route) router.navigate(location.pathname);
+    }, []);
 
-    // rendered route action/component
-    component: string | undefined = undefined;
-
-    connectedCallback() {
-        super.connectedCallback()
-        EventService.subscribe('route-change', this.onRouteChange);
-
-        // route app to the initial url
-        if (router) router.navigate(this.route || location.pathname);
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback()
-        EventService.unsubscribe('route-change', this.onRouteChange);
-    }
-
-    // auto-change handler from url change.
-    onRouteChange = (e) => {
-        const r = e.target;
-        console.log(`onRouteChange`, r)
-        if (r?.route && routes[r.route]) {
-            this.route = r.route;
-            this.component = routes[r.route](r);
-        } else {
-            this.component = undefined;
-        }
-    }
-
-    render() {
-        this.shadowRoot.innerHTML = `
-            ${this.component}
-      `;
-    }
+    return (
+        route ? (
+            typeof routes[route] != 'undefined' ? routes[route](routeParams) : "Not found.") : ''
+    )
 }

@@ -1,22 +1,23 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "outDir": "./dist",
-    "target": "es2021",
+    "target": "es2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmitOnError": true,
     "lib": ["es2021", "dom", "DOM.Iterable"],
-    "strict": true,
-    "esModuleInterop": false,
+    "strict": false,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "./",
-    "jsx": "react",
-    "jsxFactory": "h",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "incremental": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
@@ -25,18 +26,19 @@
     "noUnusedParameters": false,
     "paths": {
         "*": [
-            "./*"
+            "./src/*"
         ],
         "app/*": [
-            "./*"
+            "./src/*"
         ],
         "lib/*": [
-            "./lib/*"
+            "./src/lib/*"
         ],
         "components/*": [
-            "./components/*"
-        ]
+            "./src/components/*"
+        ],
+
     }
   },
-  "include": ["**/*.ts","**/*.js", "src/index.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
 }

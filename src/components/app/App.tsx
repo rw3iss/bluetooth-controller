@@ -1,16 +1,17 @@
-import AppHeader from './AppHeader';
-var h = require('virtual-dom/h');
+import { RouteContext } from 'components/app/route-context/RouteContext';
+import AppHeader from './app-header/AppHeader';
+import "./App.scss";
 
 const App = (props = {}) => {
 
     return (
-        <div id="app">
-
-            App
+        <main id="app">
 
             <AppHeader />
 
-        </div>
+            <RouteContext />
+
+        </main>
     );
 
 }
