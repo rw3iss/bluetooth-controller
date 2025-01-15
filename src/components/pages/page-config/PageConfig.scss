@@ -1,4 +1,13 @@
 #config {
+    display: flex;
+    flex: 1 0 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    background: var(--page-pg);
+
     .menu {
         flex: 0.2 0 20%;
         width: 20%;

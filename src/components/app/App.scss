@@ -4,14 +4,23 @@
     flex: 1 0 100%;
     height: 100vh;
     width: 100vw;
+    max-height: 100vh;
+    max-width: 100vw;
     background: var(--app-bg, #123);
     color: var(--app-color, white);
 
-    .page {
-        flex: 1 0 100%;
-        color: white;
+    .context {
+        width: 100%;
         display: flex;
-        flex-direction: row;
-        background: var(--page-bg, #123);
+        flex-direction: column;
+        flex: 1 0 100%;
+
+        .page {
+            flex: 1 0 100%;
+            color: white;
+            display: flex;
+            flex-direction: row;
+            background: var(--page-bg, #123);
+        }
     }
 }

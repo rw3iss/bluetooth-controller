@@ -10,7 +10,9 @@ const App = (props = {}) => {
 
             <AppHeader />
 
-            <RouteContext />
+            <div className="context">
+                <RouteContext />
+            </div>
 
             <AdminTools />
 

@@ -1,4 +1,4 @@
-import { useViewState } from 'lib/hooks';
+import { useSavedState } from 'lib/hooks';
 
 import "./PageConfig.scss";
 
@@ -7,7 +7,7 @@ const DEFAULT_VIEW_STATE = {
 }
 
 export function PageConfig(props) {
-    const { viewState, saveViewState } = useViewState('page-config', DEFAULT_VIEW_STATE);
+    const { state: viewState, saveState: saveViewState } = useSavedState('page-config', DEFAULT_VIEW_STATE);
 
     async function changeSection(s) {
         console.log(`changeSection`, s)

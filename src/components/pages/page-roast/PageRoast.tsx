@@ -1,7 +1,10 @@
 import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
-import { useViewState } from 'lib/hooks';
+import { useSavedState } from 'lib/hooks';
 import { capitalize } from 'lib/utils/StrUtils';
+import { useState } from 'preact/hooks';
+import { ReadVar } from 'components/app/vars/ReadVar.tsx';
+import { WriteVar } from 'components/app/vars/WriteVar.tsx';
 
 import './PageRoast.scss';
 
@@ -22,36 +25,72 @@ const DEFAULT_VIEW_STATE = {
     }
 }
 
-function ReadVar({ label, value }) {
-    return (
-        <div class="read-var">
-            {label && <div class="label">{label}</div>}
-            <div class="value">{value}</div>
-        </div>
-    );
+const DEFAULT_ROAST_STATE = {
+    currentTemp: 0,
+    targetTemp: 0,
+    motor: true,
+    heater: true,
+    exhaust: true,
+    eject: false,
+    dateStarted: undefined,
+    runtimeSecs: 0
 }
 
 export function PageRoast(props) {
-    const { viewState, saveViewState } = useViewState('page-roast', DEFAULT_VIEW_STATE);
+    const { state: viewState, saveState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
+    const { state: roastState, saveState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE);
+    const [updateMessage, setUpdateMessage] = useState(undefined);
 
     async function toggleSection(s) {
         viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
         await saveViewState({ ...viewState });
     }
 
-    function getDeviceVar(v) {
+    function deviceVar(v) {
+        return roastState[v];
         //read from the roast controller
+    }
+
+    // triggered when a new value is set, tells the device to change
+    function setRoastValue(property, value) {
+        console.log(`setRoastValue`, property, value);
+        roastState[property] = value;
+        saveRoastState({ ...roastState });
+        setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
+        setTimeout(() => {
+            setUpdateMessage('');
+        }, 3000);
+    }
+
+    function handleEject(isOn) {
+        if (isOn) {
+            if (confirm("Are you sure you want to eject?")) {
+                setRoastValue('eject', isOn);
+            } else {
+                console.log(`Eject cancelled.`)
+            }
+        } else {
+            setRoastValue('eject', isOn);
+        }
     }
 
     function renderPanelContent(s) {
         switch (s) {
             case "current":
                 return <div class="panel-content" id="panel-current">
-                    <ReadVar label="Temp" value={getDeviceVar('temp')} />
+                    <ReadVar label="Current Temp" value={deviceVar('currentTemp')} />
+                    <ReadVar label="Target Temp" value={deviceVar('targetTemp')} />
+                    <ReadVar label="Motor" value={deviceVar('motor')} />
+                    <ReadVar label="Exhaust" value={deviceVar('exhaust')} />
+                    <ReadVar label="Eject" value={deviceVar('eject')} />
                 </div>
             case "set":
                 return <div class="panel-content" id="panel-set">
-                    SET
+                    <WriteVar type="number" defaultValue={deviceVar('targetTemp')} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
+                    <WriteVar type="checkbox" checked={deviceVar('motor')} label="Motor" onChanged={(value) => setRoastValue('motor', value)} />
+                    <WriteVar type="checkbox" checked={deviceVar('exhaust')} label="Exhaust" onChanged={(value) => setRoastValue('exhaust', value)} />
+                    <WriteVar type="checkbox" checked={deviceVar('eject')} label="Eject" onChanged={(value) => handleEject(value)} />
+                    {updateMessage && <div className="update-message">{updateMessage}</div>}
                 </div>
             case "automation":
                 return <div class="panel-content" id="panel-automation">
