@@ -1,14 +1,13 @@
-import idb from 'lib/stores/IDB/IDB';
 import { useState } from 'preact/hooks';
 import './AdminTools.scss';
 
-export function AdminTools() {
+export function AdminTools({ app }) {
     const [closed, setClosed] = useState(false);
     const [hidden, setHidden] = useState(false);
 
     async function clearViewCache() {
-        const store = idb.getStore('view-state');
-        await idb.clearAll('view-state');
+        const store = app.idb.getStore('view-state');
+        await app.idb.clearAll('view-state');
         console.log(`View state cleared.`, store)
     }
 

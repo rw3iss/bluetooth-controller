@@ -1,6 +1,8 @@
 import CacheStore from './Cache/CacheStore';
+import { defaultDb } from './IDB/IDB';
 import IDbStore from './IDB/IDbStore';
 import IStore from './IStore';
+
 
 // Uses IndexedDB as the data store, or falls back to an available in-memory Cache (local storage, etc).
 export default class IDbOrCacheStore implements IStore {
@@ -13,7 +15,7 @@ export default class IDbOrCacheStore implements IStore {
 
     idbSupported = true;
 
-    constructor(storeIdx?) {
+    constructor(storeIdx?, db?) {
         if (storeIdx) this.storeIdx = storeIdx;
 
         const win: any = typeof window == 'undefined' ? {} : window;
@@ -22,7 +24,7 @@ export default class IDbOrCacheStore implements IStore {
             this.idbSupported = false;
             this.store = new CacheStore(this.storeIdx);
         } else {
-            this.store = new IDbStore(this.storeIdx);
+            this.store = new IDbStore(db || defaultDb(), this.storeIdx);
         }
     }
 

@@ -3,7 +3,7 @@ import { AdminTools } from 'components/basic/ui-admin-tools/AdminTools';
 import AppHeader from './app-header/AppHeader';
 import "./App.scss";
 
-const App = (props = {}) => {
+const App = ({ app }) => {
 
     return (
         <main id="app">
@@ -14,7 +14,7 @@ const App = (props = {}) => {
                 <RouteContext />
             </div>
 
-            <AdminTools />
+            <AdminTools app={app} />
 
         </main>
     );

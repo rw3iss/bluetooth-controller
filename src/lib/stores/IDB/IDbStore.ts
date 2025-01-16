@@ -1,20 +1,18 @@
 import IStore from '../IStore';
-import IDB from './IDB';
+import { IDB } from './IDB';
 
 export default class IDbStore implements IStore {
 
     // store's identifier
-    storeIdx = "BASE_";
+    storeIdx = "Store_";
 
-    // underlying IDb reference
+    // underlying IDb references
+    db: any = undefined;
     store: any = undefined;
 
-    constructor(storeIdx?) {
-        if (storeIdx)
-            this.storeIdx = storeIdx;
-
-        this.store = IDB.getStore(this.storeIdx);
-        if (!this.store) this.store = IDB.newStore(this.storeIdx);
+    constructor(db: IDB, storeIdx?, opts?) {
+        if (storeIdx) this.storeIdx = storeIdx;
+        this.store = this.db.getStoreOrCreate(this.storeIdx, opts);
     }
 
     public async add(val: any, id?: undefined | string) {
@@ -24,28 +22,28 @@ export default class IDbStore implements IStore {
     }
 
     public async set(key, val) {
-        return await IDB.set(this.storeIdx, val, key);
+        return await this.db.set(this.storeIdx, val, key);
     }
 
     public async get(key, defaultValue?) {
-        let v = await IDB.get(this.storeIdx, key);
+        let v = await this.db.get(this.storeIdx, key);
         return (!v && defaultValue) ? defaultValue : v;
     }
 
     public async remove(key) {
-        return await IDB.delete(this.storeIdx, key);
+        return await this.db.delete(this.storeIdx, key);
     }
 
     public async getAll() {
-        return await IDB.getAll(this.storeIdx);
+        return await this.db.getAll(this.storeIdx);
     }
 
     public async getAllKeys() {
-        return await IDB.getAllKeys(this.storeIdx);
+        return await this.db.getAllKeys(this.storeIdx);
     }
 
     public async size() {
-        return await IDB.size(this.storeIdx);
+        return await v.size(this.storeIdx);
     }
 
     public async clear() {
@@ -53,15 +51,15 @@ export default class IDbStore implements IStore {
     }
 
     public async clearAll() {
-        return await IDB.clearAll(this.storeIdx);
+        return await this.db.clearAll(this.storeIdx);
     }
 
     public async clearIf(condition) {
-        return await IDB.clearIf(this.storeIdx, condition);
+        return await this.db.clearIf(this.storeIdx, condition);
     }
 
     public async onReady(cb) {
-        IDB.onReady(cb);
+        this.db.onReady(cb);
     }
     // public clearIf(condition) {
     //     let removeKeys: any[] = [];

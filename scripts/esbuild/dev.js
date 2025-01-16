@@ -4,6 +4,7 @@ const path = require("path");
 const { globSync } = require('glob');
 const esbuild = require('esbuild');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
+const envFilePlugin = require('esbuild-envfile-plugin');
 //const postCssPlugin = require("esbuild-plugin-postcss2");
 //const autoprefixer = require("autoprefixer");
 const { getNormalizedEnvVars } = require("./utils/envUtils");
@@ -80,6 +81,7 @@ async function dev() {
             tsconfig: "tsconfig.json",
             mainFields: ["browser", "module", "main"],
             plugins: [
+                envFilePlugin,
                 sassPlugin({
                     cache: pluginCache,
                     loadPaths: [`${cwd}`],

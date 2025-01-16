@@ -1,10 +1,10 @@
+import { ReadVar } from 'components/app/vars/ReadVar.tsx';
+import { WriteVar } from 'components/app/vars/WriteVar.tsx';
 import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
 import { useSavedState } from 'lib/hooks';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
-import { ReadVar } from 'components/app/vars/ReadVar.tsx';
-import { WriteVar } from 'components/app/vars/WriteVar.tsx';
 
 import './PageRoast.scss';
 
@@ -74,6 +74,7 @@ export function PageRoast(props) {
         }
     }
 
+    console.log(`saved state`, viewState)
     function renderPanelContent(s) {
         switch (s) {
             case "current":

@@ -2,7 +2,7 @@
 
 // init:
 this.db = new IDB();
-this.db.open(DBNAME);
+this.db.open(DBNAME, version?);
 this.db.newStore(DBNAME, { autoIncrement: true }, [
     { name: 'id', key: 'id', params: { unique: true } },
     { name: 'word, language', key: [ 'word', 'language' ], params: { unique: true } },
@@ -16,15 +16,14 @@ let o = await this.db.insert(DBNAME, word);
 
 */
 
+import { APP_ID } from 'env';
 import { getLogger } from "lib/utils/logging";
 
 // todo: queue all operations (such as clear, and delete) and execute when initialized/onupgradeneeded
 // todo: wrap all in try/catch
 
-// this number must be increased for new DB changes to take effect and register themselves on existing clients.
-const DB_VERSION = 1;
 
-const { log, warn } = getLogger('idb', { color: 'green', enabled: true });
+const { log, warn, error } = getLogger('idb', { color: 'green', enabled: true });
 
 // for some reason esbuild or browsersync don't like window
 const win: any = typeof window == 'undefined' ? {} : window;
@@ -35,22 +34,30 @@ type StoreDef = {
     indexes: {}   // optional indexes used for searching
 }
 
-class IDB {
+export class IDB {
+
+    public static dbs: Array<IDB> = []; // reference array for all instantiated DBs
+
+    name = undefined;
+    version = undefined;
 
     isOpen = false;         // if it's ready
     isReady = false;        // if its open and ready (upgrades complete)
     isInitialized = false   // if the stores have been instantiated
+
     db: any = undefined;    // underlying opened DB instance
-    _storeDefs: Array<StoreDef> = [];        // the user-registered pending definitions
-    public stores = {};            // the instantiated stores
+
+    _storeDefs: Array<StoreDef> = [];   // the user-registered pending definitions
+    public stores: Array<any> = [];             // the instantiated stores
+
     readyListeners = [];
 
-    constructor() {
+    constructor(name?, version?) {
+        this.name = name || 'app-db';
+        this.version = version || 1;
         let indexedDB = win.indexedDB || win.mozIndexedDB || win.webkitIndexedDB || win.msIndexedDB;
         if (!indexedDB) {
-            if (typeof window != 'undefined') {
-                throw "Your browser doesn't support a stable version of IndexedDB.";
-            }
+            if (typeof window != 'undefined') throw "Your browser doesn't support a stable version of IndexedDB.";
             return;
         }
         let IDBTransaction = win.IDBTransaction || win.webkitIDBTransaction || win.msIDBTransaction || { READ_WRITE: "readwrite" };
@@ -59,41 +66,81 @@ class IDB {
         Object.defineProperty(window, 'IDBKeyRange', { value: IDBKeyRange });
     }
 
-    open(dbName) {
-        let indexedDB = win.indexedDB || win.mozIndexedDB || win.webkitIndexedDB || win.msIndexedDB;
-        if (!indexedDB) {
-            if (typeof window != 'undefined') {
-                throw "Your browser doesn't support a stable version of IndexedDB.";
+    // static accessor so UI/clients can retrieve an instance of their DB anywhere
+    public static getDb(name) {
+        return this.dbs.find(db => db.name == name);
+    }
+
+    // returns the main/default app db instance
+    public static getDefaultDb = () => {
+        return IDB.getDb(APP_ID);
+    }
+
+    // opens the db and initializes any preconfigured stores
+    async init(schema?) {
+        if (schema) {
+            for (var t of schema) {
+                console.log(`newStore`, t)
+                this.newStore(t.name, t.options, t.indexes);
             }
-            return;
         }
-        log('OPENING IDB - version:', DB_VERSION)
-        var request = win.indexedDB.open(dbName, DB_VERSION);
+        await this.open();
+    }
 
-        // create stores after upgrade/ready
-        request.onupgradeneeded = (e) => {
-            this.db = e.target.result;
-            warn('IDB Upgrade needed! ... ', e.target)
-            this.isOpen = true;
-            this.initializeStores();
-        };
+    async open(): Promise<IDB> {
+        return new Promise((resolve, reject) => {
+            try {
+                let db;
+                let indexedDB = win.indexedDB || win.mozIndexedDB || win.webkitIndexedDB || win.msIndexedDB;
+                if (!indexedDB) {
+                    if (typeof window != 'undefined') throw "Your browser doesn't support a stable version of IndexedDB.";
+                    return;
+                }
+                log('OPENING IDB', this.name, this.version)
+                var request = win.indexedDB.open(this.name, this.version);
 
-        // handle operations after success
-        request.onsuccess = (e) => {
-            log('IDB OPENED')
-            this.db = e.target.result;
-            this.isOpen = true;
-            this.isReady = true;
-            this.initializeStores();
-            this.execQueuedCommands();
-            this.emitReady();
-        };
+                // create stores
+                request.onupgradeneeded = (e) => {
+                    this.db = e.target.result;
+                    if (this.db) {
+                        this.db.onerror = (e) => console.error(`Error upgrading iDB:`, e);
+                        warn('IDB Upgrade needed! ... ', e.target)
+                        this.createStores();
+                        log(`Store creation done.`)
+                    }
+                };
 
-        request.onerror = (e) => {
-            console.error('IDB open error! ', e.target.error)
-            this.isOpen = false;
-        };
+                // handle operations after success (stores are ready)
+                request.onsuccess = (e) => {
+                    if (!this.db) this.db = e.target.result;
+                    log('IDB OPENED', this.db)
 
+                    this.db.onversionchange = function () {
+                        //!important when version change is detected close the database immediately
+                        this.db.close() // hint:1
+                        log(`Need version change`)
+                    }
+
+                    IDB.dbs.push(this);
+
+                    this.isOpen = true;
+                    this.isReady = true;
+                    //this.initializeStores();
+                    this.execQueuedCommands();
+                    this.emitReady();
+
+                    resolve(this);
+                };
+
+                request.onerror = (e) => {
+                    console.error('IDB open error! ', e.target.error)
+                    this.isOpen = false;
+                    reject(e);
+                };
+            } catch (e) {
+                reject(e);
+            }
+        });
     }
 
     onReady = (cb) => {
@@ -110,6 +157,17 @@ class IDB {
         // todo:
     }
 
+    // creates the registered stores, when the DB is ready.
+    createStores() {
+        if (!this.isInitialized) {
+            log('Initializing IDB stores...', this._storeDefs);
+            for (var s of this._storeDefs) this.createStore(s.name, s.options, s.indexes);
+            this.isInitialized = true;
+        } else {
+            warn('(IDB already initialized?)')
+        }
+    }
+
     // registers a new store to be created.
     // todo:  this should return a store with an interface... ?
     newStore(storeName, options?, indexes?) {
@@ -121,15 +179,54 @@ class IDB {
             indexes: indexes || {}
         });
         // if system is already initialized, register the store now:
-        if (this.isInitialized) {
+        if (this.isInitialized)
             return this.createStore(storeName, options, indexes);
-        }
     }
 
     // registers a new store to be created.
     // todo:  this should return a store with an interface... ?
     getStore(storeName) {
-        return this._storeDefs.find(s => s.name == storeName);
+        return this.stores.find(s => s.name == storeName);
+    }
+    // Instantiates a new store with IndexedDB. Assumes the DB is ready.
+    private createStore(storeName, options?, indexes?) {
+        let store;
+        log('create store', storeName, options)
+
+        //if (this.isOpen) {
+        try {
+            // query if store exists
+            if (this.db) {
+                if (this.db.objectStoreNames.contains(storeName)) {
+                    const txn = this.db.transaction(storeName, "readwrite");
+                    store = txn.objectStore(storeName);
+                    console.log('found existing store...', storeName, store)
+                } else {
+                    store = this.db.createObjectStore(storeName, options);
+                    if (indexes && indexes.length) {
+                        indexes.map(i => store.createIndex(i.name, i.key, i.params));
+                    }
+                    this.stores.push(store);
+                    console.log(`Created`, storeName, store)
+                }
+            } else {
+                console.error(`createStore error: db is not initialized`)
+            }
+            return store;
+        } catch (e) {
+            // TODO: HANDLE THIS....
+            error('createStore error:', e);
+        }
+        //     } else {
+        //     console.log(`db not open.`)
+        //     return undefined;
+        // }
+    }
+
+    getStoreOrCreate(storeName, opts?) {
+        let s = this.getStore(storeName);
+        if (!s) s = this.createStore(storeName, opts);
+        return s;
     }
 
     get(storeName, key, index?) {
@@ -300,65 +397,4 @@ class IDB {
         }
     }
 
-    // creates the registered stores when DB is ready.
-    initializeStores() {
-        if (!this.isInitialized) {
-            log('Initializing IDB stores...',);
-            this._storeDefs.forEach(s => {
-                this.createStore(s.name, s.options, s.indexes);
-            });
-            this.isInitialized = true;
-        } else {
-            warn('(IDB already initialized?)')
-        }
-    }
-
-    // Instantiates a new store with IndexedDB. Assumes the DB is ready.
-    private createStore(storeName, options?, indexes?) {
-        let store;
-        log('create store', storeName, this.db)
-
-        const _create = () => {
-            this.db.createObjectStore(storeName, options);
-            if (indexes && indexes.length) {
-                indexes.map(i => {
-                    store.createIndex(i.name, i.key, i.params);
-                });
-            }
-
-            this.stores[storeName] = store;
-            return store;
-        }
-
-        if (this.isOpen) {
-            try {
-                if (this.isReady) {
-                    // query if store exists
-                    if (this.db.objectStoreNames.contains(storeName)) {
-                        const txn = this.db.transaction(storeName, "readwrite");
-                        store = txn.objectStore(storeName);
-                        if (store) {
-                            // console.log('found existing store...', storeName, store)
-                            return store;
-                        }
-                    }
-                }
-
-                return _create();
-            } catch (e) {
-                // TODO: HANDLE THIS....
-                console.error('create store error', e);
-            }
-        } else {
-            return undefined;
-        }
-    }
-
 }
-
-// Todo: move initialization and instance to app start.
-
-const idb = new IDB();
-idb.open('App');
-
-export default idb;
