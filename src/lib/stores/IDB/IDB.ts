@@ -23,7 +23,7 @@ import { getLogger } from "lib/utils/logging";
 // todo: wrap all in try/catch
 
 
-const { log, warn, error } = getLogger('idb', { color: 'green', enabled: false });
+const { log, warn, error } = getLogger('idb', { color: 'green', enabled: true });
 
 // for some reason esbuild or browsersync don't like window
 const win: any = typeof window == 'undefined' ? {} : window;
@@ -78,9 +78,11 @@ export class IDB {
 
     // opens the db and initializes any preconfigured stores
     async init(schema?) {
+        log(`init()`, schema)
         if (schema) {
             for (var t of schema) this.newStore(t.name, t.options, t.indexes);
         }
+        log(`opening...`)
         await this.open();
     }
 
@@ -168,6 +170,7 @@ export class IDB {
     // registers a new store to be created.
     // todo:  this should return a store with an interface... ?
     newStore(storeName, options?, indexes?) {
+        log(`newStore()`, storeName);
         if (this._storeDefs.find(s => s.name == storeName))
             throw "This store exists already: " + storeName;
         this._storeDefs.push({
@@ -176,8 +179,10 @@ export class IDB {
             indexes: indexes || {}
         });
         // if system is already initialized, register the store now:
-        if (this.isInitialized)
+        if (this.isInitialized) {
+            console.log(`  system already initialized.`)
             return this.createStore(storeName, options, indexes);
+        }
     }
 
     // registers a new store to be created.
@@ -185,6 +190,7 @@ export class IDB {
     getStore(storeName) {
         return this.stores.find(s => s.name == storeName);
     }
+
     // Instantiates a new store with IndexedDB. Assumes the DB is ready.
     private createStore(storeName, options?, indexes?) {
         let store;
@@ -193,11 +199,11 @@ export class IDB {
         //if (this.isOpen) {
         try {
             // query if store exists
-            console.log(`db tables`, this.db.objectStoreNames)
             if (this.db) {
                 if (this.db.objectStoreNames.contains(storeName)) {
-                    const txn = this.db.transaction(storeName, "readwrite");
-                    store = txn.objectStore(storeName);
+                    store = this.getStore(storeName);
+                    //const txn = this.db.transaction(storeName, "readwrite");
+                    //store = txn.objectStore(storeName);
                     //console.log('found existing store...', storeName, store)
                 } else {
                     store = this.db.createObjectStore(storeName, options);
@@ -215,10 +221,6 @@ export class IDB {
             // TODO: HANDLE THIS....
             console.error('createStore error:', e);
         }
-        //     } else {
-        //     console.log(`db not open.`)
-        //     return undefined;
-        // }
     }
 
     getStoreOrCreate(storeName, opts?) {

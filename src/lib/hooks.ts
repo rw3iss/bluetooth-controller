@@ -37,23 +37,20 @@ export function useDatabase(name?) {
     return [db];
 }
 
-export function useStore(db, id) {
-    let store;
-    if (db) {
-        // todo: use anon AI, ie. db.getStore('');s
-        store = new IDbStore(db, id);
-    }
-    return store;
+export function useStore(id, dbName?) {
+    const db = dbName ? IDB.getDb(dbName) : IDB.getDefaultDb();
+    console.log(`use store`, id, dbName, db, db.getStore(id));
+    if (db) return db.getStore(id);
+    return undefined;
 };
 
 export async function useSavedState(id, def) {
-    const [db] = useDatabase();
-    const store = useStore(db, id);
+    const store = useStore('saved-states');
     const [state, setState] = useState(store.get(id) || def);
 
     // load saved state on mount
     useEffect(() => {
-        if (db && store) {
+        if (store) {
             //setStore(new IDbStore(db, 'saved-states'));
             console.log(`store before state?`, store, store.get(id));
             (async function () {

@@ -9,6 +9,7 @@ const initApp = async () => {
 
     const idb: IDB = new IDB(APP_ID);
     await idb.init(idbTables);
+    console.log(`Mounting app...`)
 
     render(<App />, document.body);
 
