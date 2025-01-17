@@ -37,29 +37,22 @@ const DEFAULT_ROAST_STATE = {
 }
 
 export function PageRoast(props) {
-    const { state: viewState, saveState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
-    const { state: roastState, saveState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE);
+    const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
+    const { state: roastState, setState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
-
-    async function toggleSection(s) {
-        viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
-        await saveViewState({ ...viewState });
-    }
 
     function deviceVar(v) {
         return roastState[v];
         //read from the roast controller
     }
 
-    // triggered when a new value is set, tells the device to change
+    // send a new value command to the device
     function setRoastValue(property, value) {
-        console.log(`setRoastValue`, property, value);
         roastState[property] = value;
-        saveRoastState({ ...roastState });
+        console.log(`setRoastValue and save:`, property, value, roastState);
+        saveViewState({ ...roastState });
         setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
-        setTimeout(() => {
-            setUpdateMessage('');
-        }, 3000);
+        setTimeout(() => setUpdateMessage(''), 3000);
     }
 
     function handleEject(isOn) {
@@ -74,7 +67,13 @@ export function PageRoast(props) {
         }
     }
 
+    async function toggleSection(s) {
+        viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
+        await saveViewState({ ...viewState });
+    }
+
     console.log(`saved state`, viewState)
+
     function renderPanelContent(s) {
         switch (s) {
             case "current":

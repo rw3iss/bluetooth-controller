@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import './AdminTools.scss';
 
-export function AdminTools({ app }) {
+export function AdminTools() {
     const [closed, setClosed] = useState(false);
     const [hidden, setHidden] = useState(false);
 

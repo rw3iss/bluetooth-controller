@@ -9,13 +9,8 @@ const initApp = async () => {
 
     const idb: IDB = new IDB(APP_ID);
     await idb.init(idbTables);
-    console.log(`db ready.`)
 
-    const app = {
-        db: idb
-    }
-
-    render(<App app={app} />, document.body);
+    render(<App />, document.body);
 
 }
 

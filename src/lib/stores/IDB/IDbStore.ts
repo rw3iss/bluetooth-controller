@@ -7,10 +7,11 @@ export default class IDbStore implements IStore {
     storeIdx = "Store_";
 
     // underlying IDb references
-    db: any = undefined;
+    db: IDB | undefined = undefined;
     store: any = undefined;
 
     constructor(db: IDB, storeIdx?, opts?) {
+        this.db = db;
         if (storeIdx) this.storeIdx = storeIdx;
         this.store = this.db.getStoreOrCreate(this.storeIdx, opts);
     }

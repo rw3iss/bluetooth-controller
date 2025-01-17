@@ -23,7 +23,7 @@ import { getLogger } from "lib/utils/logging";
 // todo: wrap all in try/catch
 
 
-const { log, warn, error } = getLogger('idb', { color: 'green', enabled: true });
+const { log, warn, error } = getLogger('idb', { color: 'green', enabled: false });
 
 // for some reason esbuild or browsersync don't like window
 const win: any = typeof window == 'undefined' ? {} : window;
@@ -79,10 +79,7 @@ export class IDB {
     // opens the db and initializes any preconfigured stores
     async init(schema?) {
         if (schema) {
-            for (var t of schema) {
-                console.log(`newStore`, t)
-                this.newStore(t.name, t.options, t.indexes);
-            }
+            for (var t of schema) this.newStore(t.name, t.options, t.indexes);
         }
         await this.open();
     }
@@ -196,11 +193,12 @@ export class IDB {
         //if (this.isOpen) {
         try {
             // query if store exists
+            console.log(`db tables`, this.db.objectStoreNames)
             if (this.db) {
                 if (this.db.objectStoreNames.contains(storeName)) {
                     const txn = this.db.transaction(storeName, "readwrite");
                     store = txn.objectStore(storeName);
-                    console.log('found existing store...', storeName, store)
+                    //console.log('found existing store...', storeName, store)
                 } else {
                     store = this.db.createObjectStore(storeName, options);
                     if (indexes && indexes.length) {
@@ -215,7 +213,7 @@ export class IDB {
             return store;
         } catch (e) {
             // TODO: HANDLE THIS....
-            error('createStore error:', e);
+            console.error('createStore error:', e);
         }
         //     } else {
         //     console.log(`db not open.`)
@@ -229,7 +227,7 @@ export class IDB {
         return s;
     }
 
-    get(storeName, key, index?) {
+    async get(storeName, key, index?) {
         return new Promise((resolve, reject) => {
             if (this.isReady) {
                 try {
@@ -258,7 +256,7 @@ export class IDB {
         });
     }
 
-    getAll(storeName) {
+    async getAll(storeName) {
         return new Promise((resolve, reject) => {
             if (this.isReady) {
                 try {
@@ -284,7 +282,7 @@ export class IDB {
         });
     }
 
-    getAllKeys(storeName) {
+    async getAllKeys(storeName) {
         return new Promise((resolve, reject) => {
             if (this.isReady) {
                 const txn = this.db.transaction(storeName, "readwrite"); //IDBTransaction.READ_WRITE);
@@ -298,7 +296,7 @@ export class IDB {
         });
     }
 
-    set(storeName, object, key?) {
+    async set(storeName, object, key?) {
         return new Promise((resolve, reject) => {
             if (this.isReady && key) {
                 try {
@@ -323,7 +321,7 @@ export class IDB {
         });
     }
 
-    update(storeName, object, key?) {
+    async update(storeName, object, key?) {
         return new Promise((resolve, reject) => {
             if (this.isReady) {
                 try {

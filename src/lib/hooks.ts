@@ -1,6 +1,7 @@
 import EventService from 'lib/EventService';
 import { useEffect, useState } from 'preact/hooks';
 import { IDB } from './stores/IDB/IDB';
+import IDbStore from './stores/IDB/IDbStore';
 
 export function useRoute() {
     const [route, setRoute] = useState(undefined);
@@ -23,37 +24,60 @@ export function useRoute() {
 
 // todo: should be data wrapper, not IDB specific
 export function useDatabase(name?) {
-    // todo: can useEffect to wait for IDB to be ready and DB created?
-    const db = name ? IDB.getDb(name) : IDB.getDefaultDb();
+    const [db, setDb] = useState(name ? IDB.getDb(name) : IDB.getDefaultDb());
+
+    useEffect(() => {
+        if (!db) {
+            const _db = IDB.getDb(name ? IDB.getDb(name) : IDB.getDefaultDb());
+            if (_db) setDb(_db);
+        }
+        console.log(`db?`, db)
+    }, []);
+
     return [db];
 }
 
-export function useSavedState(id, def) {
-    this.store = undefined;
-    this.id = id;
-
-    const [state, setState] = useState(def);
-    const [db] = useDatabase();
-
-    useEffect(() => {
-        if (db && !this.store) this.store = db.getStoreOrCreate(`saved-states`);
-        (async function () {
-            if (this.store) {
-                console.log(`getting saved state`, this.id, this.store)
-                const s = await this.store.get(this.id);
-                console.log(`state`, s)
-                if (s) setState(s);
-            }
-        })();
-    }, [db]);
-
-    // if a new state is provided, it will also set the new viewState
-    async function saveState(newState?) {
-        console.log(`saveState`, newState)
-        // todo: should set after useEffect change if flagged?
-        if (newState) setState(newState);
-        if (this.store) await this.store.set(this.id, newState || state);
+export function useStore(db, id) {
+    let store;
+    if (db) {
+        // todo: use anon AI, ie. db.getStore('');s
+        store = new IDbStore(db, id);
     }
+    return store;
+};
 
-    return { state, setState, saveState };
+export async function useSavedState(id, def) {
+    const [db] = useDatabase();
+    const store = useStore(db, id);
+    const [state, setState] = useState(store.get(id) || def);
+
+    // load saved state on mount
+    useEffect(() => {
+        if (db && store) {
+            //setStore(new IDbStore(db, 'saved-states'));
+            console.log(`store before state?`, store, store.get(id));
+            (async function () {
+                const s = await store.get(id);
+                if (s) setState(s);
+            })();
+        } else {
+            console.log(`no db or store?`)
+        }
+    }, []);
+
+    // when state changes, save to db
+    useEffect(() => {
+        async function save() {
+            console.log(`state changed`, id, store, state);
+            if (store) {
+                store.set(id, state);
+                console.log(`test:`, store.get(id))
+            } else {
+                console.log(`no store for save?`, id)
+            }
+        }
+        save();
+    }, [state]);
+
+    return { state, setState };
 }
