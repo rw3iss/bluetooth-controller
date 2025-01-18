@@ -1,7 +1,7 @@
-import { Fn } from 'lib/types/Types';
+import { Fn } from 'lib/Types';
 import Cache from 'lib/utils/Cache';
 import { getLogger } from 'lib/utils/logging';
-import StoreInterface from '../IStore';
+import { IStore } from '../IStore';
 
 const { log, warn } = getLogger('CacheStore', { color: 'magenta', enabled: false });
 
@@ -9,7 +9,7 @@ const { log, warn } = getLogger('CacheStore', { color: 'magenta', enabled: false
 
 
 // BaseStore - a simple LocalStorage scope-based mechanism. The scope is derived from the store's prefix (storeIdx).
-export default class CacheStore implements StoreInterface {
+export default class CacheStore implements IStore {
 
     storeIdx = "BASE_";
 

@@ -1,4 +1,4 @@
-export default interface IStore {
+export interface IStore {
 
     add(item: any, id?: string | undefined);
 

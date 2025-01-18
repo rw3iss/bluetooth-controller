@@ -7,6 +7,7 @@ import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
 
 import './PageRoast.scss';
+import RoastController from '../../../lib/RoastController.js';
 
 const DEFAULT_VIEW_STATE = {
     "sections": {
@@ -26,20 +27,24 @@ const DEFAULT_VIEW_STATE = {
 }
 
 const DEFAULT_ROAST_STATE = {
+    isStarted: false,
+    isPaused: false,
+    timeStarted: undefined,
+    timeRunningMs: 0,
     currentTemp: 0,
     targetTemp: 0,
-    motor: true,
-    heater: true,
-    exhaust: true,
-    eject: false,
-    dateStarted: undefined,
-    runtimeSecs: 0
+    heaterOn: false,
+    motorOn: false,
+    exhaustOn: false,
+    ejectOn: false,
+    coolingOn: false
 }
 
 export function PageRoast(props) {
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const { state: roastState, setState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE, false);
     const [updateMessage, setUpdateMessage] = useState(undefined);
+
 
     function deviceVar(v) {
         return roastState ? roastState[v] : undefined;
@@ -70,12 +75,15 @@ export function PageRoast(props) {
     }
 
     async function toggleSection(s) {
-        viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
-        await saveViewState({ ...viewState });
+        if (viewState) {
+            viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
+            await saveViewState({ ...viewState });
+        }
     }
 
     function renderPanelContent(s) {
         switch (s) {
+
             case "current":
                 return <div class="panel-content" id="panel-current">
                     <ReadVar label="Current Temp" value={deviceVar('currentTemp')} />
@@ -84,6 +92,7 @@ export function PageRoast(props) {
                     <ReadVar label="Exhaust" value={deviceVar('exhaust')} />
                     <ReadVar label="Eject" value={deviceVar('eject')} />
                 </div>
+
             case "set":
                 return <div class="panel-content" id="panel-set">
                     <WriteVar type="number" defaultValue={deviceVar('targetTemp')} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
@@ -92,14 +101,17 @@ export function PageRoast(props) {
                     <WriteVar type="checkbox" checked={deviceVar('eject')} label="Eject" onChanged={(value) => handleEject(value)} />
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
                 </div>
+
             case "automation":
                 return <div class="panel-content" id="panel-automation">
                     AUTOMATION
                 </div>
+
             case "profile":
                 return <div class="panel-content" id="panel-profile">
-                    PROFILE
+                    <button onClick={() => roastCtrl.togglePause()} />
                 </div>
+
             default:
                 return "";
         }

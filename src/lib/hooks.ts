@@ -1,6 +1,6 @@
 import EventService from 'lib/EventService';
 import { useEffect, useState } from 'preact/hooks';
-import { IndexedDBManager } from './stores/IDB/IndexedDBManager';
+import { IndexedDBManager } from './IndexedDBManager';
 
 // useRoute - Binds route changes to local listeners that components can
 // use to find the current route and detect route changes.

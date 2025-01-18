@@ -2,7 +2,7 @@ import { RouteContext } from 'components/app/route-context/RouteContext';
 import { AdminTools } from 'components/basic/ui-admin-tools/AdminTools';
 import { idbTables } from 'config/idb.config';
 import { APP_ID } from 'env';
-import { IndexedDBManager } from 'lib/stores/IDB/IndexedDBManager';
+import { IndexedDBManager } from 'lib/IndexedDBManager';
 import { useEffect } from 'preact/hooks';
 import AppHeader from './app-header/AppHeader';
 
