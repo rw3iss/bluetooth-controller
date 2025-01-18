@@ -50,7 +50,7 @@ export function PageRoast(props) {
     function setRoastValue(property, value) {
         roastState[property] = value;
         console.log(`setRoastValue and save:`, property, value, roastState);
-        saveViewState({ ...roastState });
+        saveRoastState({ ...roastState });
         setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
         setTimeout(() => setUpdateMessage(''), 3000);
     }
@@ -102,6 +102,8 @@ export function PageRoast(props) {
                 return "";
         }
     }
+
+    console.log(`viewstate`, viewState)
 
     return (
         <div class="page" id="roast">

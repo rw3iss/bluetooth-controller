@@ -1,8 +1,10 @@
 import EventService from 'lib/EventService';
 import { useEffect, useState } from 'preact/hooks';
-import { IDB } from './stores/IDB/IDB';
 import { IndexedDBManager } from './stores/IDB/IndexedDBManager';
 
+// useRoute - Binds route changes to local listeners that components can
+// use to find the current route and detect route changes.
+const ROUTE_CHANGE_EVENT = 'route-change';
 export function useRoute() {
     const [route, setRoute] = useState(undefined);
     const [routeParams, setRouteParams] = useState(undefined);
@@ -13,9 +15,9 @@ export function useRoute() {
             setRouteParams(e.target.params);
         }
 
-        EventService.subscribe('route-change', handleRouteChange);
+        EventService.subscribe(ROUTE_CHANGE_EVENT, handleRouteChange);
         return () => {
-            EventService.unsubscribe('route-change', handleRouteChange);
+            EventService.unsubscribe(ROUTE_CHANGE_EVENT, handleRouteChange);
         };
     });
 
@@ -23,19 +25,19 @@ export function useRoute() {
 }
 
 // todo: should be data wrapper, not IDB specific
-export function useDatabase(name?) {
-    const [db, setDb] = useState(name ? IDB.getDb(name) : IDB.getDefaultDb());
+// export function useDatabase(name?) {
+//     const [db, setDb] = useState(name ? IDB.getDb(name) : IDB.getDefaultDb());
 
-    useEffect(() => {
-        if (!db) {
-            const _db = IDB.getDb(name ? IDB.getDb(name) : IDB.getDefaultDb());
-            if (_db) setDb(_db);
-        }
-        console.log(`db?`, db)
-    }, []);
+//     useEffect(() => {
+//         if (!db) {
+//             const _db = IDB.getDb(name ? IDB.getDb(name) : IDB.getDefaultDb());
+//             if (_db) setDb(_db);
+//         }
+//         console.log(`db?`, db)
+//     }, []);
 
-    return [db];
-}
+//     return [db];
+// }
 
 // export function useStore(id, dbName?) {
 //     const db = IndexedDBManager.getDefaultDb();
@@ -44,7 +46,7 @@ export function useDatabase(name?) {
 //     return undefined;
 // };
 
-type IDbStateWrapper = {
+export type IDbStateWrapper = {
     id: string,
     state: {}
 }
