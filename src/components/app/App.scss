@@ -17,7 +17,7 @@
 
 body,
 html {
-    font-size: 16px;
+    font-size: 24px;
     letter-spacing: 1px;
 }
 
@@ -33,7 +33,7 @@ html {
     color: var(--app-color, white);
     background: var(--app-bg, #123) url("public/images/bean.svg") repeat;
     background-size: var(--app-bg-image-size);
-    font-family: "Coffee Menus";
+    font-family: "Coffee Green";
 
     .context {
         width: 100%;

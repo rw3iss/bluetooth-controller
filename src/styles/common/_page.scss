@@ -1,0 +1,46 @@
+@import "../mixins/page";
+@import "../mixins/layout";
+@import "../mixins/breakpoints";
+// for each page/route view
+
+.page-context {
+    @include page-context;
+
+    .page-layout {
+        @include page-layout;
+
+        .page-content {
+            //@include page-content;
+        }
+
+        > .error.full {
+            @include flex-col-fill;
+
+            text-align: center;
+            max-width: 800px;
+        }
+    }
+}
+
+// SECTIONS //////////////////////////////////////////////////
+
+.page-section {
+    //@include page-section;
+
+    > .section-header {
+        //@include section-header;
+    }
+
+    > .section-content {
+        //@include section-content;
+    }
+}
+
+@include small-desktop {
+}
+
+@include mobile {
+    .page {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,45 @@
+// spinning loader icon5px
+// TODO: probably just move this to a Component
+
+@mixin loader-ring($thickness: 8px, $maxSize: 64px, $color: #FFF) {
+    .loader-ring {
+        display: inline-block;
+        position: relative;
+        width: $maxSize + ($thickness * 2);
+        height: $maxSize + ($thickness * 2);
+    }
+
+    .loader-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: $maxSize;
+        height: $maxSize;
+        margin: $thickness;
+        border: $thickness solid $color;
+        border-radius: 50%;
+        animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: $color transparent transparent transparent;
+    }
+
+    .loader-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+    }
+
+    .loader-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+    }
+
+    .loader-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+    }
+
+    @keyframes loader-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}

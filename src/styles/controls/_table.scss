@@ -1,0 +1,50 @@
+$border: 1px solid rgba(#456, 0.5);
+$tablePadding: 10px;
+
+.table {
+    border-radius: 10px;
+    border-bottom: 0;
+
+    &[data-bs-theme="dark"] {
+        border-bottom: 0;
+    }
+
+    > :not(caption) > * > * {
+        background: none;
+    }
+
+    .col-header {
+        min-width: 50px;
+        font-weight: bold;
+    }
+
+    .row {
+        display: table-row;
+
+        .col {
+            min-width: 50px;
+            flex: auto;
+        }
+    }
+
+    thead {
+        background: var(--bs-body-bg);
+        --bs-border-width: 0;
+
+        tr {
+            th {
+                --bs-border-width: 0;
+            }
+        }
+    }
+
+    tbody {
+        --bs-border-width: 0;
+        tr:last-child {
+            td {
+                --bs-border-width: 0;
+                border-bottom: 0;
+            }
+        }
+    }
+}

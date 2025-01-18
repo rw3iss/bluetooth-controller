@@ -1,0 +1,89 @@
+$minColWidth: 400px;
+$cardMargin: 15px;
+$cardPadding: 25px;
+$cardRadius: var(--default-radius);
+$cardBackground: rgba(50, 55, 60, 0.9);
+$pageTextColor: #ffff;
+
+@mixin card {
+    @include flex-col;
+    border-radius: $cardRadius;
+    //margin: $cardMargin;
+    padding: $cardPadding;
+    color: $pageTextColor;
+    font-weight: normal;
+    min-width: $minColWidth;
+    position: relative;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.35);
+    @include blob-item-bg;
+
+    .card-header {
+        @include h4;
+        text-align: center;
+        width: 100%;
+        margin: 0;
+        padding: 0.25em;
+        color: white;
+        border-bottom: none;
+    }
+
+    &.is-selected {
+        background: var(--color-blue-light);
+    }
+
+    &.add-new {
+        cursor: pointer;
+    }
+
+    &:first-child {
+    }
+
+    &:last-child {
+    }
+
+    &.icon {
+        &:not(.add-new):after {
+            @include flex-center-both;
+            content: "i";
+            font-size: 1.5rem;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            border: 2px solid #000;
+        }
+
+        &.add-new:after {
+            @include flex-center-both;
+            content: "+";
+            font-size: 2.5rem;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            border: 2px solid #000;
+        }
+    }
+}
+
+@mixin card-hover {
+    //@include card;
+
+    &:hover {
+        @include blob-item-bg-hover;
+        cursor: pointer;
+    }
+}
+
+@mixin card-list {
+    @include flex-row;
+    padding: $cardMargin 0;
+
+    .card {
+        @include card;
+    }
+}

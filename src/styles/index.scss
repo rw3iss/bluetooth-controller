@@ -1,2 +1,4 @@
 @use "./vars";
-@use "../components/app/App.scss";
+@import "./mixins";
+@import "./common";
+@import "../components/app/App.scss";

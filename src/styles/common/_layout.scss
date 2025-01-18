@@ -1,0 +1,315 @@
+@import "../mixins/layout";
+
+// flexbox helpers
+.flex {
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -ms-flexbox;
+    display: -o-flex;
+
+    > *.fill {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+        align-self: auto;
+    }
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.flex2 {
+    flex: 2;
+}
+
+.flex3 {
+    flex: 2;
+}
+
+.flex4 {
+    flex: 4;
+}
+
+.flex5 {
+    flex: 5;
+}
+
+.flex-inline {
+    @include flex-inline;
+}
+
+.flex,
+.flex-row {
+    @include flex();
+
+    .col {
+        flex: auto;
+
+        &.even {
+            flex: 1 0;
+        }
+    }
+}
+
+.flex-wrap {
+    @include flex-wrap();
+}
+
+.flex-no-wrap {
+    @include flex-no-wrap();
+}
+
+.flex-center-x,
+.flex-row-center-x {
+    @include flex-center-x();
+}
+
+.flex-center-y,
+.flex-row-center-y {
+    @include flex-center-y();
+}
+
+.flex-center-both {
+    @include flex-center-both();
+}
+
+// column layouts
+
+.flex-col {
+    @include flex-col();
+}
+
+.flex-col-center {
+    @include flex-col-center();
+}
+
+.flex-col-center-x {
+    @include flex-col-center-x();
+}
+
+.flex-col-center-y {
+    @include flex-col-center-y();
+}
+
+.flex-col-center-both {
+    @include flex-col-center-both();
+}
+
+// force container to 100% grow
+
+.flex-fill {
+    @include flex-fill();
+}
+
+.flex-row-fill {
+    @include flex-row-fill();
+}
+
+.flex-col-fill {
+    @include flex-col-fill();
+}
+
+.flex-end {
+    // assumes flex row
+    justify-self: flex-end;
+    margin: 0 0 0 auto;
+}
+
+.flex-row {
+    .flex-end {
+        justify-self: flex-end;
+        margin: 0 0 0 auto;
+    }
+}
+
+.flex-col {
+    .flex-end {
+        align-self: flex-end;
+        margin: 0 0 0 auto;
+    }
+}
+
+// @mixin flex($axis: 'row', $align: 'flex-start', $justify: 'flex-start', $flex: 'auto') {
+//     display: flex;
+//     flex-direction: $axis;
+//     align-items: $align;
+//     justify-content: $justify;
+//     flex: $flex;
+// }
+
+// classes that can be applied directly to html elements
+
+.full {
+    width: 100%;
+}
+
+.cols {
+    display: flex;
+}
+
+//padding helpers
+.pad {
+    &.tn {
+        padding: calc(var(--defaultItemPadding) * 0.25);
+    }
+
+    &.xs {
+        padding: calc(var(--defaultItemPadding) * 0.5);
+    }
+
+    &.sm {
+        padding: calc(var(--defaultItemPadding) * 0.75);
+    }
+
+    &.md {
+        padding: var(--defaultItemPadding);
+    }
+
+    &.lg {
+        padding: calc(var(--defaultItemPadding) * 1.5);
+    }
+
+    &.xl {
+        padding: calc(var(--defaultItemPadding) * 2);
+    }
+
+    &.ns {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &.ntb {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+//margin helpers
+.margin {
+    &.ts {
+        margin: calc(var(--defaultItemPadding) * 0.25);
+    }
+
+    &.xs {
+        margin: calc(var(--defaultItemPadding) * 0.5);
+    }
+
+    &.sm {
+        margin: calc(var(--defaultItemPadding) * 0.75);
+    }
+
+    &.md {
+        margin: var(--defaultItemPadding);
+    }
+
+    &.lg {
+        margin: calc(var(--defaultItemPadding) * 1.5);
+    }
+
+    &.xl {
+        margin: calc(var(--defaultItemPadding) * 2);
+    }
+
+    &.ns {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    &.ntb {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+///////////////////
+
+.align-start {
+    align-items: flex-start;
+}
+
+.align-end {
+    align-items: flex-end;
+}
+
+// OLD:
+
+// .flex-row {
+//     @extend .flex;
+//     flex-direction: row;
+//     -webkit-flex-direction: row;
+//     -moz-flex-direction: row;
+//     -ms-flex-direction: row;
+//     -webkit-box-orient: horizontal;
+//     -webkit-box-direction: normal;
+// }
+
+// .flex-col {
+//     @extend .flex;
+// 	flex-direction: column;
+// }
+
+// .flex-row-center  {
+//     @extend .flex-row;
+//     align-items: center;
+// }
+
+// .flex-center {
+//     @extend .flex;
+// 	flex-direction: row;
+// 	justify-content: center;
+// 	-webkit-justify-content: center;
+// 	align-items: center;
+// 	-webkit-align-items: center;
+// }
+
+// .flex-col-center {
+//     @extend .flex-col;
+// 	justify-content: center;
+// 	-webkit-justify-content: center;
+// 	align-items: center;
+// 	-webkit-align-items: center;
+// }
+
+// .flex-center-both {
+//     @include flex-center-both;
+// }
+
+// .flex-col-center-both {
+//     @include flex-center-both;
+// 	flex-direction: column;
+// }
+
+// .flex-wrap {
+//     @extend .flex;
+//     flex-wrap: wrap;
+//     -webkit-flex-wrap: wrap;
+//     -ms-flex-wrap: wrap;
+//     -ms-flex-wrap: wrap;
+// }
+
+// .flex-spread {
+//     @extend .flex;
+// 	justify-content: space-around;
+// 	-webkit-justify-content: space-around;
+// }
+
+// .flex-no-wrap {
+//     @extend .flex;
+// 	flex-wrap: nowrap;
+// 	-webkit-flex-wrap: nowrap;
+// }
+
+// .flex-fill {
+//     @include flex-fill;
+// }
+
+// .flex-col-fill {
+//     @include flex-col-fill;
+// }
+
+// .flex-end {
+//     align-self: flex-end;
+//     margin: 0 0 0 auto;
+// }

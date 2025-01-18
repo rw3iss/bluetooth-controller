@@ -13,6 +13,7 @@
     .panel-menu {
         flex: 0.1 0 20%;
         width: 20%;
+        min-width: 240px;
         padding: 10px;
         border-right: 1px solid rgba(#aaa, 0.1);
         background: var(--panel-bg);
@@ -24,6 +25,7 @@
                 .title {
                     padding: 10px;
                     font-weight: bold;
+                    background: var(--button-bg-hover);
                     color: var(--button-color);
                     border-top-left-radius: var(--panel-radius);
                     border-top-right-radius: var(--panel-radius);
@@ -57,7 +59,7 @@
 
                 &.open {
                     .title {
-                        color: var(--button-color-hover);
+                        color: var(--button-color-alt);
                         background: var(--button-bg-hover);
                         border-bottom-left-radius: 0;
                         border-bottom-right-radius: 0;
@@ -116,7 +118,8 @@
         align-items: flex-start;
         justify-content: flex-start;
         font-weight: bold;
-        color: var(--button-color);
+        color: var(--label-color);
+        text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
     }
 
     .value {

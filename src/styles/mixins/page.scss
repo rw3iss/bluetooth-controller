@@ -1,0 +1,42 @@
+@use "./breakpoints.scss";
+
+// for each page/route view
+
+@mixin page-context {
+    @include flex-col-fill-100;
+    position: relative;
+}
+
+@mixin page-header {
+    color: white;
+    border-bottom: 1px solid #fff;
+    background: var(--color-gradient-blue-base);
+
+    .title {
+        //@include font-header;
+    }
+}
+
+@mixin page-layout {
+    @include flex-col-fill-100;
+    //overflow-y: auto;
+    z-index: 1;
+
+    > .loader {
+        @include flex-col-fill-center-both;
+    }
+
+    .page-header {
+        //@include page-header;
+    }
+
+    .page-content {
+        //@include page-content;
+    }
+
+    > .error.full {
+        @include flex-col-fill;
+        text-align: center;
+        max-width: 800px;
+    }
+}

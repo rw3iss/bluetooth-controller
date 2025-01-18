@@ -1,0 +1,43 @@
+@mixin mobile {
+    /* Portrait and Landscape */
+    @media (min-width: 0px) and (max-width: 1024px) {
+        // and (-webkit-min-device-pixel-ratio: 2) {
+        @content;
+    }
+}
+
+@mixin tablet_and_larger {
+    @media only screen and (min-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin not-mobile() {
+    @media only screen and (min-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+        @content;
+    }
+}
+
+@mixin small-desktop {
+    @media only screen and (min-width: 1024px) and (max-width: 1440px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (min-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin qhd {
+    @media only screen and (min-width: 1440px) {
+        @content;
+    }
+}
+
+@mixin uhd {
+    @media only screen and (min-width: 2160px) {
+        @content;
+    }
+}

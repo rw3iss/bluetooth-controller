@@ -1,0 +1,10 @@
+@function hexToRGB($hex) {
+    @return red($hex), green($hex), blue($hex);
+}
+
+@function get-color($color: "") {
+    @if not map-has-key($colors, $color) {
+        @warn "'#{$color}' is not a known color";
+    }
+    @return map-get($colors, $color);
+}
