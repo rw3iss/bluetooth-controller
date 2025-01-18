@@ -19,6 +19,8 @@
         //background: linear-gradient(90deg, rgba(17, 34, 51, 1) 0%, rgba(21, 38, 54, 1) 50%, rgba(17, 34, 51, 1) 100%);
 
         .menu-item {
+            display: flex;
+            align-items: center;
             margin: 5px 0;
             padding: 15px;
             //background: var(--button-bg);
@@ -33,7 +35,6 @@
                 background: var(--button-bg-hover);
                 color: var(--button-color-hover);
                 background: rgb(34, 51, 68);
-                background: linear-gradient(180deg, rgba(34, 51, 68, 1) 0%, rgba(29, 44, 59, 1) 100%);
             }
 
             &.active {

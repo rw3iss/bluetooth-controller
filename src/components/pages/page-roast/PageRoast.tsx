@@ -42,17 +42,19 @@ export function PageRoast(props) {
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
     function deviceVar(v) {
-        return roastState[v];
+        return roastState ? roastState[v] : undefined;
         //read from the roast controller
     }
 
     // send a new value command to the device
     function setRoastValue(property, value) {
-        roastState[property] = value;
-        console.log(`setRoastValue and save:`, property, value, roastState);
-        saveRoastState({ ...roastState });
-        setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
-        setTimeout(() => setUpdateMessage(''), 3000);
+        if (roastState) {
+            roastState[property] = value;
+            console.log(`setRoastValue and save:`, property, value, roastState);
+            saveRoastState({ ...roastState });
+            setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
+            setTimeout(() => setUpdateMessage(''), 3000);
+        }
     }
 
     function handleEject(isOn) {

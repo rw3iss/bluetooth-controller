@@ -17,6 +17,13 @@ export class IndexedDBManager {
         IndexedDBManager.dbs.push(this);
     }
 
+    // static accessor for clients to retrieve an instance of a DB from anywhere.
+    public static getDb(name = APP_ID) {
+        let db = IndexedDBManager.dbs.find(d => d.dbName == APP_ID);
+        if (!db) db = new IndexedDBManager(APP_ID);
+        return db;
+    }
+
     private getVersionFromLocalStorage(): number | null {
         const versionString = localStorage.getItem(`${this.dbName}_version`);
         return versionString ? parseInt(versionString, 10) : null;
@@ -24,18 +31,6 @@ export class IndexedDBManager {
 
     private setVersionInLocalStorage(version: number) {
         localStorage.setItem(`${this.dbName}_version`, version.toString());
-    }
-
-    // static accessor so UI/clients can retrieve an instance of their DB anywhere
-    public static getDb(name) {
-        return this.dbs.find(db => db.name == name);
-    }
-
-    // returns the main/default app db instance
-    public static getDefaultDb = () => {
-        let db = IndexedDBManager.dbs.find(d => d.dbName == APP_ID);
-        if (!db) db = new IndexedDBManager(APP_ID);
-        return db;
     }
 
     private openDB(): Promise<IDBDatabase> {

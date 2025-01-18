@@ -8,7 +8,7 @@
         "node": ">=20"
     },
     "scripts": {
-        "dev": "concurrently -k -r \"node scripts/esbuild/dev.js --config tsconfig.json\" \"web-dev-server --config scripts/web-dev-server.config.js\"",
+        "dev": "rm -rf build && concurrently -k -r \"node scripts/esbuild/dev.js --config tsconfig.json\" \"web-dev-server --config scripts/web-dev-server.config.js\"",
         "build": "rm -rf build && node scripts/esbuild/build.js --config tsconfig.json",
         "start": "web-dev-server --config scripts/web-dev-server.config.js"
     },

@@ -23,7 +23,7 @@ const autoprefixer = require('autoprefixer');
 //const gzipPlugin = require('@luncheon/esbuild-plugin-gzip');
 
 // Config params (relative to where npm/script is called from):
-const GLOBAL_NAME = 'Bluetooth';
+const GLOBAL_NAME = 'CoffeeController';
 const INPUT_DIR = './src';
 const OUTPUT_DIR = './build';
 const TARGET = 'esnext';
@@ -78,6 +78,7 @@ async function dev() {
             },
             external: ['window', 'document'],
             assetNames: 'public/[name].[hash]',
+            publicPath: "",
             tsconfig: "tsconfig.json",
             mainFields: ["browser", "module", "main"],
             plugins: [

@@ -1,3 +1,26 @@
+@use "sass:math";
+
+@mixin font($name, $location, $type, $weight: 500) {
+    @font-face {
+        font-family: $name;
+        font-weight: $weight;
+        src:
+            local($name),
+            url($location) format($type);
+    }
+}
+
+@include font("Coffee Bean", "public/fonts/Coffee Bean.ttf", "truetype");
+@include font("Coffee Green", "public/fonts/Coffee Green.otf", "opentype");
+@include font("Coffee Extra", "public/fonts/coffee_extra/Coffee Extra.otf", "opentype");
+@include font("Coffee Menus", "public/fonts/coffee_menus/Coffee Menus_personal use.ttf", "truetype"); //
+
+body,
+html {
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
 #app {
     display: flex;
     flex-direction: column;
@@ -8,6 +31,9 @@
     max-width: 100vw;
     background: var(--app-bg, #123);
     color: var(--app-color, white);
+    background: var(--app-bg, #123) url("public/images/bean.svg") repeat;
+    background-size: var(--app-bg-image-size);
+    font-family: "Coffee Menus";
 
     .context {
         width: 100%;

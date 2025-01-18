@@ -7,12 +7,14 @@ const DEFAULT_VIEW_STATE = {
 }
 
 export function PageConfig(props) {
-    const { state: viewState, saveState: saveViewState } = useSavedState('page-config', DEFAULT_VIEW_STATE);
+    const { state: viewState, setState: saveViewState } = useSavedState('page-config', DEFAULT_VIEW_STATE, false);
 
     async function changeSection(s) {
-        console.log(`changeSection`, s)
-        viewState["section"] = s;
-        await saveViewState({ ...viewState });
+        if (viewState) {
+            console.log(`changeSection`, s)
+            viewState["section"] = s;
+            await saveViewState({ ...viewState });
+        }
     }
 
     return (

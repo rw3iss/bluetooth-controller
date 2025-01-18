@@ -67,7 +67,7 @@ export function useSavedState(id: string, def: {}, waitFor = true) {
     useEffect(() => {
         //console.log(`useSavedState effect`, id);
         (async function () {
-            const db = IndexedDBManager.getDefaultDb();
+            const db = IndexedDBManager.getDb();
             if (db) {
                 const s: IDbStateWrapper | undefined = await db.get(STATE_STORE, id);
                 setState(s ? s.state : def);
@@ -80,7 +80,7 @@ export function useSavedState(id: string, def: {}, waitFor = true) {
     // when state changes, save to db
     useEffect(() => {
         async function save() {
-            const db = IndexedDBManager.getDefaultDb();
+            const db = IndexedDBManager.getDb();
             if (db) {
                 if (state) { // must do this so default undefined state does not trigger
                     //console.log(`useSavedState changed`, id, state);
