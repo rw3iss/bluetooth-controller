@@ -3,6 +3,6 @@ export const idbTables = [
     {
         name: 'saved-states',
         options: {},
-        indexes: {}
+        indexes: ['id']
     }
 ]

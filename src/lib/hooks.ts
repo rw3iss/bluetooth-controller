@@ -1,7 +1,7 @@
 import EventService from 'lib/EventService';
 import { useEffect, useState } from 'preact/hooks';
 import { IDB } from './stores/IDB/IDB';
-import IDbStore from './stores/IDB/IDbStore';
+import { IndexedDBManager } from './stores/IDB/IndexedDBManager';
 
 export function useRoute() {
     const [route, setRoute] = useState(undefined);
@@ -37,40 +37,56 @@ export function useDatabase(name?) {
     return [db];
 }
 
-export function useStore(id, dbName?) {
-    const db = dbName ? IDB.getDb(dbName) : IDB.getDefaultDb();
-    console.log(`use store`, id, dbName, db, db.getStore(id));
-    if (db) return db.getStore(id);
-    return undefined;
-};
+// export function useStore(id, dbName?) {
+//     const db = IndexedDBManager.getDefaultDb();
+//     console.log(`use store`, id, dbName, db, db.getStore(id));
+//     if (db) return db.getStore(id);
+//     return undefined;
+// };
 
-export async function useSavedState(id, def) {
-    const store = useStore('saved-states');
-    const [state, setState] = useState(store.get(id) || def);
+type IDbStateWrapper = {
+    id: string,
+    state: {}
+}
+const STATE_STORE = 'saved-states';
+/**
+ * Manages storing and retrieving saved data to IndexedDB for arbitrary components.
+ * @param id The id for the saved state.
+ * @param def The default state prior to loading any from the DB.
+ * @param waitFor Prevent setting the state to default immediately,
+ * and instead wait to try and load the stored data.
+ * If no data is found the default is set.
+ * @returns The current stored state, and a setter to persist a new state to the DB.
+ */
+export function useSavedState(id: string, def: {}, waitFor = true) {
+    const [state, setState] = useState(waitFor ? undefined : def);
 
-    // load saved state on mount
+    // load saved state on mount, or otherwise set the default state
     useEffect(() => {
-        if (store) {
-            //setStore(new IDbStore(db, 'saved-states'));
-            console.log(`store before state?`, store, store.get(id));
-            (async function () {
-                const s = await store.get(id);
-                if (s) setState(s);
-            })();
-        } else {
-            console.log(`no db or store?`)
-        }
+        //console.log(`useSavedState effect`, id);
+        (async function () {
+            const db = IndexedDBManager.getDefaultDb();
+            if (db) {
+                const s: IDbStateWrapper | undefined = await db.get(STATE_STORE, id);
+                setState(s ? s.state : def);
+            } else {
+                console.error(`no db in useSavedState get?`)
+            }
+        })();
     }, []);
 
     // when state changes, save to db
     useEffect(() => {
         async function save() {
-            console.log(`state changed`, id, store, state);
-            if (store) {
-                store.set(id, state);
-                console.log(`test:`, store.get(id))
+            const db = IndexedDBManager.getDefaultDb();
+            if (db) {
+                if (state) { // must do this so default undefined state does not trigger
+                    //console.log(`useSavedState changed`, id, state);
+                    const stateWrapper: IDbStateWrapper = { id, state };
+                    await db.put(STATE_STORE, stateWrapper);
+                }
             } else {
-                console.log(`no store for save?`, id)
+                console.error(`no db in useSavedState put?`)
             }
         }
         save();

@@ -23,7 +23,7 @@ import { getLogger } from "lib/utils/logging";
 // todo: wrap all in try/catch
 
 
-const { log, warn, error } = getLogger('idb', { color: 'green', enabled: true });
+const { log, warn, error } = getLogger('idb', { color: 'green', enabled: false });
 
 // for some reason esbuild or browsersync don't like window
 const win: any = typeof window == 'undefined' ? {} : window;

@@ -38,7 +38,7 @@ const DEFAULT_ROAST_STATE = {
 
 export function PageRoast(props) {
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
-    const { state: roastState, setState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE);
+    const { state: roastState, setState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE, false);
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
     function deviceVar(v) {
@@ -71,8 +71,6 @@ export function PageRoast(props) {
         viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
         await saveViewState({ ...viewState });
     }
-
-    console.log(`saved state`, viewState)
 
     function renderPanelContent(s) {
         switch (s) {
@@ -109,13 +107,13 @@ export function PageRoast(props) {
         <div class="page" id="roast">
 
             <div class="panel-menu">
-                <Accordian>
+                {viewState ? <Accordian>
                     {Object.keys(viewState.sections).map(s =>
                         <AccordianItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
                             {renderPanelContent(s)}
                         </AccordianItem>
                     )}
-                </Accordian>
+                </Accordian> : <></>}
             </div>
 
             <div class="panel-graph">

@@ -7,7 +7,7 @@
     "moduleResolution": "NodeNext",
     "noEmitOnError": true,
     "lib": ["es2021", "dom", "DOM.Iterable"],
-    "strict": true,
+    "strict": false,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
