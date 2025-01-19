@@ -19,8 +19,6 @@ class _Application {
         if (idbTables) for (var t of idbTables) dbManager.addStore(t.name, t.indexes);
 
         await this.roastController.init();
-
-        return Promise.resolve();
     }
 }
 

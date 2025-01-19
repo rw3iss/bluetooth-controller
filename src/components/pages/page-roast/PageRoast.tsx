@@ -1,12 +1,12 @@
+import Application from 'Application';
 import { ReadVar } from 'components/app/vars/ReadVar';
 import { WriteVar } from 'components/app/vars/WriteVar';
 import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
-import { capitalize } from 'lib/utils/StrUtils';
-import { useEffect, useState } from 'preact/hooks';
-import Application from 'Application';
-import { useSavedState } from 'lib/hooks/useSavedState.js';
 import { useRoastController } from 'lib/hooks/useRoastController.js';
+import { useSavedState } from 'lib/hooks/useSavedState.js';
+import { capitalize } from 'lib/utils/StrUtils';
+import { useState } from 'preact/hooks';
 import './PageRoast.scss';
 
 const DEFAULT_VIEW_STATE = {
@@ -80,11 +80,6 @@ export function PageRoast(props) {
             viewState.sections[s].isOpen = !viewState.sections[s].isOpen;
             await saveViewState({ ...viewState });
         }
-    }
-
-    function onControllerChange(e) {
-        console.log(`PageRoast controller change`, e);
-        setRoastState(roast);
     }
 
     function confirmStop() {

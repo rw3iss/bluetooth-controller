@@ -13,3 +13,5 @@ export const routes = {
     "/config": (p?) => <PageConfig />,
     "/page-not-found": (p?) => <PageNotFound />
 };
+
+export const DEFAULT_ROUTE = "/roast";

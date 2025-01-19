@@ -25,8 +25,8 @@ export function useRoastController() {
     const updateRoastValue = async (prop, val, save = true) => {
         roastState[prop] = val;
         const newState = { ...roastState };
-        setRoastState(newState);
         if (save) await ctrl.save(newState);
+        setRoastState(ctrl.roast);
     }
 
     const startRoast = () => {
@@ -36,7 +36,7 @@ export function useRoastController() {
 
     const togglePause = () => {
         ctrl.togglePause();
-        updateRoastValue('isPaused', roastState?.isPaused);
+        updateRoastValue('isPaused', ctrl.roast.isPaused);
     }
 
     const stopRoast = () => {

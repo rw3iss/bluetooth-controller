@@ -22,8 +22,7 @@ const AppHeader = (props = {}) => {
 
     return (
         <header class="app-header">
-            <Link to="/" className={`logo ${routeClass('/')}`}>Rrroaster</Link>
-            <Link to="/roast" className={routeClass('/roast')}>Roast</Link>
+            <Link to="/roast" className={routeClass('/roast')}>Rrroast</Link>
             <Link to="/profiles" className={routeClass('/profiles')}>Profiles</Link>
             <Link to="/history" className={routeClass('/history')}>History</Link>
             <Link to="/config" className={routeClass('/config')}>Config</Link>

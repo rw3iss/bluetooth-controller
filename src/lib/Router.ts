@@ -16,7 +16,7 @@ export class Router {
         window.addEventListener("popstate", (e) => {
             if (e.state?.url) {
                 this.loadUrl(e.state?.url);
-            } c
+            }
         });
     }
 
