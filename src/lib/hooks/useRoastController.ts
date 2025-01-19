@@ -1,23 +1,32 @@
 
 import { useEffect, useState } from 'preact/hooks';
-import { DEFAULT_ROAST_STATE, RoastController } from 'lib/RoastController';
 import Application from '../../Application.js';
 
 // get the current roast controller
 export function useRoastController() {
     const ctrl = Application.roastController;
-    const [roastState, setRoastState] = useState(ctrl.roast)
+    const [roastState, setRoastState] = useState(undefined)
 
     useEffect(() => {
+        setRoastState(ctrl.roast);
         console.log(`useRoastController effect()`, roastState)
+        ctrl.addListener(onEvent);
+        return () => ctrl.removeListener(onEvent);
     }, []);
 
-    const updateRoastValue = async (prop, val) => {
+    const onEvent = async (e) => {
+        console.log(`URC event:`, e, ctrl.roast);
+        // trigger state update for normal bound component listeners
+        setRoastState({ ...ctrl.roast });
+        //await ctrl.save(ctrl.roast);
+    }
+
+    // saves the new state to idb and triggers a state update
+    const updateRoastValue = async (prop, val, save = true) => {
         roastState[prop] = val;
         const newState = { ...roastState };
         setRoastState(newState);
-        console.log(`updateRoastValue`, prop, val)
-        await ctrl.save(newState);
+        if (save) await ctrl.save(newState);
     }
 
     const startRoast = () => {
@@ -27,7 +36,7 @@ export function useRoastController() {
 
     const togglePause = () => {
         ctrl.togglePause();
-        updateRoastValue('isPaused', !roastState.isPaused);
+        updateRoastValue('isPaused', roastState?.isPaused);
     }
 
     const stopRoast = () => {

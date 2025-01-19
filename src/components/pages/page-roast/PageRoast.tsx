@@ -1,5 +1,5 @@
-import { ReadVar } from 'components/app/vars/ReadVar.tsx';
-import { WriteVar } from 'components/app/vars/WriteVar.tsx';
+import { ReadVar } from 'components/app/vars/ReadVar';
+import { WriteVar } from 'components/app/vars/WriteVar';
 import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
 import { capitalize } from 'lib/utils/StrUtils';
@@ -48,19 +48,19 @@ Other components - useEffect((), [roastState]); - when state changes, the views 
 */
 
 
-const RoastCtrl = Application.roastController;
 
 export function PageRoast(props) {
-    const roast = RoastCtrl.roast;
+    const ctrl = Application.roastController;
+    const roast = ctrl.roast;
     const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
-    useEffect(() => {
-        console.log(`ADD LISTENER`)
-        RoastCtrl.addListener(onControllerChange);
-        return () => RoastCtrl.removeListener(onControllerChange);
-    }, []);
+    // useEffect(() => {
+    //     console.log(`ADD LISTENER`)
+    //     RoastCtrl.addListener(onControllerChange);
+    //     return () => RoastCtrl.removeListener(onControllerChange);
+    // }, []);
 
     function deviceVar(v) {
         return roast ? roast[v] : undefined;
@@ -84,7 +84,7 @@ export function PageRoast(props) {
 
     function onControllerChange(e) {
         console.log(`PageRoast controller change`, e);
-        setRoastState(RoastCtrl.roast);
+        setRoastState(roast);
     }
 
     function confirmStop() {
@@ -94,7 +94,7 @@ export function PageRoast(props) {
     }
 
     function confirmEject() {
-        if (confirm("Are you sure you want to eject?")) RoastCtrl.eject();
+        if (confirm("Are you sure you want to eject?")) ctrl.eject();
         else console.log(`Eject cancelled.`)
     }
 
@@ -147,7 +147,7 @@ export function PageRoast(props) {
         <div class="page" id="roast">
 
             <div class="panel-menu">
-                {viewState ? <Accordian>
+                {(viewState && roastState) ? <Accordian>
                     {Object.keys(viewState.sections).map(s =>
                         <AccordianItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
                             {renderPanelContent(s)}

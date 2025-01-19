@@ -35,7 +35,7 @@ export class RoastController {
 
     // tick time to report new data
     private updateIntervalMs = 1000;
-    private updateTimeout; // the timeout object
+    private updateTimeout; // timeout handle
 
     constructor() { }
 
@@ -45,65 +45,69 @@ export class RoastController {
             const s: IDbSavedState | undefined = await db.get(STATE_STORE, ROAST_STATE);
             console.log(`See saved roast state?`, s)
             if (s) this.roast = s.state;
+            if (this.roast?.isStarted && !this.roast.isPaused) {
+                // resume roasting...
+                if (confirm("Resume running roast?")) {
+                    this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
+                }
+            }
         }
     }
 
     public async save(state) {
+        console.log(`save`, state)
+        if (state) this.roast = state;
         const db = IndexedDBManager.getDb();
         if (db) {
-            await db.put(STATE_STORE, wrapState(ROAST_STATE, state));
+            await db.put(STATE_STORE, wrapState(ROAST_STATE, this.roast));
         }
     }
 
-    public connectDevice(device) {
-        this.device = device;
-        if (this.device) {
-            this.device.addListener(this.onDeviceEvent);
-        }
-    }
+    // public connectDevice(device) {
+    //     this.device = device;
+    //     if (this.device) {
+    //         this.device.addListener(this.onDeviceEvent);
+    //     }
+    // }
 
-    onDeviceEvent(e) {
-        console.log(`device event`, e)
-    }
-
-    public addListener(l) {
-        this.listeners.push(l);
-    };
-
-    public removeListener(l) {
-        this.listeners = this.listeners.filter(_l => _l != l);
-    };
-
-    private emitEvent(e) {
-        this.listeners.forEach(l => l(e));
-    }
+    // onDeviceEvent(e) {
+    //     console.log(`device event`, e)
+    // }
 
     // updates and persists the state, and notifies listeners
-    setState = (key, value) => {
+    setState = (key, value, save = false) => {
         this.roast[key] = value;
-        console.log(`setState:`, key, this.roast[key]);
+        if (save) this.save(this.roast);
     };
 
-    public start() {
+    onTick = () => {
+        this.setState('timeRunningMs', this.roast.timeRunningMs + this.updateIntervalMs, true);
+        if (!this.roast.isPaused) {
+            // check automation actions
+        }
+        this.emitEvent(event('tick'));
+    };
+
+    public start = () => {
         console.log(`start roast`);
         if (this.roast.isStarted) throw "Roast is already started. Stop it first.";
+        // todo: set multiple state, default
         this.setState('isStarted', true);
         this.setState('timeStarted', new Date());
+        this.setState('timeRunningMs', false);
         this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
         this.emitEvent(event('roast-started'));
     };
 
-    onTick = () => {
-        this.setState('timeRunningMs', this.roast.timeRunningMs + this.updateIntervalMs);
-        if (!this.roast.isPaused) {
-            // check automation actions
-        }
-    };
-
     public togglePause() {
-        this.setState('isPaused', !this.roast.isPaused);
-        console.log(`roast toggle pause`);
-        this.emitEvent(event(this.roast.isPaused ? 'roast-paused' : 'roast-unpaused'));
+        const paused = !this.roast.isPaused;
+        this.setState('isPaused', paused);
+        if (!paused) {
+            this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
+        } else {
+            clearInterval(this.updateTimeout);
+        }
+        this.emitEvent(event(paused ? 'roast-paused' : 'roast-unpaused'));
     };
 
     public stop() {
@@ -117,5 +121,17 @@ export class RoastController {
         this.setState('ejectOn', true);
         this.emitEvent(event('roast-ejected'));
         console.log(`roast ejected.`, this.roast)
+    };
+
+    public addListener(l) {
+        this.listeners.push(l);
+    };
+
+    public removeListener(l) {
+        this.listeners = this.listeners.filter(_l => _l != l);
+    };
+
+    private emitEvent(e) {
+        this.listeners.forEach(l => l(e));
     };
 }
