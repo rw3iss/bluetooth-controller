@@ -11,7 +11,6 @@ export function RoastPopup() {
     const [paused, setPaused] = useState(false);
 
     useEffect(() => {
-        console.log(`popup`, RoastCtrl);
         RoastCtrl.addListener(onControllerChange);
     }, []);
 
@@ -25,7 +24,6 @@ export function RoastPopup() {
     }
 
     function onClick() {
-        console.log(`router`, router.route)
         if (router.route != '/roast') router.navigate('/roast');
     }
 

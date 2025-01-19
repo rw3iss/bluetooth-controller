@@ -1,7 +1,7 @@
 import BluetoothDevice from 'lib/BluetoothDevice';
 import { Fn } from 'lib/Types';
 import { IndexedDBManager } from './IndexedDBManager.js';
-import { STATE_STORE } from './hooks/useSavedState.js';
+import { IDbSavedState, STATE_STORE, wrapState } from './hooks/useSavedState.js';
 
 const event = (name, data = {}) => ({
     name,
@@ -37,15 +37,21 @@ export class RoastController {
     private updateIntervalMs = 1000;
     private updateTimeout; // the timeout object
 
-    constructor() {
+    constructor() { }
+
+    public async init(restore = true) {
+        const db = IndexedDBManager.getDb();
+        if (db && restore) {
+            const s: IDbSavedState | undefined = await db.get(STATE_STORE, ROAST_STATE);
+            console.log(`See saved roast state?`, s)
+            if (s) this.roast = s.state;
+        }
     }
 
-    public async tryRestore() {
+    public async save(state) {
         const db = IndexedDBManager.getDb();
         if (db) {
-            const s = await db.get(STATE_STORE, ROAST_STATE);
-            console.log(`SAVED roast state?`, s)
-            if (s) this.roast = s.state;
+            await db.put(STATE_STORE, wrapState(ROAST_STATE, state));
         }
     }
 

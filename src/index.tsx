@@ -6,6 +6,7 @@ import { App } from './components/app/App';
 const initApp = async () => {
 
     await Application.init();
+
     render(<App />, document.body);
 
 }

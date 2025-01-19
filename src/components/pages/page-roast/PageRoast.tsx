@@ -52,7 +52,7 @@ const RoastCtrl = Application.roastController;
 
 export function PageRoast(props) {
     const roast = RoastCtrl.roast;
-    const { roastState, setRoastState } = useRoastController();
+    const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
@@ -68,14 +68,11 @@ export function PageRoast(props) {
     }
 
     // send a new value command to the device
-    function setRoastValue(property, value) {
-        if (roast) {
-            roast[property] = value;
-            console.log(`setRoastValue and save:`, property, value, roast);
-            setRoastState({ ...roast });
-            setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="number value">{value}</span></>);
-            setTimeout(() => setUpdateMessage(''), 3000);
-        }
+    function setRoastValue(prop, val) {
+        updateRoastValue(prop, val);
+        //setRoastState({ ...roast });
+        setUpdateMessage(<>✅  &nbsp;{capitalize(prop)} updated to <span class="number value">{val}</span></>);
+        setTimeout(() => setUpdateMessage(''), 3000);
     }
 
     async function toggleSection(s) {
@@ -92,7 +89,7 @@ export function PageRoast(props) {
 
     function confirmStop() {
         if (confirm("Are you sure you want to stop the current roast?")) {
-            RoastCtrl.stop()
+            stopRoast();
         }
     }
 
@@ -100,10 +97,6 @@ export function PageRoast(props) {
         if (confirm("Are you sure you want to eject?")) RoastCtrl.eject();
         else console.log(`Eject cancelled.`)
     }
-
-    console.log(`Roast state`, roastState)
-    useEffect(() => {
-    }, [roastState]);
 
     function renderPanelContent(s) {
         let inner: VNode = undefined;
@@ -137,8 +130,8 @@ export function PageRoast(props) {
 
             case "profile":
                 inner = <>
-                    {!roastState.isStarted && <button onClick={() => RoastCtrl.start()}>Start Roast</button>}
-                    {roastState.isStarted && <button onClick={() => RoastCtrl.togglePause()}>{roastState.isPaused ? 'Play' : 'Pause'}</button>}
+                    {!roastState.isStarted && <button onClick={() => startRoast()}>Start Roast</button>}
+                    {roastState.isStarted && <button onClick={() => togglePause()}>{roastState.isPaused ? 'Play' : 'Pause'}</button>}
                     {roastState.isStarted && <button onClick={() => confirmStop()}>Stop Roast</button>}
                 </>
                 break;

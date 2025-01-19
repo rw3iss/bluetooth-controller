@@ -12,10 +12,14 @@ class _Application {
         this.roastController = new RoastController();
     }
 
+    // Things to initialize before client can start...
     async init() {
-        await this.roastController.tryRestore();
+        console.log(`Application.init()`)
         const dbManager = new IndexedDBManager(APP_ID, 1);
         if (idbTables) for (var t of idbTables) dbManager.addStore(t.name, t.indexes);
+
+        await this.roastController.init();
+
         return Promise.resolve();
     }
 }
