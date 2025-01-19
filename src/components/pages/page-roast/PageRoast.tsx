@@ -2,11 +2,11 @@ import { ReadVar } from 'components/app/vars/ReadVar.tsx';
 import { WriteVar } from 'components/app/vars/WriteVar.tsx';
 import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
-import { useSavedState } from 'lib/hooks';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useEffect, useState } from 'preact/hooks';
-
 import Application from 'Application';
+import { useSavedState } from 'lib/hooks/useSavedState.js';
+import { useRoastController } from 'lib/hooks/useRoastController.js';
 import './PageRoast.scss';
 
 const DEFAULT_VIEW_STATE = {
@@ -40,13 +40,20 @@ const DEFAULT_VIEW_STATE = {
 //     coolingOn: false
 // }
 
+/*
+RoastController - instantiated and state auto-loaded on App start.
+
+Other components - useEffect((), [roastState]); - when state changes, the views will be updated.
+
+*/
+
+
 const RoastCtrl = Application.roastController;
 
 export function PageRoast(props) {
     const roast = RoastCtrl.roast;
-
+    const { roastState, setRoastState } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
-    const { state: roastState, setState: saveRoastState } = useSavedState('roast', roast, false);
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
     useEffect(() => {
@@ -65,7 +72,7 @@ export function PageRoast(props) {
         if (roast) {
             roast[property] = value;
             console.log(`setRoastValue and save:`, property, value, roast);
-            saveRoastState({ ...v });
+            setRoastState({ ...roast });
             setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="number value">{value}</span></>);
             setTimeout(() => setUpdateMessage(''), 3000);
         }
@@ -80,7 +87,7 @@ export function PageRoast(props) {
 
     function onControllerChange(e) {
         console.log(`PageRoast controller change`, e);
-        saveRoastState(RoastCtrl.roast);
+        setRoastState(RoastCtrl.roast);
     }
 
     function confirmStop() {

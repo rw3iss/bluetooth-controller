@@ -1,5 +1,5 @@
 import Link from 'components/basic/link/Link';
-import { useRoute } from 'lib/hooks';
+import { useRoute } from 'lib/hooks/useRoute.js';
 import './AppHeader.scss';
 
 const AppHeader = (props = {}) => {

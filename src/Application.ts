@@ -13,6 +13,7 @@ class _Application {
     }
 
     async init() {
+        await this.roastController.tryRestore();
         const dbManager = new IndexedDBManager(APP_ID, 1);
         if (idbTables) for (var t of idbTables) dbManager.addStore(t.name, t.indexes);
         return Promise.resolve();

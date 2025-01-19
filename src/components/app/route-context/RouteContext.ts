@@ -1,7 +1,7 @@
 import { routes } from 'config/routes';
-import { useRoute } from 'lib/hooks';
 import { router } from 'lib/Router';
 import { useEffect } from 'preact/hooks';
+import { useRoute } from 'lib/hooks/useRoute.js';
 
 export function RouteContext() {
 

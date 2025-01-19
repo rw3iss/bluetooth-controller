@@ -1,12 +1,14 @@
 import BluetoothDevice from 'lib/BluetoothDevice';
 import { Fn } from 'lib/Types';
+import { IndexedDBManager } from './IndexedDBManager.js';
+import { STATE_STORE } from './hooks/useSavedState.js';
 
 const event = (name, data = {}) => ({
     name,
     data
 });
 
-const DEFAULT_ROAST_STATE = () => ({
+export const DEFAULT_ROAST_STATE = () => ({
     isStarted: false,
     isPaused: false,
     timeStarted: undefined,
@@ -18,6 +20,9 @@ const DEFAULT_ROAST_STATE = () => ({
     ejectOn: false,
     coolingOn: false
 });
+
+const ROAST_STATE = 'roast';
+
 // manages a live roast across the app, and listens for events from the connection to update the state.
 export class RoastController {
 
@@ -33,7 +38,15 @@ export class RoastController {
     private updateTimeout; // the timeout object
 
     constructor() {
-        // todo: restore state?
+    }
+
+    public async tryRestore() {
+        const db = IndexedDBManager.getDb();
+        if (db) {
+            const s = await db.get(STATE_STORE, ROAST_STATE);
+            console.log(`SAVED roast state?`, s)
+            if (s) this.roast = s.state;
+        }
     }
 
     public connectDevice(device) {
