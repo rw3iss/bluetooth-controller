@@ -1,0 +1,26 @@
+#roast-popup {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgb(39, 184, 102);
+    color: white;
+    padding: 5px;
+    z-index: 11;
+
+    &:hover {
+        cursor: pointer;
+        background: rgb(53, 211, 121);
+    }
+
+    &.paused {
+        background: rgb(216, 171, 86);
+        &:hover {
+            background: rgb(255, 203, 107);
+        }
+    }
+
+    &.show {
+        display: block;
+    }
+}

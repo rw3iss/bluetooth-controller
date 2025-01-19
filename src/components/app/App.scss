@@ -1,25 +1,4 @@
-@use "sass:math";
-
-@mixin font($name, $location, $type, $weight: 500) {
-    @font-face {
-        font-family: $name;
-        font-weight: $weight;
-        src:
-            local($name),
-            url($location) format($type);
-    }
-}
-
-@include font("Coffee Bean", "public/fonts/Coffee Bean.ttf", "truetype");
-@include font("Coffee Green", "public/fonts/Coffee Green.otf", "opentype");
-@include font("Coffee Extra", "public/fonts/coffee_extra/Coffee Extra.otf", "opentype");
-@include font("Coffee Menus", "public/fonts/coffee_menus/Coffee Menus_personal use.ttf", "truetype"); //
-
-body,
-html {
-    font-size: 24px;
-    letter-spacing: 1px;
-}
+@import "../../styles";
 
 #app {
     display: flex;
@@ -33,7 +12,6 @@ html {
     color: var(--app-color, white);
     background: var(--app-bg, #123) url("public/images/bean.svg") repeat;
     background-size: var(--app-bg-image-size);
-    font-family: "Coffee Green";
 
     .context {
         width: 100%;
@@ -50,3 +28,11 @@ html {
         }
     }
 }
+
+// input,
+// select,
+// .number {
+//     font-size: 1.1em;
+//     font-family: var(--font-input);
+//     letter-spacing: 1px;
+// }

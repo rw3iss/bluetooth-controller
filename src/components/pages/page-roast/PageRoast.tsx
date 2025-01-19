@@ -4,10 +4,10 @@ import { Accordian } from 'components/basic/accordian/Accordian';
 import { AccordianItem } from 'components/basic/accordian/AccordianItem';
 import { useSavedState } from 'lib/hooks';
 import { capitalize } from 'lib/utils/StrUtils';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
+import Application from 'Application';
 import './PageRoast.scss';
-import RoastController from '../../../lib/RoastController.js';
 
 const DEFAULT_VIEW_STATE = {
     "sections": {
@@ -26,51 +26,48 @@ const DEFAULT_VIEW_STATE = {
     }
 }
 
-const DEFAULT_ROAST_STATE = {
-    isStarted: false,
-    isPaused: false,
-    timeStarted: undefined,
-    timeRunningMs: 0,
-    currentTemp: 0,
-    targetTemp: 0,
-    heaterOn: false,
-    motorOn: false,
-    exhaustOn: false,
-    ejectOn: false,
-    coolingOn: false
-}
+// {
+//     isStarted: false,
+//     isPaused: false,
+//     timeStarted: undefined,
+//     timeRunningMs: 0,
+//     currentTemp: 0,
+//     targetTemp: 0,
+//     heaterOn: false,
+//     motorOn: false,
+//     exhaustOn: false,
+//     ejectOn: false,
+//     coolingOn: false
+// }
+
+const RoastCtrl = Application.roastController;
 
 export function PageRoast(props) {
+    const roast = RoastCtrl.roast;
+
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
-    const { state: roastState, setState: saveRoastState } = useSavedState('roast', DEFAULT_ROAST_STATE, false);
+    const { state: roastState, setState: saveRoastState } = useSavedState('roast', roast, false);
     const [updateMessage, setUpdateMessage] = useState(undefined);
 
+    useEffect(() => {
+        console.log(`ADD LISTENER`)
+        RoastCtrl.addListener(onControllerChange);
+        return () => RoastCtrl.removeListener(onControllerChange);
+    }, []);
 
     function deviceVar(v) {
-        return roastState ? roastState[v] : undefined;
+        return roast ? roast[v] : undefined;
         //read from the roast controller
     }
 
     // send a new value command to the device
     function setRoastValue(property, value) {
-        if (roastState) {
-            roastState[property] = value;
-            console.log(`setRoastValue and save:`, property, value, roastState);
-            saveRoastState({ ...roastState });
-            setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="value">{value}</span></>);
+        if (roast) {
+            roast[property] = value;
+            console.log(`setRoastValue and save:`, property, value, roast);
+            saveRoastState({ ...v });
+            setUpdateMessage(<>✅  &nbsp;{capitalize(property)} updated to <span class="number value">{value}</span></>);
             setTimeout(() => setUpdateMessage(''), 3000);
-        }
-    }
-
-    function handleEject(isOn) {
-        if (isOn) {
-            if (confirm("Are you sure you want to eject?")) {
-                setRoastValue('eject', isOn);
-            } else {
-                console.log(`Eject cancelled.`)
-            }
-        } else {
-            setRoastValue('eject', isOn);
         }
     }
 
@@ -81,43 +78,70 @@ export function PageRoast(props) {
         }
     }
 
-    function renderPanelContent(s) {
-        switch (s) {
+    function onControllerChange(e) {
+        console.log(`PageRoast controller change`, e);
+        saveRoastState(RoastCtrl.roast);
+    }
 
+    function confirmStop() {
+        if (confirm("Are you sure you want to stop the current roast?")) {
+            RoastCtrl.stop()
+        }
+    }
+
+    function confirmEject() {
+        if (confirm("Are you sure you want to eject?")) RoastCtrl.eject();
+        else console.log(`Eject cancelled.`)
+    }
+
+    console.log(`Roast state`, roastState)
+    useEffect(() => {
+    }, [roastState]);
+
+    function renderPanelContent(s) {
+        let inner: VNode = undefined;
+
+        switch (s) {
             case "current":
-                return <div class="panel-content" id="panel-current">
+                inner = <>
                     <ReadVar label="Current Temp" value={deviceVar('currentTemp')} />
                     <ReadVar label="Target Temp" value={deviceVar('targetTemp')} />
                     <ReadVar label="Motor" value={deviceVar('motor')} />
                     <ReadVar label="Exhaust" value={deviceVar('exhaust')} />
                     <ReadVar label="Eject" value={deviceVar('eject')} />
-                </div>
+                </>
+                break;
 
             case "set":
-                return <div class="panel-content" id="panel-set">
+                inner = <>
                     <WriteVar type="number" defaultValue={deviceVar('targetTemp')} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
                     <WriteVar type="checkbox" checked={deviceVar('motor')} label="Motor" onChanged={(value) => setRoastValue('motor', value)} />
                     <WriteVar type="checkbox" checked={deviceVar('exhaust')} label="Exhaust" onChanged={(value) => setRoastValue('exhaust', value)} />
-                    <WriteVar type="checkbox" checked={deviceVar('eject')} label="Eject" onChanged={(value) => handleEject(value)} />
+                    <WriteVar type="checkbox" checked={deviceVar('eject')} label="Eject" onChanged={(value) => confirmEject()} />
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
-                </div>
+                </>
+                break;
 
             case "automation":
-                return <div class="panel-content" id="panel-automation">
+                inner = <>
                     AUTOMATION
-                </div>
+                </>
+                break;
 
             case "profile":
-                return <div class="panel-content" id="panel-profile">
-                    <button onClick={() => roastCtrl.togglePause()} />
-                </div>
+                inner = <>
+                    {!roastState.isStarted && <button onClick={() => RoastCtrl.start()}>Start Roast</button>}
+                    {roastState.isStarted && <button onClick={() => RoastCtrl.togglePause()}>{roastState.isPaused ? 'Play' : 'Pause'}</button>}
+                    {roastState.isStarted && <button onClick={() => confirmStop()}>Stop Roast</button>}
+                </>
+                break;
 
             default:
-                return "";
+                inner = <>not found</>;
         }
-    }
 
-    console.log(`viewstate`, viewState)
+        return <div class="menu-section" id={`menu-section-${s}`}>{inner}</div>;
+    }
 
     return (
         <div class="page" id="roast">
@@ -133,7 +157,7 @@ export function PageRoast(props) {
             </div>
 
             <div class="panel-graph">
-                GRAPH
+                {JSON.stringify(roastState)}
             </div>
         </div>
     )

@@ -1,3 +1,5 @@
+@import "../mixins/layout";
+
 $iconWidth: 24px;
 
 .icon {
@@ -19,5 +21,4 @@ $iconWidth: 24px;
         width: calc(#{$iconWidth} * 3);
         min-width: calc(#{$iconWidth} * 3);
     }
-
 }

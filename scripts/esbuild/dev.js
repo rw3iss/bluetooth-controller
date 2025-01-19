@@ -11,8 +11,7 @@ const { getNormalizedEnvVars } = require("./utils/envUtils");
 const { mkDirSync } = require("./utils/fileUtils");
 const dotenv = require('dotenv');
 //const postcss = require("postcss");
-//const postcssPresetEnv = require("postcss-preset-env");
-//const sassPlugin = require("esbuild-plugin-sass");
+const postcssPresetEnv = require("postcss-preset-env");
 const { sassPlugin } = require('esbuild-sass-plugin');
 const scssPlugin = require('./plugins/scssPlugin.ts');
 const transformHtmlTemplatePlugin = require("./plugins/transformHtmlTemplatePlugin.ts");
@@ -52,7 +51,7 @@ async function dev() {
             platform: "browser",
             entryPoints: [
                 `${INPUT_DIR}/index.tsx`,
-                `${INPUT_DIR}/styles/index.scss`
+                //`${INPUT_DIR}/styles/index.scss`
             ],
             outdir: `${OUTPUT_DIR}`,
             //entryFile: `${INPUT_DIR}/index.tsx`,
@@ -68,13 +67,9 @@ async function dev() {
                 '.woff': 'file',
                 '.woff2': 'file',
                 '.png': 'file',
-                '.gif': 'file',
                 '.jpg': 'file',
                 '.svg': 'file',
-                '.js': 'js',
-                '.jsx': 'jsx',
-                '.ts': 'ts',
-                '.scss': 'file'
+                '.gif': 'file'
             },
             external: ['window', 'document'],
             assetNames: 'public/[name].[hash]',
@@ -89,7 +84,7 @@ async function dev() {
                     filter: /\.scss$/,
                     type: 'css',
                     async transform(source) {
-                        const { css } = await postcss([autoprefixer]).process(source);
+                        const { css } = await postcss([autoprefixer, postcssPresetEnv({ stage: 0 })]).process(source);
                         return { loader: "css", contents: css, watchFiles: watchStyles };
                     }
                 }),

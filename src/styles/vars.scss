@@ -1,5 +1,15 @@
 :root {
+    --default-font: "Coffee Green";
     --default-radius: 10px;
+    --default-font-size: 25px;
+    --default-color: #def;
+    --default-letter-spacing: 2px;
+    --default-line-height: 1.1em;
+
+    --font-default: Arial;
+    --font-input: "Coffee Bean";
+    --font-headers: "Coffee Green";
+    --font-label: "Coffee Green";
 
     // default app bg
     --app-bg: #012;
@@ -11,15 +21,21 @@
     --panel-bg-faded: rgba(17, 34, 51, 0.9);
     --panel-section-bg: rgba(34, 51, 68, 0.5);
     --panel-radius: 10px;
+    --panel-min-width: 240px;
 
     --page-bg: #123;
     --page-section-bg: #234;
 
     --button-bg: #234;
-    --button-bg-hover: #234;
+    --button-bg-hover: #28394a;
+    --button-bg-active: #345;
+    --button-bg-active-hover: #2d3e4f;
     --button-color: rgb(168, 173, 179);
-    --button-color-alt: rgb(231, 244, 255);
     --button-color-hover: rgb(113, 255, 238);
+    --button-color-alt-hover: rgb(166, 245, 255);
 
     --label-color: rgb(160, 188, 192);
+
+    --link-color: rgb(66, 201, 255);
+    --link-color-hover: rgb(96, 242, 255);
 }

@@ -5,10 +5,11 @@ import { APP_ID } from 'env';
 import { IndexedDBManager } from 'lib/IndexedDBManager';
 import { useEffect } from 'preact/hooks';
 import AppHeader from './app-header/AppHeader';
+import { RoastPopup } from './roast-popup/RoastPopup';
 
 import "./App.scss";
 
-const App = () => {
+export const App = () => {
 
     useEffect(() => {
         // Init app db:
@@ -31,11 +32,11 @@ const App = () => {
                 <RouteContext />
             </div>
 
+            <RoastPopup />
+
             <AdminTools />
 
         </main>
     );
 
 }
-
-export default App;

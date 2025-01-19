@@ -1,22 +1,28 @@
 import BluetoothDevice from 'lib/BluetoothDevice';
-import { Fn } from 'src/lib/Types';
+import { Fn } from 'lib/Types';
 
+const event = (name, data = {}) => ({
+    name,
+    data
+});
+
+const DEFAULT_ROAST_STATE = () => ({
+    isStarted: false,
+    isPaused: false,
+    timeStarted: undefined,
+    timeRunningMs: 0,
+    currentTemp: 0,
+    heaterOn: false,
+    motorOn: false,
+    exhaustOn: false,
+    ejectOn: false,
+    coolingOn: false
+});
 // manages a live roast across the app, and listens for events from the connection to update the state.
 export class RoastController {
 
     // current roast state
-    roast = {
-        isStarted: false,
-        isPaused: false,
-        timeStarted: undefined,
-        timeRunningMs: 0,
-        currentTemp: 0,
-        heaterOn: false,
-        motorOn: false,
-        exhaustOn: false,
-        ejectOn: false,
-        coolingOn: false
-    };
+    public roast = DEFAULT_ROAST_STATE();
 
     private device: BluetoothDevice | undefined = undefined;
 
@@ -27,9 +33,10 @@ export class RoastController {
     private updateTimeout; // the timeout object
 
     constructor() {
+        // todo: restore state?
     }
 
-    connectDevice(device) {
+    public connectDevice(device) {
         this.device = device;
         if (this.device) {
             this.device.addListener(this.onDeviceEvent);
@@ -40,41 +47,56 @@ export class RoastController {
         console.log(`device event`, e)
     }
 
-    addListener(l) {
-        // todo
+    public addListener(l) {
         this.listeners.push(l);
     };
 
-    // updates and persists the state, and notifies listeners
-    private setState(key, value) {
-        this.roast[key] = value;
-        console.log(`setState:`, this.roast[key]);
+    public removeListener(l) {
+        this.listeners = this.listeners.filter(_l => _l != l);
+    };
+
+    private emitEvent(e) {
+        this.listeners.forEach(l => l(e));
     }
 
-    start() {
+    // updates and persists the state, and notifies listeners
+    setState = (key, value) => {
+        this.roast[key] = value;
+        console.log(`setState:`, key, this.roast[key]);
+    };
+
+    public start() {
         console.log(`start roast`);
-        if (this.roast.isStarted) throw "Roast is already started.";
+        if (this.roast.isStarted) throw "Roast is already started. Stop it first.";
         this.setState('isStarted', true);
         this.setState('timeStarted', new Date());
         this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
-    }
+        this.emitEvent(event('roast-started'));
+    };
 
-    onTick() {
-        console.log(`roast tick`);
+    onTick = () => {
         this.setState('timeRunningMs', this.roast.timeRunningMs + this.updateIntervalMs);
         if (!this.roast.isPaused) {
             // check automation actions
         }
-    }
-
-    togglePause() {
-        this.setState('isPaused', !this.roast.isPaused);
-        console.log(`roast toggle pause`);
     };
 
-    stop() {
+    public togglePause() {
+        this.setState('isPaused', !this.roast.isPaused);
+        console.log(`roast toggle pause`);
+        this.emitEvent(event(this.roast.isPaused ? 'roast-paused' : 'roast-unpaused'));
+    };
+
+    public stop() {
         this.setState('isStarted', false);
+        this.emitEvent(event('roast-stopped++'));
         console.log(`roast stopped.`, this.roast)
     };
 
+    public eject() {
+        //this.setState('isStarted', false);
+        this.setState('ejectOn', true);
+        this.emitEvent(event('roast-ejected'));
+        console.log(`roast ejected.`, this.roast)
+    };
 }

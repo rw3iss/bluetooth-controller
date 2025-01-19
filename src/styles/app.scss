@@ -1,0 +1,9 @@
+@import "./mixins/inputs";
+
+.number {
+    font-family: var(--font-input);
+    font-size: var(--input-font-size);
+    color: var(--color-input-dark);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    letter-spacing: 4px;
+}

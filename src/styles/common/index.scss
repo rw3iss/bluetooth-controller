@@ -1,6 +1,7 @@
-@use "./global";
-@use "./normalize";
-@use "./text";
-@use "./layout";
-@use "./page";
-@use "./scrollbar";
+@import "./normalize";
+@import "./fonts";
+@import "./global";
+@import "./text";
+@import "./layout";
+@import "./page";
+@import "./scrollbar";
