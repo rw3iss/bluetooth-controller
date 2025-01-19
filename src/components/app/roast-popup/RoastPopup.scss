@@ -7,6 +7,35 @@
     color: white;
     padding: 5px;
     z-index: 11;
+    font-weight: bold;
+    font-size: 1.2rem;
+    min-width: 120px;
+    text-align: right;
+
+    .status {
+        color: rgb(0, 255, 0);
+    }
+
+    .title {
+        font-size: 0.75em;
+        font-weight: bold;
+        color: #456;
+    }
+
+    .runtime {
+        font-size: 0.8em;
+        margin-top: 5px;
+
+        .label {
+            font-size: 0.75em;
+            line-height: 0.75em;
+        }
+
+        span {
+            font-size: 1.5em;
+            color: rgb(105, 105, 5);
+        }
+    }
 
     &:hover {
         cursor: pointer;
@@ -17,6 +46,10 @@
         background: rgb(216, 171, 86);
         &:hover {
             background: rgb(255, 203, 107);
+        }
+
+        .status {
+            color: rgb(218, 112, 0);
         }
     }
 

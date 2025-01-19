@@ -5,7 +5,6 @@ $menuItemColor: rgb(156, 201, 100);
 $menuItemBg: #123;
 
 .app-header {
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -18,12 +17,14 @@ $menuItemBg: #123;
     background-size: var(--app-bg-image-size);
 
     a {
+        flex: 1 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 0 20px 0 20px;
         height: var(--app-bg-image-size);
         min-height: 100%;
+        max-width: 200px;
         background: $menuItemBg;
         color: $menuItemColor;
         //background: #123;

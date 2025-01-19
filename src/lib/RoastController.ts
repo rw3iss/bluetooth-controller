@@ -94,7 +94,7 @@ export class RoastController {
         // todo: set multiple state, default
         this.setState('isStarted', true);
         this.setState('timeStarted', new Date());
-        this.setState('timeRunningMs', false);
+        this.setState('timeRunningMs', 0, true);
         this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
         this.emitEvent(event('roast-started'));
     };
@@ -111,7 +111,7 @@ export class RoastController {
     };
 
     public stop() {
-        this.setState('isStarted', false);
+        this.setState('isStarted', false, true);
         this.emitEvent(event('roast-stopped++'));
         console.log(`roast stopped.`, this.roast)
     };
