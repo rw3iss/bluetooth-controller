@@ -1,11 +1,12 @@
 @mixin input() {
-    font-family: var(--font-input);
+    font-family: var(--input-font);
     padding: var(--input-padding);
-    font-size: 40px; // var(--input-font-size);
-    color: var(--color-input-dark);
-    background: rgb(50, 60, 70);
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.7);
-    border-radius: var(--input-radius);
-    outline: none;
-    letter-spacing: 4px;
+    font-size: var(--input-font-size);
+    color: var(--input-color);
+    background: var(--input-background);
+    box-shadow: var(--input-shadow);
+    border-radius: var(--input-radius, 5px);
+    border: var(--input-border, none);
+    outline: var(--input-outline, none);
+    letter-spacing: var(--input-letter-spacing, 1px);
 }

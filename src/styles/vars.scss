@@ -7,9 +7,17 @@
     --default-line-height: 1.1em;
 
     --font-default: Arial;
-    --font-input: "Coffee Bean";
     --font-headers: "Coffee Green";
     --font-label: "Coffee Green";
+
+    --input-font: "Coffee Green";
+    --input-padding: 4px;
+    --input-font-size: 1.2rem;
+    --input-color: var(--default-color);
+    --input-background: #123;
+    --input-shadow: inset 1px 1px 3px rgba(5, 5, 10, 0.5);
+    --input-outline: none;
+    --input-letter-spacing: 4px;
 
     // default app bg
     --app-bg: #012;
