@@ -9,7 +9,9 @@ export function RoastPopup() {
         if (router.route != '/roast') router.navigate('/roast');
     }
 
-    const runSecs = (roastState?.timeRunningMs || 0) / 1000;
+    const now = new Date();
+    const runSecs = roastState ? (now.getTime() - roastState.timeStarted.getTime()) : 0;
+    //const runSecs = (roastState?.timeRunningMs || 0) / 1000;
     const runMins = Math.floor(runSecs / 60);
     const remSecs = runSecs - (runMins * 60);
 
@@ -18,7 +20,7 @@ export function RoastPopup() {
             Roast
         </div>
         <div class="status">
-            {roastState.isPaused ? "PAUSED" : "PLAYING"}
+            {roastState.isPaused ? "PAUSED" : "RUNNING"}
         </div>
         <div class="runtime">
             <div class="label">

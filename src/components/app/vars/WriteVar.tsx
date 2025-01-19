@@ -8,7 +8,6 @@ export function WriteVar(props) {
     function onValueChange(value) {
         setValue(value);
         setDirty(true);
-        console.log(`value change`, value)
     }
 
     function renderInputType(type) {
@@ -16,20 +15,17 @@ export function WriteVar(props) {
             case "number":
                 return <input {...props} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
             case "boolean":
-                return <input {...props} onChange={(e) => onValueChange(e.target.checked)} />
+            case "checkbox":
+                return <input {...props} checked={value} onChange={(e) => onValueChange(e.target.checked)} />
             default:
                 return <input {...props} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
         }
 
     }
 
-    function updateValue() {
+    function commitValue() {
         if (props.onChanged) props.onChanged(value);
         setDirty(false);
-        // setUpdated(true);
-        // setTimeout(() => {
-        //     setUpdated(false);
-        // }, 3000)
     }
 
     return (
@@ -39,7 +35,7 @@ export function WriteVar(props) {
                 {renderInputType(props.type)}
             </div>
             <div class="action">
-                <button disabled={!dirty} onClick={(e) => updateValue()}>set</button>
+                <button disabled={!dirty} onClick={(e) => commitValue()}>set</button>
             </div>
         </div>
     );

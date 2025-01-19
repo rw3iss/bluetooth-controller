@@ -35,13 +35,13 @@ $menuItemBg: #123;
 
         &:hover {
             background: rgb(17, 34, 51);
-            background: linear-gradient(0deg, rgba(17, 34, 51, 1) 0%, rgba(34, 51, 68, 1) 40%);
+            background: linear-gradient(0deg, rgba(17, 34, 51, 1) 0%, rgba(34, 51, 68, 1) 50%);
             color: color.adjust($menuItemColor, $lightness: 15%);
         }
 
         &.active {
             background: rgb(17, 34, 51);
-            background: linear-gradient(0deg, rgba(17, 34, 51, 1) 0%, rgba(34, 51, 68, 1) 40%);
+            background: linear-gradient(0deg, rgba(17, 34, 51, 1) 0%, rgba(34, 51, 68, 1) 50%);
             color: rgb(255, 216, 171);
         }
 

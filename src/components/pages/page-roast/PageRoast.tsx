@@ -69,10 +69,13 @@ export function PageRoast(props) {
 
     // send a new value command to the device
     function setRoastValue(prop, val) {
+        console.log(`setRoastValue`, prop, val)
         updateRoastValue(prop, val);
         //setRoastState({ ...roast });
-        setUpdateMessage(<>✅  &nbsp;{capitalize(prop)} updated to <span class="number value">{val}</span></>);
-        setTimeout(() => setUpdateMessage(''), 3000);
+        let sVal = val;
+        if (['motorOn', 'exhaustOn', 'ejectOn'].includes(prop)) sVal = val ? 'ON' : 'OFF';
+        setUpdateMessage(<><span class="i">✅</span> &nbsp;{capitalize(prop)} updated to <div class="number value">{sVal}</div></>);
+        //setTimeout(() => setUpdateMessage(''), 3000);
     }
 
     async function toggleSection(s) {
@@ -99,20 +102,20 @@ export function PageRoast(props) {
         switch (s) {
             case "current":
                 inner = <>
-                    <ReadVar label="Current Temp" value={deviceVar('currentTemp')} />
-                    <ReadVar label="Target Temp" value={deviceVar('targetTemp')} />
-                    <ReadVar label="Motor" value={deviceVar('motor')} />
-                    <ReadVar label="Exhaust" value={deviceVar('exhaust')} />
-                    <ReadVar label="Eject" value={deviceVar('eject')} />
+                    <ReadVar label="Current Temp" value={roastState.currentTemp} />
+                    <ReadVar label="Target Temp" value={roastState.targetTemp} />
+                    <ReadVar label="Motor" value={roastState.motorOn} />
+                    <ReadVar label="Exhaust" value={roastState.exhaustOn} />
+                    <ReadVar label="Eject" value={roastState.ejectOn} />
                 </>
                 break;
 
             case "set":
                 inner = <>
-                    <WriteVar type="number" defaultValue={deviceVar('targetTemp')} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
-                    <WriteVar type="checkbox" checked={deviceVar('motor')} label="Motor" onChanged={(value) => setRoastValue('motor', value)} />
-                    <WriteVar type="checkbox" checked={deviceVar('exhaust')} label="Exhaust" onChanged={(value) => setRoastValue('exhaust', value)} />
-                    <WriteVar type="checkbox" checked={deviceVar('eject')} label="Eject" onChanged={(value) => confirmEject()} />
+                    <WriteVar type="number" value={roastState.targetTemp} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
+                    <WriteVar type="checkbox" value={roastState.motorOn ? 'checked' : ''} label="Motor" onChanged={(value) => setRoastValue('motorOn', value)} />
+                    <WriteVar type="checkbox" value={roastState.exhaustOn ? 'checked' : ''} label="Exhaust" onChanged={(value) => setRoastValue('exhaustOn', value)} />
+                    {roastState.isStarted && <button onClick={() => confirmEject()}>Eject</button>}
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
                 </>
                 break;

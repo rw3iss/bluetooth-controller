@@ -9,16 +9,13 @@ export function useRoastController() {
 
     useEffect(() => {
         setRoastState(ctrl.roast);
-        console.log(`useRoastController effect()`, roastState)
         ctrl.addListener(onEvent);
         return () => ctrl.removeListener(onEvent);
     }, []);
 
+    // trigger state update for normal bound component listeners
     const onEvent = async (e) => {
-        console.log(`URC event:`, e, ctrl.roast);
-        // trigger state update for normal bound component listeners
         setRoastState({ ...ctrl.roast });
-        //await ctrl.save(ctrl.roast);
     }
 
     // saves the new state to idb and triggers a state update
@@ -31,7 +28,7 @@ export function useRoastController() {
 
     const startRoast = () => {
         ctrl.start();
-        updateRoastValue('isStarted', true);
+        updateRoastValue('isStarted', false);
     }
 
     const togglePause = () => {
