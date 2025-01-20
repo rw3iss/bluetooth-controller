@@ -1,0 +1,270 @@
+$padFix: 0.38rem;
+$padFixMobile: 0.1rem;
+$btnPadRight: calc(calc(var(--button-height) / 2) + 2px);
+
+.btn-bar {
+    display: flex;
+
+    .btn {
+        margin-left: var(--default-item-spacing);
+        margin-right: var(--default-item-spacing);
+    }
+}
+
+.button,
+.btn {
+    position: relative;
+    @include flex-center-both;
+    display: inline-flex;
+    font-family: var(--font-button);
+    font-weight: 700;
+    padding: var(--button-padding);
+    min-width: 80px;
+    // padding-top: $padFix;
+    min-height: var(--button-height);
+    height: var(--button-height);
+    color: var(--button-color);
+    background: var(--button-bg);
+    border-radius: var(--button-radius);
+
+    // disable selection highlight on click:
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-rendering: optimizeLegibility;
+    box-shadow: 1px 1px 5px rgba(0, 5, 10, 0.25);
+
+    .inner {
+        @include flex-center-both;
+        max-height: 100%;
+        text-align: center;
+        //padding: 5px 0 0; // todo: fix per browser / tweak
+    }
+
+    &.tiny {
+        font-size: 0.85em;
+        padding: 0.1rem 0.5rem;
+        height: 24px;
+        min-height: 24px;
+        min-width: 30px;
+        line-height: 1em;
+    }
+
+    &.bold {
+        font-weight: bold;
+    }
+
+    &.nh {
+        height: auto;
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: var(--button-color-hover);
+        background: var(--button-bg-hover);
+    }
+
+    // colors /////////
+
+    // TODO: print these as functional sass outputs...
+
+    &.btn-outline {
+        color: var(--button-background-color);
+        background: none;
+        border: 2px solid var(--button-background-color);
+
+        &:hover {
+            color: var(--color-blue-light);
+            border: 2px solid var(--color-blue-light);
+        }
+    }
+
+    &.color-blue {
+        //@include gradient-dark-blue;
+        background: blue;
+        color: var(--button-text-color);
+
+        &:hover {
+            //@include gradient-darker-blue;
+        }
+    }
+
+    &.color-green {
+        border: 2px solid var(--color-green);
+        color: var(--color-green);
+
+        &.filled {
+            background: var(--color-green);
+            color: var(--color-blue-dark);
+        }
+    }
+
+    &.color-light {
+        border: 2px solid var(--color-white);
+        color: var(--color-white);
+
+        &.filled {
+            background: var(--color-white);
+            color: var(--color-blue);
+        }
+    }
+
+    &.color-red {
+        border: 2px solid var(--color-red);
+        color: var(--color-red);
+
+        &.filled {
+            background: var(--color-red);
+            color: var(--color-white);
+        }
+    }
+
+    &.text-blue {
+        color: var(--color-blue) !important;
+    }
+
+    &.text-green {
+        color: var(--color-green) !important;
+    }
+
+    &.text-white {
+        color: white !important;
+    }
+
+    &.text-red {
+        color: var(--color-red) !important;
+    }
+
+    //////////////
+
+    &.has-icon {
+        @include flex-center-x;
+        // padding-left: 1rem;
+        // padding-right: $btnPad;
+
+        &.icon-left {
+            // padding-left: clamp(5px, 0.25vw, 10px);
+            // padding-right: 1rem;
+        }
+    }
+
+    .icon {
+        @include flex-center-x;
+        position: absolute;
+        display: block;
+        justify-self: flex-end;
+        margin: 0 0 0 auto;
+        width: 0;
+        min-width: 0;
+        right: $btnPadRight;
+
+        > * {
+            display: block;
+            position: absolute;
+            right: -0.9em; //-$btnPad;
+            //top: -.2em;
+            min-width: 1.4rem;
+            max-width: 28px;
+            transform: translateY(-50%);
+        }
+
+        > .loader {
+            .loader-ring {
+                div {
+                    top: 2px; // special case to move the loader down a few pixels...
+                }
+            }
+        }
+    }
+
+    &.text-left {
+        justify-content: flex-start;
+    }
+
+    // sizes
+
+    &.size-small {
+        font-weight: 300;
+        font-size: 0.75rem;
+        min-width: 60px;
+        padding: 2px 0.35rem;
+        min-height: calc(var(--button-height) / 1.5);
+        height: calc(var(--button-height) / 1.5);
+    }
+
+    &.size-large {
+        font-weight: 500;
+        font-size: 1.25rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        min-width: 100px;
+        padding-top: calc(#{$padFix} * 1.5);
+        min-height: calc(var(--button-height) * 1.5);
+        height: calc(var(--button-height) * 1.5);
+    }
+
+    &.flex-inline {
+        @include flex-inline;
+    }
+
+    &.btn-refresh {
+        position: relative;
+        border: 1px solid white;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        &:active {
+            top: 1px;
+        }
+    }
+
+    //////////////////////////////////////
+
+    @include mobile {
+        //font-size: 0.65rem;
+        min-width: 68px;
+        height: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0; //$padFixMobile;
+
+        .inner {
+            @include flex-center-x;
+            // padding: 4px 0 0; // todo: fix per browser / tweak
+            line-height: 0.75rem;
+        }
+
+        .icon {
+            > * {
+                top: -1px;
+                right: -1em;
+                min-width: 24px;
+                max-width: 24px;
+            }
+        }
+
+        &.simple {
+            padding-top: 0rem;
+        }
+
+        &.bold {
+            padding-top: 2px;
+
+            // &.has-icon {
+            //     .icon {
+            //         > * {
+            //             //padding-top: 3px;
+            //             right: -.7em;
+            //             top: 0;//-.1em;
+            //             min-width: 24px;
+            //             max-width: 24px;
+            //         }
+            //     }
+            // }
+        }
+    }
+}

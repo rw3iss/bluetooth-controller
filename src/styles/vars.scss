@@ -5,6 +5,7 @@
     --default-color: #def;
     --default-letter-spacing: 2px;
     --default-line-height: 1.1em;
+    --default-item-spacing: 2px;
 
     --radius-small: 5px;
     --radius-medium: 10px;
@@ -38,13 +39,17 @@
     --page-bg: #123;
     --page-section-bg: #234;
 
-    --button-bg: #234;
-    --button-bg-hover: #28394a;
-    --button-bg-active: #345;
-    --button-bg-active-hover: #2d3e4f;
-    --button-color: rgb(168, 173, 179);
+    --button-bg: rgb(54, 75, 98);
+    --button-bg-hover: rgb(65, 92, 122);
+    --button-bg-active: rgb(67, 93, 118);
+    --button-bg-active-hover: #486a8d;
+    --button-height: 30px;
+    --button-color: rgb(94, 177, 168);
     --button-color-hover: rgb(113, 255, 238);
-    --button-color-alt-hover: rgb(166, 245, 255);
+    --button-color-active: rgb(90, 242, 224);
+    --button-color-active-hover: rgb(111, 255, 255);
+    --button-radius: 5px;
+    --button-padding: 5px;
 
     --label-color: rgb(160, 188, 192);
 

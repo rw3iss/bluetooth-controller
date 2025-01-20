@@ -69,13 +69,13 @@
 
                 &.open {
                     .title {
-                        color: var(--button-color-alt);
+                        color: var(--button-color-active);
                         background: var(--button-bg-active);
                         border-bottom-left-radius: 0;
                         border-bottom-right-radius: 0;
 
                         &:hover {
-                            color: var(--button-color-alt-hover);
+                            color: var(--button-color-active-hover);
                             background: var(--button-bg-active-hover);
                         }
 
@@ -124,9 +124,11 @@
         }
 
         .value {
+            margin-top: -2px;
             display: block;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            line-height: 1em;
             color: rgb(175, 197, 48);
             padding-left: 2px;
         }
