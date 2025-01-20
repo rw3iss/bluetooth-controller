@@ -30,8 +30,8 @@
                     color: var(--button-color);
                     border-top-left-radius: var(--panel-radius);
                     border-top-right-radius: var(--panel-radius);
-                    border-bottom-left-radius: var(--panel-radius);
-                    border-bottom-right-radius: var(--panel-radius);
+                    //border-bottom-left-radius: var(--panel-radius);
+                    //border-bottom-right-radius: var(--panel-radius);
 
                     &:hover {
                         background: var(--button-bg-hover);
@@ -54,10 +54,14 @@
                 }
 
                 .content {
-                    transition: height 0.5s ease;
+                    padding-top: 12px;
+                    transition: height var(--panel-animation) var(--panel-animation-type);
+                    background: var(--panel-section-bg);
+                    border-bottom-left-radius: var(--panel-radius);
+                    border-bottom-right-radius: var(--panel-radius);
 
                     .content-section {
-                        padding: 15px;
+                        padding: 0px 15px 15px 15px;
                         color: white;
                         font-size: 0.9em;
                         background: var(--panel-section-bg);
@@ -112,6 +116,26 @@
 
 #menu-section-set {
     position: relative;
+
+    .label {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        font-weight: bold;
+        color: var(--label-color);
+        text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
+    }
+
+    .toggle {
+        flex: 1 0 auto;
+        display: flex;
+        width: 100%;
+
+        .label {
+            flex: 1 0 auto;
+        }
+    }
 
     .update-message {
         background: var(--panel-bg-faded);

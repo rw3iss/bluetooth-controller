@@ -1,0 +1,28 @@
+#notification {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 101;
+
+    .inner {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        background: green;
+
+        .title {
+            font-weight: bold;
+            font-size: 1.2em;
+            background: blue;
+        }
+
+        .content {
+        }
+    }
+
+    &.error {
+        .inner {
+            background: red;
+        }
+    }
+}

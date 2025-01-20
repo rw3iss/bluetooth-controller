@@ -175,7 +175,7 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
             <div ref={el => this.plotRef = el} style={{
                 width: '100%',
                 height: 'calc(100% - 50px)',
-                backgroundColor: '#234' // Ensure background matches the plot's paper_bgcolor
+                backgroundColor: '#123' // Ensure background matches the plot's paper_bgcolor
             }} />
         );
     }

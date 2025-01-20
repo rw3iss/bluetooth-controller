@@ -16,13 +16,13 @@
     --font-label: "Coffee Green";
 
     --input-font: "Coffee Green";
-    --input-padding: 4px;
-    --input-font-size: 1.2rem;
+    --input-padding: 2px;
+    --input-font-size: 1.1rem;
     --input-color: var(--default-color);
     --input-background: #123;
     --input-shadow: inset 1px 1px 3px rgba(5, 5, 10, 0.5);
     --input-outline: none;
-    --input-letter-spacing: 4px;
+    --input-letter-spacing: 3px;
 
     // default app bg
     --app-bg: #012;
@@ -31,12 +31,12 @@
 
     // side menu bg for empty part
     --panel-bg: #123;
-    --panel-bg-faded: rgba(17, 34, 51, 0.9);
-    --panel-section-bg: rgba(34, 51, 68, 0.5);
+    --panel-bg-faded: rgba(17, 34, 51, 1);
+    --panel-section-bg: rgba(34, 51, 68, 1);
     --panel-radius: 10px;
     --panel-min-width: 250px;
     --panel-animation: 0.2s;
-    --panel-animation-type: ease-in-out;
+    --panel-animation-type: ease;
 
     --page-bg: #123;
     --page-section-bg: #234;
