@@ -9,6 +9,7 @@ import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
 import { Button } from '../../basic/button/Button';
 import './PageRoast.scss';
+import Toggle from '../../basic/toggle/Toggle.js';
 
 const DEFAULT_VIEW_STATE = {
     "sections": {
@@ -76,7 +77,7 @@ export function PageRoast(props) {
         let sVal = val;
         if (['motorOn', 'exhaustOn', 'ejectOn'].includes(prop)) sVal = val ? 'ON' : 'OFF';
         setUpdateMessage(<><span class="i">✅</span> &nbsp;{capitalize(prop)} updated to <div class="number value">{sVal}</div></>);
-        //setTimeout(() => setUpdateMessage(''), 3000);
+        setTimeout(() => setUpdateMessage(''), 3000);
     }
 
     async function toggleSection(s) {
@@ -116,6 +117,10 @@ export function PageRoast(props) {
                     <WriteVar type="number" value={roastState.targetTemp} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
                     <WriteVar type="checkbox" value={roastState.motorOn ? 'checked' : ''} label="Motor" onChanged={(value) => setRoastValue('motorOn', value)} />
                     <WriteVar type="checkbox" value={roastState.exhaustOn ? 'checked' : ''} label="Exhaust" onChanged={(value) => setRoastValue('exhaustOn', value)} />
+
+                    <Toggle label="Heater" onChange={(e) => setRoastValue('heaterOn', e)}></Toggle>
+                    <Toggle label="Motor" onChange={(e) => setRoastValue('motorOn', e)}></Toggle>
+                    <Toggle label="Exhaust" onChange={(e) => setRoastValue('exhaustOn', e)}></Toggle>
                     <Button onClick={() => confirmEject()}>Eject</Button>
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
                 </>

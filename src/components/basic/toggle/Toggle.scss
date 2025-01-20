@@ -1,0 +1,50 @@
+// Toggle.scss
+.toggle {
+    display: flex;
+
+    .toggle-switch {
+        width: 60px;
+        height: 34px;
+        background: #ccc;
+        border-radius: 34px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+
+        &.on {
+            background: #4caf50;
+
+            .toggle-switch {
+                transform: translateX(26px);
+            }
+        }
+
+        &.off {
+            background: #ccc;
+
+            .toggle-switch {
+                transform: translateX(0);
+            }
+        }
+
+        &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+
+            &:hover {
+                cursor: not-allowed;
+            }
+        }
+
+        .toggle-handle {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            transition: transform 0.3s;
+        }
+    }
+}
