@@ -58,53 +58,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const graphData = {
-    current: {
-        isStarted: false,
-        isPaused: false,
-
-        timeStarted: undefined,
-        timeRunningMs: 0,
-
-        currentTemp: 0,
-        targetTemp: 0,
-
-        heaterOn: false,
-        motorOn: false,
-        exhaustOn: false,
-        ejectOn: false,
-        coolingOn: false
-    },
-
-    data: [
-        {
-            time: Date(),
-            temperature: 123,
-            motorSpeed: 100,
-            exhaustSpeed: 100
-        },
-        {
-            time: Date(),
-            temperature: 123,
-            motorSpeed: 100,
-            exhaustSpeed: 100
-        }
-    ],
-
-    events: [{
-        name: "roast-paused",
-        time: Date()
-    }, {
-        name: "motor-enabled",
-        time: Date()
-    }],
-
-    markers: [{
-        text: "Some text",
-        time: Date()
-    }]
-}
-
 
 const layers = {
     temperature: true,
@@ -113,6 +66,44 @@ const layers = {
     events: true,
     markers: true
 };
+
+const graphConfig = {
+    style: 'line',
+    axes: {
+        x: {
+            title: "Time"
+        },
+        y: {
+            title: "Value"
+        }
+    },
+    layers: [
+        { id: "temp", visible: true, color: "yellow" },
+        { id: "other", visible: true, color: "blue" }
+    ]
+}
+
+async function graphData() {
+    const data1 = [], data2 = [];
+
+    for (let i = 0; i < 20; i++) {
+        data1.push({ x: i, y: getRandomInt(40000, 50000) });
+    }
+
+    for (let i = 0; i < 20; i++) {
+        data2.push({ x: i, y: getRandomInt(40000, 50000) });
+    }
+
+    return [{
+        id: "temp",
+        label: "Temperature",
+        data: data1
+    }, {
+        id: "other",
+        label: "Other",
+        data: data2
+    }];
+}
 
 export function PageRoast(props) {
     const ctrl = Application.roastController;
@@ -199,14 +190,6 @@ export function PageRoast(props) {
         return <div class="content-section" id={`menu-section-${s}`}>{inner}</div>;
     }
 
-    async function graphData() {
-        const data = [];
-        for (let i = 0; i < 20; i++) {
-            data.push({ x: i, y: getRandomInt(40000, 50000) });
-        }
-        return data;
-    }
-
     return (
         <div class="page" id="roast">
 
@@ -221,7 +204,7 @@ export function PageRoast(props) {
             </div>
 
             <div class="panel-graph">
-                <CanvasGraph getData={graphData} style="line" />
+                <CanvasGraph getData={graphData} config={graphConfig} />
             </div>
         </div>
     )

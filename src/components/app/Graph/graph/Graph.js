@@ -7,6 +7,8 @@ Todo: render Labels for all data and widgets AFTER they render themselves... (tw
 export default class Graph extends CanvasDrawingContext {
 
     data = undefined;
+    config = undefined;
+
     zoomLevel = 1;
     xMin = undefined;
     xMax = undefined; // todo
@@ -50,6 +52,7 @@ export default class Graph extends CanvasDrawingContext {
         super(canvasContext);
         this.width = config.width || 400;
         this.height = config.height || 400;
+        this.config = config;
         if (config.style) this.chartStyle = config.style;
     }
 
@@ -110,7 +113,7 @@ export default class Graph extends CanvasDrawingContext {
         let xStart = 0 + this.axesPadding + this.axesLineWidth;
         let yStart = 0 + this.height - this.axesPadding - this.axesLineWidth;
 
-        let drawData = (i, point, dataWidth, nextPt) => {
+        let drawData = (i, point, dataWidth, nextPt, color) => {
             let xPos = i * dataWidth;
             // yh = (graph height) * (this value's percent over total y) - (paddings)
             let yHeight = this.height * ((point.y - this.yMin) / (this.yMax - this.yMin)) - (this.axesPadding * 2) - this.axesLineWidth / 2;
@@ -124,12 +127,12 @@ export default class Graph extends CanvasDrawingContext {
                     if (this.barWidth) {
                         this.drawRect(center - this.barWidth / 2, yStart - yHeight, this.barWidth, yHeight, null, this.gradientColor);
                     } else {
-                        this.drawRect(xStart + xPos + this.dataMargin, yStart - yHeight, dataWidth - this.dataMargin, yHeight, null, this.gradientColor);
+                        this.drawRect(xStart + xPos + this.dataMargin, yStart - yHeight, dataWidth - this.dataMargin, yHeight, null, color || this.gradientColor);
                     }
                     break;
 
                 case 'point':
-                    this.drawCircle(center + this.pointRadius / 2, yStart - yHeight, this.pointRadius, this.pointBorder, this.pointColor, this.gradientColor);
+                    this.drawCircle(center + this.pointRadius / 2, yStart - yHeight, this.pointRadius, this.pointBorder, color || this.pointColor, this.gradientColor);
                     textYOffset = textYOffset - this.pointRadius;
                     textXOffset = textXOffset + this.pointRadius / 2;
                     break;
@@ -149,7 +152,7 @@ export default class Graph extends CanvasDrawingContext {
                     }
 
                     this.drawCircle(center + this.pointRadius / 2, yStart - yHeight,
-                        this.pointRadius, this.pointBorder, this.pointColor, this.gradientColor);
+                        this.pointRadius, this.pointBorder, this.pointColor, color || this.gradientColor);
 
                     break;
                 default:
@@ -159,14 +162,28 @@ export default class Graph extends CanvasDrawingContext {
             this.drawText(point.y.toString(), center + textXOffset, yStart - yHeight + textYOffset, 0, this.graphFont, this.fontColor);
         }
 
-        if (this.data) {
-            let dl = this.data.length;
+        function layerColor(d) {
+            const layerConfig = (d?.id && this.config.layers) ? this.config.layers[d.id] : null;
+            return layerConfig?.color || "black";
+        }
+
+        const drawLayerData = (d) => {
+            let dl = d.length;
             let dataWidth = (this.width - this.axesPadding * 2 - this.dataMargin - this.axesLineWidth) / (dl);
             for (let i = 0; i < dl; i++) {
-                let p = this.data[i];
+                let p = d[i];
                 // calculate where to draw this point
-                drawData(i, p, dataWidth, i < dl ? this.data[i + 1] : null);
+                drawData(i, p, dataWidth, i < dl ? this.data[i + 1] : null, layerColor(d));
             }
+        };
+
+        if (this.data) {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(d => drawLayerData(d));
+            } else {
+                drawLayerData(this.data);
+            }
+
         }
     }
 
