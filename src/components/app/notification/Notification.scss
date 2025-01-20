@@ -5,24 +5,31 @@
     z-index: 101;
 
     .inner {
-        padding: 20px;
         display: flex;
         flex-direction: column;
-        background: green;
+        color: white;
+        background: rgb(64, 114, 64);
 
         .title {
+            padding: 5px;
+            width: 100%;
             font-weight: bold;
             font-size: 1.2em;
-            background: blue;
+            background: rgb(81, 153, 81);
         }
 
         .content {
+            padding: 20px;
         }
     }
 
     &.error {
         .inner {
-            background: red;
+            background: rgb(160, 71, 71);
+
+            .title {
+                background: rgb(190, 80, 80);
+            }
         }
     }
 }

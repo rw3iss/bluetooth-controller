@@ -8,9 +8,10 @@ import { useSavedState } from 'lib/hooks/useSavedState.js';
 import Notification from 'lib/NotificatonService';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
-import GraphWrapper from '../../app/graph-wrapper/GraphWrapper';
+import CanvasGraph from '../../app/Graph/CanvasGraph';
 import { Button } from '../../basic/button/Button';
 import Toggle from '../../basic/toggle/Toggle.js';
+
 import './PageRoast.scss';
 
 const DEFAULT_VIEW_STATE = {
@@ -51,6 +52,11 @@ Other components - useEffect((), [roastState]); - when state changes, the views 
 
 */
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 const graphData = {
     current: {
@@ -108,27 +114,12 @@ const layers = {
     markers: true
 };
 
-export function notification(n) {
-
-}
-
 export function PageRoast(props) {
     const ctrl = Application.roastController;
     const roast = ctrl.roast;
     const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
-
-    // useEffect(() => {
-    //     console.log(`ADD LISTENER`)
-    //     RoastCtrl.addListener(onControllerChange);
-    //     return () => RoastCtrl.removeListener(onControllerChange);
-    // }, []);
-
-    function deviceVar(v) {
-        return roast ? roast[v] : undefined;
-        //read from the roast controller
-    }
 
     // send a new value command to the device
     function setRoastValue(prop, val) {
@@ -208,6 +199,14 @@ export function PageRoast(props) {
         return <div class="content-section" id={`menu-section-${s}`}>{inner}</div>;
     }
 
+    async function graphData() {
+        const data = [];
+        for (let i = 0; i < 20; i++) {
+            data.push({ x: i, y: getRandomInt(40000, 50000) });
+        }
+        return data;
+    }
+
     return (
         <div class="page" id="roast">
 
@@ -222,7 +221,7 @@ export function PageRoast(props) {
             </div>
 
             <div class="panel-graph">
-                <GraphWrapper graphData={graphData} layers={layers} />
+                <CanvasGraph getData={graphData} style="line" />
             </div>
         </div>
     )

@@ -19,7 +19,6 @@ export const NotificationContext = (props) => {
     }, []);
 
     function onNotification(e) {
-        console.log(`NOTIFY`, e.target)
         if (e.target) {
             if (timeout) clearInterval(timeout);
             setShow(true);

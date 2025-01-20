@@ -1,6 +1,8 @@
 import * as Plotly from 'plotly.js-dist';
 import { Component } from 'preact';
 
+import "./GraphWrapper.scss";
+
 export interface GraphData {
     current: {
         isStarted: boolean;
@@ -67,12 +69,17 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
     });
 
     getLayout = () => ({
+        font: {
+            family: 'Coffee Menu'
+        },
         title: {
             text: 'Data Visualization',
-            font: { color: '#B0C4DE' } // Light Steel Blue for text
+            font: {
+                color: '#B0C4DE'
+            } // Light Steel Blue for text
         },
-        paper_bgcolor: '#234', // Dark background as requested
-        plot_bgcolor: '#191970', // Midnight Blue for plot area
+        paper_bgcolor: '#123', // Dark background as requested
+        plot_bgcolor: '#123', // Midnight Blue for plot area
         xaxis: {
             title: 'Time',
             type: 'date',
@@ -172,7 +179,7 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
 
     render() {
         return (
-            <div ref={el => this.plotRef = el} style={{
+            <div class="graph-wrapper" ref={el => this.plotRef = el} style={{
                 width: '100%',
                 height: 'calc(100% - 50px)',
                 backgroundColor: '#123' // Ensure background matches the plot's paper_bgcolor
