@@ -7,6 +7,7 @@ import { useRoastController } from 'lib/hooks/useRoastController.js';
 import { useSavedState } from 'lib/hooks/useSavedState.js';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
+import GraphWrapper from '../../app/graph-wrapper/GraphWrapper';
 import { Button } from '../../basic/button/Button';
 import './PageRoast.scss';
 
@@ -49,6 +50,61 @@ Other components - useEffect((), [roastState]); - when state changes, the views 
 */
 
 
+const graphData = {
+    current: {
+        isStarted: false,
+        isPaused: false,
+
+        timeStarted: undefined,
+        timeRunningMs: 0,
+
+        currentTemp: 0,
+        targetTemp: 0,
+
+        heaterOn: false,
+        motorOn: false,
+        exhaustOn: false,
+        ejectOn: false,
+        coolingOn: false
+    },
+
+    data: [
+        {
+            time: Date(),
+            temperature: 123,
+            motorSpeed: 100,
+            exhaustSpeed: 100
+        },
+        {
+            time: Date(),
+            temperature: 123,
+            motorSpeed: 100,
+            exhaustSpeed: 100
+        }
+    ],
+
+    events: [{
+        name: "roast-paused",
+        time: Date()
+    }, {
+        name: "motor-enabled",
+        time: Date()
+    }],
+
+    markers: [{
+        text: "Some text",
+        time: Date()
+    }]
+}
+
+
+const layers = {
+    temperature: true,
+    motorSpeed: true,
+    exhaustSpeed: true,
+    events: true,
+    markers: true
+};
 
 export function PageRoast(props) {
     const ctrl = Application.roastController;
@@ -97,7 +153,7 @@ export function PageRoast(props) {
         else console.log(`Eject cancelled.`)
     }
 
-    function renderPanelContent(s) {
+    function renderPanelMenu(s) {
         let inner: VNode = undefined;
 
         switch (s) {
@@ -149,14 +205,14 @@ export function PageRoast(props) {
                 {(viewState && roastState) ? <Accordian>
                     {Object.keys(viewState.sections).map(s =>
                         <AccordianItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
-                            {renderPanelContent(s)}
+                            {renderPanelMenu(s)}
                         </AccordianItem>
                     )}
                 </Accordian> : <></>}
             </div>
 
             <div class="panel-graph">
-                {JSON.stringify(roastState)}
+                <GraphWrapper graphData={graphData} layers={layers} />
             </div>
         </div>
     )
