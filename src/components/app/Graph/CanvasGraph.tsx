@@ -11,17 +11,19 @@ function CanvasGraph({ getData, config }) {
     const canvas = createRef();
 
     useEffect(() => {
-        if (!graph) initGraph();
-
-        window.addEventListener("resize", handleResize);
+        window.addEventListener("resize", updateSize);
         return () => {
-            window.removeEventListener("resize", handleResize);
+            window.removeEventListener("resize", updateSize);
         }
     }, []);
 
+    useEffect(() => {
+        if (container?.current && canvas?.current && !graph) initGraph();
+    }, [container, canvas]);
+
     const initGraph = async () => {
         const g = new Graph(canvas.current.getContext("2d"), config);
-        handleResize();
+        const { w, h } = updateSize();
 
         let data = await getData();
         console.log(`GOT DATA`, data)
@@ -30,21 +32,26 @@ function CanvasGraph({ getData, config }) {
 
         setGraph(g);
         setLoading(false);
+
+        g.resize(w, h);
     }
 
-    const handleResize = () => {
-        if (container.current && canvas.current && graph) {
+    const updateSize = (e?) => {
+        console.log(`updateSize`, container, canvas)
+        if (container.current && canvas.current) {
             let w = container.current.offsetWidth;
             let h = container.current.offsetHeight;
             if (config.width) w = Math.max(w, config.width);
             if (config.height) h = Math.max(h, config.height);
             canvas.current.setAttribute('width', w);
             canvas.current.setAttribute('height', h);
-            graph.resize(w, h);
+            console.log(`SIZE`, w, h, graph)
+            if (graph) graph.resize(w, h);
+            return { w, h };
         }
     }
 
-    if (graph) graph.render();
+    //if (graph) graph.render();
 
     return (
         <div class="canvas-graph" ref={container}>

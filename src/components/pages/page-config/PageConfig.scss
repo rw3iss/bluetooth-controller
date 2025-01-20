@@ -20,9 +20,10 @@
 
         .menu-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             margin: 5px 0;
             padding: 15px;
+            text-align: left;
             //background: var(--button-bg);
             //border-bottom: 1px solid #345;
             color: var(--button-color);

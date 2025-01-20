@@ -108,12 +108,14 @@ export default class Graph extends CanvasDrawingContext {
 
     // render the graph from the dimensions and current zoom level
     renderData() {
+        console.log(`renderData`, this.data);
         // todo: zoom = 2 = 50% zoom in (only show half points);
 
         let xStart = 0 + this.axesPadding + this.axesLineWidth;
         let yStart = 0 + this.height - this.axesPadding - this.axesLineWidth;
 
         let drawData = (i, point, dataWidth, nextPt, color) => {
+            console.log(`drawData`, i, point, dataWidth, color);
             let xPos = i * dataWidth;
             // yh = (graph height) * (this value's percent over total y) - (paddings)
             let yHeight = this.height * ((point.y - this.yMin) / (this.yMax - this.yMin)) - (this.axesPadding * 2) - this.axesLineWidth / 2;
@@ -162,18 +164,20 @@ export default class Graph extends CanvasDrawingContext {
             this.drawText(point.y.toString(), center + textXOffset, yStart - yHeight + textYOffset, 0, this.graphFont, this.fontColor);
         }
 
-        function layerColor(d) {
-            const layerConfig = (d?.id && this.config.layers) ? this.config.layers[d.id] : null;
-            return layerConfig?.color || "black";
+        const layerColor = (d) => {
+            const layer = this.config.layers.find(l => l.id == d.id);
+            console.log(`layerColor`, d, self, layer);
+            return layer?.color || "black";
         }
 
         const drawLayerData = (d) => {
-            let dl = d.length;
+            let dl = d.data.length;
+            console.log(`DLD`, d, this)
             let dataWidth = (this.width - this.axesPadding * 2 - this.dataMargin - this.axesLineWidth) / (dl);
             for (let i = 0; i < dl; i++) {
-                let p = d[i];
+                let p = d.data[i];
                 // calculate where to draw this point
-                drawData(i, p, dataWidth, i < dl ? this.data[i + 1] : null, layerColor(d));
+                drawData(i, p, dataWidth, i < dl ? d.data[i + 1] : null);//layerColor(d));
             }
         };
 
