@@ -1,9 +1,9 @@
-import './AccordianItem.scss';
+import './MenuItem.scss';
 
-export function AccordianItem({ title, id, open, children, onClick }) {
+export function MenuItem({ title, id, open, children, onClick }) {
 
     return (
-        <div class={`accordian-item ${open ? 'open' : ''}`}>
+        <div class={`menu-item ${open ? 'open' : ''}`}>
             <div class="title" onClick={(e) => {
                 onClick(id);
             }}>

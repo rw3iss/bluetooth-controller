@@ -18,13 +18,9 @@
         border-right: 1px solid rgba(#aaa, 0.1);
         background: var(--panel-bg);
 
-        .accordian {
-            .accordian-item {
+        .menu {
+            .menu-item {
                 margin: 5px 0;
-
-                .menu-section {
-                    width: 100%;
-                }
 
                 .title {
                     position: relative;
@@ -58,13 +54,19 @@
                 }
 
                 .content {
-                    padding: 15px;
-                    color: white;
-                    font-size: 0.9em;
-                    background: var(--panel-section-bg);
-                    border-bottom-left-radius: var(--panel-radius);
-                    border-bottom-right-radius: var(--panel-radius);
-                    overflow: hidden;
+                    transition: height 0.5s ease;
+
+                    .content-section {
+                        padding: 15px;
+                        color: white;
+                        font-size: 0.9em;
+                        background: var(--panel-section-bg);
+                        border-bottom-left-radius: var(--panel-radius);
+                        border-bottom-right-radius: var(--panel-radius);
+                        display: flex;
+                        flex-direction: column;
+                        transition: height var(--panel-animation) var(--panel-animation-type);
+                    }
                 }
 
                 &.open {
@@ -91,6 +93,10 @@
                             height: 12px;
                             transform: rotate(90deg);
                         }
+                    }
+
+                    .content {
+                        transition: height var(--panel-animation) var(--panel-animation-type);
                     }
                 }
             }
@@ -141,7 +147,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    margin: 5px 0;
+    margin: 3px 0;
 
     .label {
         flex: 1;

@@ -1,8 +1,8 @@
 import Application from 'Application';
 import { ReadVar } from 'components/app/vars/ReadVar';
 import { WriteVar } from 'components/app/vars/WriteVar';
-import { Accordian } from 'components/basic/accordian/Accordian';
-import { AccordianItem } from 'components/basic/accordian/AccordianItem';
+import { Menu } from 'components/basic/menu/Menu';
+import { MenuItem } from 'components/basic/menu/MenuItem';
 import { useRoastController } from 'lib/hooks/useRoastController.js';
 import { useSavedState } from 'lib/hooks/useSavedState.js';
 import { capitalize } from 'lib/utils/StrUtils';
@@ -154,7 +154,7 @@ export function PageRoast(props) {
         else console.log(`Eject cancelled.`)
     }
 
-    function renderPanelMenu(s) {
+    function renderMenuSection(s) {
         let inner: VNode = undefined;
 
         switch (s) {
@@ -200,20 +200,20 @@ export function PageRoast(props) {
                 inner = <>not found</>;
         }
 
-        return <div class="menu-section" id={`menu-section-${s}`}>{inner}</div>;
+        return <div class="content-section" id={`menu-section-${s}`}>{inner}</div>;
     }
 
     return (
         <div class="page" id="roast">
 
             <div class="panel-menu">
-                {(viewState && roastState) ? <Accordian>
+                {(viewState && roastState) ? <Menu>
                     {Object.keys(viewState.sections).map(s =>
-                        <AccordianItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
-                            {renderPanelMenu(s)}
-                        </AccordianItem>
+                        <MenuItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
+                            {renderMenuSection(s)}
+                        </MenuItem>
                     )}
-                </Accordian> : <></>}
+                </Menu> : <></>}
             </div>
 
             <div class="panel-graph">

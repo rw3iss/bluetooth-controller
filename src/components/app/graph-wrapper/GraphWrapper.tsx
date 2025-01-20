@@ -50,21 +50,57 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
 
     componentDidMount() {
         if (this.plotRef) {
-            this.plot = Plotly.newPlot(this.plotRef, this.getPlotData(), this.getLayout());
+            this.plot = Plotly.newPlot(this.plotRef, this.getPlotData(), this.getLayout(), this.getConfig());
         }
     }
 
     componentDidUpdate(prevProps: PlotlyWrapperProps) {
-        if (this.plot && prevProps.graphData !== this.props.graphData || prevProps.layers !== this.props.layers) {
-            Plotly.update(this.plot, this.getPlotData(), this.getLayout());
+        if (this.plot && (prevProps.graphData !== this.props.graphData || prevProps.layers !== this.props.layers)) {
+            Plotly.update(this.plot, this.getPlotData(), this.getLayout(), this.getConfig());
         }
     }
+
+    getConfig = () => ({
+        displayModeBar: false, // to avoid white modebar if it's visible
+        responsive: true,
+        dragmode: 'pan'
+    });
+
+    getLayout = () => ({
+        title: {
+            text: 'Data Visualization',
+            font: { color: '#B0C4DE' } // Light Steel Blue for text
+        },
+        paper_bgcolor: '#234', // Dark background as requested
+        plot_bgcolor: '#191970', // Midnight Blue for plot area
+        xaxis: {
+            title: 'Time',
+            type: 'date',
+            color: '#B0C4DE', // Light Steel Blue for axis labels
+            gridcolor: '#4682B4', // Steel Blue for grid lines
+            linecolor: '#4682B4', // Steel Blue for axis lines
+            zerolinecolor: '#4682B4', // Zero line color
+        },
+        yaxis: {
+            title: 'Value',
+            color: '#B0C4DE', // Light Steel Blue for axis labels
+            gridcolor: '#4682B4', // Steel Blue for grid lines
+            linecolor: '#4682B4', // Steel Blue for axis lines
+            zerolinecolor: '#4682B4', // Zero line color
+        },
+        font: {
+            color: '#B0C4DE' // Default text color
+        }
+    });
 
     getPlotData = () => {
         const { data, events, markers } = this.props.graphData;
         const { temperature, motorSpeed, exhaustSpeed } = this.props.layers;
 
-        const traces = [];
+        const traces: any = [];
+
+        const lineColor = '#4169E1'; // Royal Blue for lines
+        const markerColor = '#6495ED'; // Cornflower Blue for markers
 
         if (temperature) {
             traces.push({
@@ -72,7 +108,8 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
                 y: data.map(d => d.temperature),
                 type: 'scatter',
                 mode: 'lines',
-                name: 'Temperature'
+                name: 'Temperature',
+                line: { color: lineColor }
             });
         }
 
@@ -82,7 +119,8 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
                 y: data.map(d => d.motorSpeed),
                 type: 'scatter',
                 mode: 'lines',
-                name: 'Motor Speed'
+                name: 'Motor Speed',
+                line: { color: lineColor }
             });
         }
 
@@ -92,51 +130,53 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
                 y: data.map(d => d.exhaustSpeed),
                 type: 'scatter',
                 mode: 'lines',
-                name: 'Exhaust Speed'
+                name: 'Exhaust Speed',
+                line: { color: lineColor }
             });
         }
 
         if (this.props.layers.events) {
             traces.push({
                 x: events.map(e => new Date(e.time)),
-                y: events.map(() => null), // Placeholder for y-axis since events have no numerical value
+                y: events.map(() => null),
                 mode: 'markers',
                 type: 'scatter',
                 name: 'Events',
                 text: events.map(e => e.name),
-                marker: { size: 12, symbol: 'line-ns-open' }
+                marker: {
+                    color: markerColor,
+                    size: 12,
+                    symbol: 'line-ns-open'
+                }
             });
         }
 
         if (this.props.layers.markers) {
             traces.push({
                 x: markers.map(m => new Date(m.time)),
-                y: markers.map(() => null), // Similar to events, no numerical y value
+                y: markers.map(() => null),
                 mode: 'markers',
                 type: 'scatter',
                 name: 'Markers',
                 text: markers.map(m => m.text),
-                marker: { size: 10, symbol: 'circle-open' }
+                marker: {
+                    color: markerColor,
+                    size: 10,
+                    symbol: 'circle-open'
+                }
             });
         }
 
         return traces;
     };
 
-    getLayout = () => ({
-        title: 'Data Visualization',
-        xaxis: {
-            title: 'Time',
-            type: 'date'
-        },
-        yaxis: {
-            title: 'Value'
-        }
-    });
-
     render() {
         return (
-            <div ref={el => this.plotRef = el} style={{ width: '100%', height: '400px' }} />
+            <div ref={el => this.plotRef = el} style={{
+                width: '100%',
+                height: 'calc(100% - 50px)',
+                backgroundColor: '#234' // Ensure background matches the plot's paper_bgcolor
+            }} />
         );
     }
 }

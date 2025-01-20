@@ -4,7 +4,7 @@
     --default-font-size: 25px;
     --default-color: #def;
     --default-letter-spacing: 2px;
-    --default-line-height: 1.1em;
+    --default-line-height: 1em;
     --default-item-spacing: 2px;
 
     --radius-small: 5px;
@@ -35,6 +35,8 @@
     --panel-section-bg: rgba(34, 51, 68, 0.5);
     --panel-radius: 10px;
     --panel-min-width: 250px;
+    --panel-animation: 0.2s;
+    --panel-animation-type: ease-in-out;
 
     --page-bg: #123;
     --page-section-bg: #234;

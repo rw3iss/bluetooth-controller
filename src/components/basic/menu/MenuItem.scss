@@ -1,0 +1,23 @@
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 100%;
+    width: 100%;
+    background: inherit;
+
+    > .title {
+        padding: 5px;
+    }
+
+    > .content {
+        height: 0;
+        overflow: hidden;
+        interpolate-size: allow-keywords;
+    }
+
+    &.open {
+        > .content {
+            height: auto;
+        }
+    }
+}
