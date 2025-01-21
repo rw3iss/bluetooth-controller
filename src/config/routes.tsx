@@ -11,7 +11,8 @@ export const routes = {
     "/history": (p?) => <PageHistory />,
     "/profiles": (p?) => <PageProfiles />,
     "/config": (p?) => <PageConfig />,
-    "/page-not-found": (p?) => <PageNotFound />
+    "/page-not-found": (p?) => <PageNotFound />,
+    "*": (p?) => <PageNotFound />
 };
 
 export const DEFAULT_ROUTE = "/roast";

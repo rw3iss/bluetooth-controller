@@ -16,7 +16,7 @@
         "better-local-storage-fallback": "^1.0.0",
         "dotenv": "^16.4.7",
         "eventbusjs": "^0.2.0",
-        "plotly.js-dist": "^2.35.3",
+        "plotly.js-dist": "^2.35.3"
     },
     "devDependencies": {
         "@web/dev-server": "^0.4.6",
