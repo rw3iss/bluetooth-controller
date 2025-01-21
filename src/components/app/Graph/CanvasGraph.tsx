@@ -7,13 +7,14 @@ import './CanvasGraph.scss';
 function CanvasGraph({ getData, config }) {
     const [graph, setGraph] = useState(undefined);
     const [loading, setLoading] = useState(true);
+    const [size, setSize] = useState({ w: 0, h: 0 });
     const container = createRef();
     const canvas = createRef();
 
     useEffect(() => {
-        window.addEventListener("resize", updateSize);
+        //window.addEventListener("resize", updateSize);
         return () => {
-            window.removeEventListener("resize", updateSize);
+            //window.removeEventListener("resize", updateSize);
         }
     }, []);
 
@@ -22,18 +23,22 @@ function CanvasGraph({ getData, config }) {
     }, [container, canvas]);
 
     const initGraph = async () => {
-        const g = new Graph(canvas.current.getContext("2d"), config);
-        const { w, h } = updateSize();
+        if (canvas.current) {
+            const g = new Graph(canvas.current.getContext("2d"), config);
+            const { w, h } = updateSize();
 
-        let data = await getData();
-        console.log(`GOT DATA`, data)
-        g.setData(data);
-        g.setMinMax(35000, 55000); // todo: determine
+            container.current.addEventListener("resize", updateSize);
 
-        setGraph(g);
-        setLoading(false);
+            let data = await getData();
+            console.log(`GOT DATA`, data)
+            g.setData(data);
+            g.setMinMax(35000, 55000); // todo: determine
 
-        g.resize(w, h);
+            setGraph(g);
+            setLoading(false);
+
+            g.resize(w, h);
+        }
     }
 
     const updateSize = (e?) => {
