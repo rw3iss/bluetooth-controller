@@ -172,7 +172,6 @@ export default class Graph extends CanvasDrawingContext {
 
         const drawLayerData = (d) => {
             let dl = d.data.length;
-            console.log(`DLD`, d, this)
             let dataWidth = (this.width - this.axesPadding * 2 - this.dataMargin - this.axesLineWidth) / (dl);
             for (let i = 0; i < dl; i++) {
                 let p = d.data[i];
