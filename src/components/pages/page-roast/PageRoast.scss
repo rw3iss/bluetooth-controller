@@ -14,7 +14,7 @@
         flex: 0.1 0 20%;
         width: 20%;
         min-width: var(--panel-min-width);
-        padding: 10px;
+        padding: var(--panel-padding);
         border-right: 1px solid rgba(#aaa, 0.1);
         background: var(--panel-bg);
 
@@ -110,7 +110,8 @@
     .panel-graph {
         flex: 0.8 0 80%;
         width: 80%;
-        padding: 20px;
+        height: 100%;
+        padding: var(--panel-padding);
     }
 }
 

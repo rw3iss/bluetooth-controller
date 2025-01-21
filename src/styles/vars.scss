@@ -1,7 +1,7 @@
 :root {
-    --default-font: "Coffee Green";
+    --default-font: "Messina";
     --default-radius: 10px;
-    --default-font-size: 25px;
+    --default-font-size: 18px;
     --default-color: #def;
     --default-letter-spacing: 2px;
     --default-line-height: 1em;
@@ -11,11 +11,11 @@
     --radius-medium: 10px;
     --radius-large: 15px;
 
-    --font-default: Arial;
-    --font-headers: "Coffee Green";
-    --font-label: "Coffee Green";
+    --font-default: var(--default-font);
+    --font-header: "Messina Black";
+    --font-label: "Messina Bold"; //var(--default-font);
 
-    --input-font: "Coffee Green";
+    --input-font: var(--default-font);
     --input-padding: 2px;
     --input-font-size: 1.1rem;
     --input-color: var(--default-color);
@@ -37,6 +37,7 @@
     --panel-min-width: 250px;
     --panel-animation: 0.2s;
     --panel-animation-type: ease;
+    --panel-padding: 10px;
 
     --page-bg: #123;
     --page-section-bg: #234;

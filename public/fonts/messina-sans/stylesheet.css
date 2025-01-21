@@ -1,0 +1,96 @@
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedRegularIt.eot');
+    src: local('Messina Sans Condensed Regular Italic'), local('MessinaSans-CondensedRegularIt'),
+        url('MessinaSans-CondensedRegularIt.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedRegularIt.woff2') format('woff2'),
+        url('MessinaSans-CondensedRegularIt.woff') format('woff'),
+        url('MessinaSans-CondensedRegularIt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedRegular.eot');
+    src: local('Messina Sans Condensed Regular'), local('MessinaSans-CondensedRegular'),
+        url('MessinaSans-CondensedRegular.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedRegular.woff2') format('woff2'),
+        url('MessinaSans-CondensedRegular.woff') format('woff'),
+        url('MessinaSans-CondensedRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedBoldItalic.eot');
+    src: local('Messina Sans Condensed Bold Italic'), local('MessinaSans-CondensedBoldItalic'),
+        url('MessinaSans-CondensedBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedBoldItalic.woff2') format('woff2'),
+        url('MessinaSans-CondensedBoldItalic.woff') format('woff'),
+        url('MessinaSans-CondensedBoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedBlackIt.eot');
+    src: local('Messina Sans Condensed Black Italic'), local('MessinaSans-CondensedBlackIt'),
+        url('MessinaSans-CondensedBlackIt.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedBlackIt.woff2') format('woff2'),
+        url('MessinaSans-CondensedBlackIt.woff') format('woff'),
+        url('MessinaSans-CondensedBlackIt.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedLight.eot');
+    src: local('Messina Sans Condensed Light'), local('MessinaSans-CondensedLight'),
+        url('MessinaSans-CondensedLight.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedLight.woff2') format('woff2'),
+        url('MessinaSans-CondensedLight.woff') format('woff'),
+        url('MessinaSans-CondensedLight.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedBlack.eot');
+    src: local('Messina Sans Condensed Black'), local('MessinaSans-CondensedBlack'),
+        url('MessinaSans-CondensedBlack.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedBlack.woff2') format('woff2'),
+        url('MessinaSans-CondensedBlack.woff') format('woff'),
+        url('MessinaSans-CondensedBlack.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedLightIt.eot');
+    src: local('Messina Sans Condensed Light Italic'), local('MessinaSans-CondensedLightIt'),
+        url('MessinaSans-CondensedLightIt.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedLightIt.woff2') format('woff2'),
+        url('MessinaSans-CondensedLightIt.woff') format('woff'),
+        url('MessinaSans-CondensedLightIt.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Messina Sans Condensed';
+    src: url('MessinaSans-CondensedBold.eot');
+    src: local('Messina Sans Condensed Bold'), local('MessinaSans-CondensedBold'),
+        url('MessinaSans-CondensedBold.eot?#iefix') format('embedded-opentype'),
+        url('MessinaSans-CondensedBold.woff2') format('woff2'),
+        url('MessinaSans-CondensedBold.woff') format('woff'),
+        url('MessinaSans-CondensedBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+

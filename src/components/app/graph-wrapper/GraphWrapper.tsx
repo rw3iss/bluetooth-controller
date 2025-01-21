@@ -70,7 +70,7 @@ class GraphWrapper extends Component<PlotlyWrapperProps, PlotlyWrapperState> {
 
     getLayout = () => ({
         font: {
-            family: 'Coffee Menu'
+            family: 'Messina'
         },
         title: {
             text: 'Data Visualization',

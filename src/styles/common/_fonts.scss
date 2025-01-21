@@ -12,3 +12,7 @@
 @include font("Coffee Green", "public/fonts/Coffee Green.otf", "opentype");
 @include font("Coffee Extra", "public/fonts/coffee_extra/Coffee Extra.otf", "opentype");
 @include font("Coffee Menu", "public/fonts/coffee_menus/Coffee Menus_personal use.ttf", "truetype"); //
+
+@include font("Messina", "public/fonts/messina-sans/MessinaSans-CondensedLight.ttf", "truetype");
+@include font("Messina Bold", "public/fonts/messina-sans/MessinaSans-CondensedBold.ttf", "truetype");
+@include font("Messina Black", "public/fonts/messina-sans/MessinaSans-CondensedBlack.ttf", "truetype");
