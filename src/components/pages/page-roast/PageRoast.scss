@@ -140,11 +140,13 @@
                 padding: 10px 0;
 
                 .tabs {
+                    display: flex;
                 }
 
                 .table {
                     flex-grow: 1;
                     overflow-y: auto;
+                    font-size: 0.85em;
                 }
             }
         }

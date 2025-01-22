@@ -48,9 +48,21 @@ $menuItemBg: #123;
         }
 
         &.logo {
+            padding-left: 0;
+            flex-grow: 0;
             font-size: 0.9em;
             font-weight: bold;
             color: rgb(255, 198, 93);
+
+            img {
+                height: 100%;
+                width: auto;
+                padding: 10px;
+            }
+
+            .name {
+                margin-left: 0px;
+            }
         }
     }
 

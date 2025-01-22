@@ -109,11 +109,11 @@ function graphData() {
             data: generateCurvedTemperatureData(totalSeconds),
             color: '#fcba03' // Green
         },
-        // {
-        //     type: 'data',
-        //     data: generateCurvedTemperatureData(totalSeconds),
-        //     color: '#03adfc' // Red
-        // },
+        {
+            type: 'data',
+            data: generateCurvedTemperatureData(totalSeconds),
+            color: '#03adfc' // Red
+        },
         {
             type: 'markers',
             data: [

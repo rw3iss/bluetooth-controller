@@ -37,44 +37,78 @@ export class Graph {
     }
 
     private async createGraph(): Promise<Plotly.PlotlyHTMLElement> {
-        const data = this.layers.map((layer, index) => {
-            const trace: Partial<Plotly.ScatterData> = {
+        const data = this.layers.filter(layer => layer.type !== 'markers' && layer.type !== 'events').map((layer, index) => {
+            return {
                 x: layer.data.map(item => item.time),
-                mode: layer.type === 'data' ? 'lines' : 'lines',
+                y: layer.data.map(item => item.value),
+                mode: 'lines',
+                type: 'scatter',
                 line: {
-                    width: layer.type === 'data' ? 1 : 2,
-                    color: layer.color || '#0000ff',
-                    dash: layer.type === 'markers' ? 'dash' : 'solid',
-                    shape: layer.type === 'data' ? 'spline' : 'linear',
-                    simplify: false
+                    color: layer.color,
+                    width: layer.width,
+                    dash: layer.dash
                 },
-                hoverinfo: layer.type === 'data' ? 'x+y' : layer.type === 'markers' ? 'text' : 'none',
-                editable: false // Prevent line editing (dragging)
+                name: layer.name,
+                visible: true // Initially all layers are visible
             };
+        });
 
-            if (layer.type === 'data') {
-                trace.y = layer.data.map(item => item.value);
-            } else {
-                trace.x = layer.data.map(item => item.time);//Array(100).fill(layer.data.map);
-                trace.text = layer.data.map(item => item.text || '');
-                trace.hoverlabel = { bgcolor: 'white', bordercolor: 'black', font: { color: 'black' } };
-            }
+        // Collect annotations for markers and events
+        const annotations: Partial<Plotly.Annotation>[] = this.layers.filter(layer => ['markers', 'events'].includes(layer.type)).flatMap(layer => {
+            return layer.data.map(item => {
+                return {
+                    x: item.time,
+                    y: 0.5, // Middle of y-axis for visibility
+                    xref: 'x',
+                    yref: 'paper',
+                    text: item.text || 'Event', // Default text if no text provided
+                    showarrow: false,
+                    ax: 0,
+                    ay: -40, // Adjust this to position the tooltip
+                    visible: true,
+                    // Custom styling for tooltip
+                    font: {
+                        size: 12,
+                        color: '#ffffff'
+                    },
+                    bgcolor: layer.color, // Use layer color for background
+                    bordercolor: '#ffffff',
+                    borderwidth: 2,
+                    borderpad: 4,
+                    opacity: 0.8
+                };
+            });
+        });
 
-            return trace;
+        // Collect shapes for markers and events
+        const shapes: Partial<Plotly.Shape>[] = this.layers.filter(layer => ['markers', 'events'].includes(layer.type)).flatMap(layer => {
+            return layer.data.map(item => {
+                return {
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'paper',
+                    x0: item.time,
+                    y0: 0,
+                    x1: item.time,
+                    y1: 1,
+                    line: {
+                        color: layer.color,
+                        width: 2,
+                        dash: 'solid'
+                    },
+                    visible: true
+                };
+            });
         });
 
         const maxTime = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)));
         const maxTemp = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)));
-        // Generate tick values every 15 seconds
         const tickVals = Array.from({ length: Math.ceil(maxTime / 15) + 1 }, (_, i) => i * 15);
-        // Format each tick value
         const tickText = tickVals.map(formatTime);
-
 
         const layout: Partial<Plotly.Layout> = {
             title: {
                 text: 'Roast History',
-                // Reduce spacing above the title
                 pad: { t: 5 }
             },
             paper_bgcolor: '#123',
@@ -115,7 +149,9 @@ export class Graph {
             },
             hovermode: 'closest',
             showlegend: false,
-            dragmode: false // Disable drag mode entirely
+            dragmode: false, // Disable drag mode entirely
+            shapes: shapes,
+            annotations: annotations
         };
 
         const config: Partial<Plotly.Config> = {
@@ -128,13 +164,10 @@ export class Graph {
             editable: false // Prevent any editing of the graph
         };
 
-
-        // Create the graph
         const plotlyInstance = await Plotly.newPlot(this.container, data, layout, config);
 
-        // Set up event listeners for zooming
-        //plotlyInstance.on('plotly_relayout', this.handleZoom.bind(this));
-
+        // Store reference to shapes for later manipulation
+        this.plotlyInstance = Promise.resolve(plotlyInstance);
         return plotlyInstance;
     }
 
@@ -162,6 +195,25 @@ export class Graph {
     //         Plotly.relayout(this.plotlyInstance, { 'yaxis.range': [0, maxZoomY] });
     //     }
     // }
+
+    // Update toggleLayerVisibility to handle annotations
+    public async toggleLayerVisibility(layerIndex: number, visible: boolean) {
+        const instance = await this.plotlyInstance;
+        if (layerIndex < this.layers.length) {
+            const layer = this.layers[layerIndex];
+            if (['markers', 'events'].includes(layer.type)) {
+                // For markers and events, we need to update the annotations
+                const annotations = instance.layout.annotations as Partial<Plotly.Annotation>[];
+                annotations.filter(annotation => annotation.bgcolor === layer.color).forEach(annotation => {
+                    annotation.visible = visible;
+                });
+                Plotly.relayout(instance, { annotations: annotations });
+            } else {
+                // For data layers, we use restyle
+                Plotly.restyle(instance, { visible: visible }, [layerIndex]);
+            }
+        }
+    }
 
     public async toggleControls() {
         this.showControls = !this.showControls;

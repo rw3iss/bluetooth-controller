@@ -16,13 +16,16 @@ const AppHeader = (props = {}) => {
     //     this.setState({ route: e.target.route });
     // }
 
-    function routeClass(r) {
-        return route == r ? 'active' : '';
+    function routeClass(r, other?) {
+        return (route == r ? 'active' : '') + (other ? ` ${other}` : '');
     }
 
     return (
         <header class="app-header">
-            <Link to="/roast" className={routeClass('/roast')}>Rrroast</Link>
+            <Link to="/roast" className={routeClass('/roast', 'logo')}>
+                <img src="/public/images/bean_logo.png" />
+                <span class="name">Rrroast</span>
+            </Link>
             <Link to="/profiles" className={routeClass('/profiles')}>Profiles</Link>
             <Link to="/history" className={routeClass('/history')}>History</Link>
             <Link to="/config" className={routeClass('/config')}>Config</Link>

@@ -22,10 +22,14 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
     }
 
     toggleLayerVisibility = (index: number, visible: boolean) => {
-        const newVisibility = [...this.state.visibility];
-        newVisibility[index] = visible;
-        this.setState({ visibility: newVisibility });
-        this.props.graph.updateLayerVisibility(index, visible);
+        // Update visibility in Graph
+        this.props.graph.toggleLayerVisibility(index, visible);
+        // Update local state which will trigger re-render
+        this.setState(prevState => {
+            const newVisibility = [...prevState.visibility];
+            newVisibility[index] = visible;
+            return { visibility: newVisibility };
+        });
     };
 
     render() {
@@ -72,10 +76,12 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
     }
 }
 
+
 interface CheckButtonProps {
     label: string;
-    checked: boolean;
-    onChange: (checked: boolean) => void;
+    onSelect: () => void;
+    onVisibilityChange: (checked: boolean) => void;
+    visible: boolean;
 }
 
 import { FunctionalComponent } from 'preact';
@@ -88,38 +94,38 @@ interface CheckButtonProps {
 }
 
 export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onSelect, onVisibilityChange, visible }) => {
+    // Use local state to manage the checkbox state
     const [isChecked, setIsChecked] = useState(visible);
 
-    const handleClick = () => {
+    // Handle click on the button
+    const handleClick = (e) => {
+        if (e.target.type == 'checkbox') return;
         onSelect();
     };
 
-    const handleChange = (e: Event) => {
+    // Handle change on the checkbox
+    const handleCheck = (e: Event) => {
         const target = e.target as HTMLInputElement;
         setIsChecked(target.checked);
         onVisibilityChange(target.checked);
     };
 
     return (
-        <div style={{ display: 'inline-block', marginRight: '10px' }}>
-            <button
-                onClick={handleClick}
+        <div class="check-button button"
+            onClick={handleClick}
+            style={{ display: 'flex', flex: '1', marginRight: '10px' }}>
+            <div
                 style={{
-                    padding: '5px 10px',
-                    border: '1px solid #ccc',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    backgroundColor: 'white'
                 }}
             >
-                <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={handleChange}
-                    style={{ marginRight: '5px', verticalAlign: 'middle' }}
-                />
                 {label}
-            </button>
+            </div>
+            <input class="checkbox"
+                type="checkbox"
+                checked={isChecked} // Use state for checked prop
+                onChange={handleCheck}
+                style={{ marginRight: '5px', verticalAlign: 'middle' }}
+            />
         </div>
     );
 };
