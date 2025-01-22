@@ -5,7 +5,7 @@ import Application from '../../Application.js';
 // get the current roast controller
 export function useRoastController() {
     const ctrl = Application.roastController;
-    const [roastState, setRoastState] = useState(undefined)
+    const [roastState, setRoastState] = useState(ctrl.roast)
 
     useEffect(() => {
         setRoastState(ctrl.roast);

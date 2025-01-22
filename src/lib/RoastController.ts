@@ -12,7 +12,7 @@ export const DEFAULT_ROAST_STATE = () => ({
     isStarted: false,
     isPaused: false,
 
-    timeStarted: undefined,
+    timeStarted: new Date(),
     timeRunningMs: 0,
 
     currentTemp: 0,

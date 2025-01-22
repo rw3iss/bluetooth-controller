@@ -8,10 +8,10 @@ import { useSavedState } from 'lib/hooks/useSavedState.js';
 import Notification from 'lib/NotificatonService';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
-import CanvasGraph from '../../app/Graph/CanvasGraph';
+import { GraphLayer } from '../../app/plotly-graph/Graph';
+import { CanvasGraph } from '../../app/plotly-graph/PlotlyGraph';
 import { Button } from '../../basic/button/Button';
 import Toggle from '../../basic/toggle/Toggle.js';
-
 import './PageRoast.scss';
 
 const DEFAULT_VIEW_STATE = {
@@ -58,15 +58,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-const layers = {
-    temperature: true,
-    motorSpeed: true,
-    exhaustSpeed: true,
-    events: true,
-    markers: true
-};
-
 const graphConfig = {
     style: 'line',
     axes: {
@@ -83,26 +74,64 @@ const graphConfig = {
     ]
 }
 
-async function graphData() {
-    const data1 = [], data2 = [];
+const totalSeconds = 15 * 60; // 15 minutes in seconds
+const dataArray = (): Array<{ time: number; value: number }> => {
+    return Array.from({ length: totalSeconds }, (_, index) => {
+        const time = index; // time in seconds
+        // Here, we'll generate a value that oscillates with some noise for demonstration
+        const value = Math.sin(time / 10) * 50 + (Math.random() - 0.5) * 5; // Oscillating function with noise
+        return { time, value };
+    });
+}
 
-    for (let i = 0; i < 20; i++) {
-        data1.push({ x: i, y: getRandomInt(40000, 50000) });
-    }
+function generateCurvedTemperatureData(totalSeconds: number): Array<{ time: number; value: number }> {
+    return Array.from({ length: totalSeconds }, (_, index) => {
+        const time = index; // Time in seconds
+        const maxTemp = 400; // Maximum temperature in Fahrenheit, adjusted to 400F
+        const baseTemp = 0; // Starting temperature
 
-    for (let i = 0; i < 20; i++) {
-        data2.push({ x: i, y: getRandomInt(40000, 50000) });
-    }
+        // Use a sigmoid-like function for a curved temperature increase
+        // This function starts slow, rises quickly in the middle, then tapers off
+        const k = 0.005; // Control the steepness of the curve
+        const temperature = maxTemp / (1 + Math.exp(-k * (index - totalSeconds / 2))) + (Math.random() - 0.5) * 5;
 
-    return [{
-        id: "temp",
-        label: "Temperature",
-        data: data1
-    }, {
-        id: "other",
-        label: "Other",
-        data: data2
-    }];
+        // Clamp the temperature to ensure it stays between baseTemp and maxTemp
+        const finalTemperature = Math.min(maxTemp, Math.max(baseTemp, temperature));
+
+        return { time, value: finalTemperature };
+    });
+}
+
+function graphData() {
+    const layers: GraphLayer[] = [
+        {
+            type: 'data',
+            data: generateCurvedTemperatureData(totalSeconds),
+            color: '#008000' // Green
+        },
+        {
+            type: 'data',
+            data: generateCurvedTemperatureData(totalSeconds),
+            color: '#ff0000' // Red
+        },
+        {
+            type: 'markers',
+            data: [
+                { time: 1.5, text: 'Event A' },
+                { time: 3.5, text: 'Event B' }
+            ],
+            color: '#0000ff' // Blue
+        },
+        {
+            type: 'events',
+            data: [
+                { time: 2, text: 'Major Update' },
+                { time: 4, text: 'System Overload' }
+            ],
+            color: '#800080' // Purple
+        }
+    ];
+    return layers;
 }
 
 export function PageRoast(props) {
@@ -204,7 +233,11 @@ export function PageRoast(props) {
             </div>
 
             <div class="panel-graph">
-                <CanvasGraph getData={graphData} config={graphConfig} />
+
+                <CanvasGraph layers={graphData()} config={graphConfig} />
+
+                {/* <CanvasGraph getData={graphData} config={graphConfig} /> */}
+
             </div>
         </div>
     )

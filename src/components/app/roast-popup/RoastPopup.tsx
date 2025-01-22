@@ -10,23 +10,27 @@ export function RoastPopup() {
     }
 
     const now = new Date();
+    console.log(`???`, now, roastState.timeStarted);
+
     const runSecs = roastState ? (now.getTime() - roastState.timeStarted.getTime()) : 0;
     //const runSecs = (roastState?.timeRunningMs || 0) / 1000;
     const runMins = Math.floor(runSecs / 60);
     const remSecs = runSecs - (runMins * 60);
 
-    return roastState ? <div id="roast-popup" class={`${roastState.isStarted ? `show` : ``} ${roastState.isPaused ? 'paused' : ''}`} onClick={onClick}>
-        <div class="title">
-            Roast
-        </div>
-        <div class="status">
-            {roastState.isPaused ? "PAUSED" : "RUNNING"}
-        </div>
-        <div class="runtime">
-            <div class="label">
-                Time:
+    return roastState ?
+        <div id="roast-popup" class={`${roastState.isStarted ? `show` : ``} ${roastState.isPaused ? 'paused' : ''}`} onClick={onClick}>
+            <div class="title">
+                Roast
             </div>
-            {runMins > 0 ? <><span>{runMins}</span>m <span>{remSecs}</span>s</> : <><span>{remSecs}</span>s</>}
+            <div class="status">
+                {roastState.isPaused ? "PAUSED" : "RUNNING"}
+            </div>
+            <div class="runtime">
+                <div class="label">
+                    Time:
+                </div>
+                {runMins > 0 ? <><span>{runMins}</span>m <span>{remSecs}</span>s</> : <><span>{remSecs}</span>s</>}
+            </div>
         </div>
-    </div> : undefined
+        : undefined
 }
