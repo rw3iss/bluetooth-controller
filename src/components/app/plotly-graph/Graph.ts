@@ -78,15 +78,15 @@ export class Graph {
             },
             paper_bgcolor: '#123',
             plot_bgcolor: '#234',
-            margin: { t: 40, r: 10, b: 40, l: 50 },
+            margin: { t: 40, r: 10, b: 80, l: 60 },
             xaxis: {
                 title: 'Time',
                 type: 'linear',
                 autorange: false,
+                fixedrange: true,
                 range: [0, maxTime],
-                titlefont: { size: 12 },
+                titlefont: { size: 14 },
                 tickfont: { size: 10 },
-                margin: { t: 0, r: 0, b: 20, l: 30 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
                 tickcolor: '#666666',
@@ -97,10 +97,10 @@ export class Graph {
                 title: 'Temp',
                 type: 'linear',
                 autorange: false,
+                fixedrange: true,
                 range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)))],
-                titlefont: { size: 12 },
+                titlefont: { size: 14 },
                 tickfont: { size: 10 },
-                margin: { t: 0, r: 0, b: 0, l: 0 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
                 tickcolor: '#666666'
@@ -123,8 +123,40 @@ export class Graph {
             editable: false // Prevent any editing of the graph
         };
 
-        return Plotly.newPlot(this.container, data, layout, config);
+
+        // Create the graph
+        const plotlyInstance = await Plotly.newPlot(this.container, data, layout, config);
+
+        // Set up event listeners for zooming
+        //plotlyInstance.on('plotly_relayout', this.handleZoom.bind(this));
+
+        return plotlyInstance;
     }
+
+    // private handleZoom = (eventData: any) => {
+    //     console.log(`zoom`)
+    //     const { 'xaxis.range[0]': xMin, 'xaxis.range[1]': xMax, 'yaxis.range[0]': yMin, 'yaxis.range[1]': yMax } = eventData;
+
+    //     // Define your min and max zoom levels here
+    //     const minZoomX = 60; // Example: 1 minute minimum zoom level
+    //     const maxZoomX = this.layers.flatMap(layer => layer.data.map(item => item.time)).reduce((a, b) => Math.max(a, b), 0);
+    //     const minZoomY = 10; // Example: minimum y-axis range
+    //     const maxZoomY = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)));
+
+    //     // Check and adjust x-axis zoom
+    //     if (xMax - xMin < minZoomX) {
+    //         Plotly.relayout(this.plotlyInstance, { 'xaxis.range': [xMin, xMin + minZoomX] });
+    //     } else if (xMax - xMin > maxZoomX) {
+    //         Plotly.relayout(this.plotlyInstance, { 'xaxis.range': [0, maxZoomX] });
+    //     }
+
+    //     // Check and adjust y-axis zoom
+    //     if (yMax - yMin < minZoomY) {
+    //         Plotly.relayout(this.plotlyInstance, { 'yaxis.range': [yMin, yMin + minZoomY] });
+    //     } else if (yMax - yMin > maxZoomY) {
+    //         Plotly.relayout(this.plotlyInstance, { 'yaxis.range': [0, maxZoomY] });
+    //     }
+    // }
 
     public async toggleControls() {
         this.showControls = !this.showControls;
