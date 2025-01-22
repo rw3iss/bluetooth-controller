@@ -50,18 +50,29 @@ export class Graph {
         });
 
         const layout: Partial<Plotly.Layout> = {
-            title: 'Multi-Layer Graph',
+            title: 'Roast History',
+            paper_bgcolor: '#123',
+            plot_bgcolor: '#234',
             xaxis: {
                 title: 'Time (seconds)',
                 type: 'linear',
                 autorange: false,
-                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)))]
+                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)))],
+                gridcolor: '#444444',
+                linecolor: '#666666',
+                tickcolor: '#666666'
             },
             yaxis: {
                 title: 'Value',
                 type: 'linear',
                 autorange: false,
-                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)))]
+                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)))],
+                gridcolor: '#444444',
+                linecolor: '#666666',
+                tickcolor: '#666666'
+            },
+            font: {
+                color: '#abc' // White text for better visibility on dark background
             },
             hovermode: 'closest',
             showlegend: true,

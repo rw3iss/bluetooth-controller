@@ -4,7 +4,9 @@
     display: flex;
     flex-direction: column;
     flex: 1 0 100%;
+    flex-shrink: 0;
     height: 100vh;
+    min-height: 800px;
     width: 100vw;
     max-height: 100vh;
     max-width: 100vw;
@@ -12,11 +14,15 @@
     background: var(--app-bg); //var(--app-bg, #123) url("public/images/bean.svg") repeat;
 
     .context {
-        height: 100%;
-        width: 100%;
         display: flex;
-        flex-direction: column;
-        flex: 1 0 100%;
+        flex-grow: 1;
+        overflow: hidden;
+
+        // height: 100%;
+        // width: 100%;
+        // display: flex;
+        // flex-direction: column;
+        // flex: 1 0 100%;
 
         .page {
             flex: 1 0 100%;
@@ -25,7 +31,7 @@
             color: white;
             display: flex;
             flex-direction: row;
-            background: var(--page-bg, #123);
+            background: var(--page-bg, rgb(51, 51, 17));
         }
     }
 }
