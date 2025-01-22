@@ -107,28 +107,28 @@ function graphData() {
         {
             type: 'data',
             data: generateCurvedTemperatureData(totalSeconds),
-            color: '#008000' // Green
+            color: '#fcba03' // Green
         },
-        {
-            type: 'data',
-            data: generateCurvedTemperatureData(totalSeconds),
-            color: '#ff0000' // Red
-        },
+        // {
+        //     type: 'data',
+        //     data: generateCurvedTemperatureData(totalSeconds),
+        //     color: '#03adfc' // Red
+        // },
         {
             type: 'markers',
             data: [
-                { time: 1.5, text: 'Event A' },
-                { time: 3.5, text: 'Event B' }
+                { time: 120, text: 'Event A' },
+                { time: 380, text: 'Event B' }
             ],
-            color: '#0000ff' // Blue
+            color: '#bab375'
         },
         {
             type: 'events',
             data: [
-                { time: 2, text: 'Major Update' },
-                { time: 4, text: 'System Overload' }
+                { time: 200, text: 'Major Update' },
+                { time: 400, text: 'System Overload' }
             ],
-            color: '#800080' // Purple
+            color: '#68a693'
         }
     ];
     return layers;

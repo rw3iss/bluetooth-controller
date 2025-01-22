@@ -42,7 +42,7 @@ export class Graph {
                 x: layer.data.map(item => item.time),
                 mode: layer.type === 'data' ? 'lines' : 'lines',
                 line: {
-                    width: layer.type === 'data' ? 1 : 1,
+                    width: layer.type === 'data' ? 1 : 2,
                     color: layer.color || '#0000ff',
                     dash: layer.type === 'markers' ? 'dash' : 'solid',
                     shape: layer.type === 'data' ? 'spline' : 'linear',
@@ -55,7 +55,7 @@ export class Graph {
             if (layer.type === 'data') {
                 trace.y = layer.data.map(item => item.value);
             } else {
-                trace.y = Array(layer.data.length).fill(0);
+                trace.x = layer.data.map(item => item.time);//Array(100).fill(layer.data.map);
                 trace.text = layer.data.map(item => item.text || '');
                 trace.hoverlabel = { bgcolor: 'white', bordercolor: 'black', font: { color: 'black' } };
             }
@@ -64,6 +64,7 @@ export class Graph {
         });
 
         const maxTime = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)));
+        const maxTemp = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)));
         // Generate tick values every 15 seconds
         const tickVals = Array.from({ length: Math.ceil(maxTime / 15) + 1 }, (_, i) => i * 15);
         // Format each tick value
@@ -83,27 +84,31 @@ export class Graph {
                 title: 'Time',
                 type: 'linear',
                 autorange: false,
-                fixedrange: true,
-                range: [0, maxTime],
+                //fixedrange: true,
+                range: [0, maxTime + 50],
                 titlefont: { size: 14 },
                 tickfont: { size: 10 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
                 tickcolor: '#666666',
                 tickvals: tickVals,
-                ticktext: tickText
+                ticktext: tickText,
+                minallowed: 0,
+                maxallowed: maxTime + 50
             },
             yaxis: {
                 title: 'Temp',
                 type: 'linear',
                 autorange: false,
-                fixedrange: true,
-                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)))],
+                //fixedrange: true,
+                range: [0, maxTemp + 10],
                 titlefont: { size: 14 },
                 tickfont: { size: 10 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
-                tickcolor: '#666666'
+                tickcolor: '#666666',
+                minallowed: 0,
+                maxallowed: maxTemp
             },
             font: {
                 color: '#abc' // White text for better visibility on dark background

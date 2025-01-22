@@ -38,7 +38,7 @@ export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ lay
                     instance.removeAllListeners('plotly_click');
                     instance.removeAllListeners('plotly_hover');
                     instance.removeAllListeners('plotly_unhover');
-                    graphContainerRef.current?.removeChild(controlToggle);
+                    //graphContainerRef.current?.removeChild(controlToggle);
                 };
             });
         }
