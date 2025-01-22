@@ -1,5 +1,19 @@
 import * as Plotly from 'plotly.js-dist';
 
+// Helper function to format seconds into "XhYmZs" format, excluding '0' values
+function formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    let result = '';
+    if (hours > 0) result += `${hours}h`;
+    if (minutes > 0) result += `${minutes}m`;
+    if (secs > 0 || (hours === 0 && minutes === 0)) result += `${secs}s`;
+
+    return result;
+}
+
 export interface GraphLayer {
     type: 'data' | 'markers' | 'events';
     data: Array<{ time: number; value?: number; text?: string }>;
@@ -49,24 +63,44 @@ export class Graph {
             return trace;
         });
 
+        const maxTime = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)));
+        // Generate tick values every 15 seconds
+        const tickVals = Array.from({ length: Math.ceil(maxTime / 15) + 1 }, (_, i) => i * 15);
+        // Format each tick value
+        const tickText = tickVals.map(formatTime);
+
+
         const layout: Partial<Plotly.Layout> = {
-            title: 'Roast History',
+            title: {
+                text: 'Roast History',
+                // Reduce spacing above the title
+                pad: { t: 5 }
+            },
             paper_bgcolor: '#123',
             plot_bgcolor: '#234',
+            margin: { t: 40, r: 10, b: 40, l: 50 },
             xaxis: {
-                title: 'Time (seconds)',
+                title: 'Time',
                 type: 'linear',
                 autorange: false,
-                range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)))],
+                range: [0, maxTime],
+                titlefont: { size: 12 },
+                tickfont: { size: 10 },
+                margin: { t: 0, r: 0, b: 20, l: 30 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
-                tickcolor: '#666666'
+                tickcolor: '#666666',
+                tickvals: tickVals,
+                ticktext: tickText
             },
             yaxis: {
-                title: 'Value',
+                title: 'Temp',
                 type: 'linear',
                 autorange: false,
                 range: [0, Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)))],
+                titlefont: { size: 12 },
+                tickfont: { size: 10 },
+                margin: { t: 0, r: 0, b: 0, l: 0 },
                 gridcolor: '#444444',
                 linecolor: '#666666',
                 tickcolor: '#666666'
@@ -75,7 +109,7 @@ export class Graph {
                 color: '#abc' // White text for better visibility on dark background
             },
             hovermode: 'closest',
-            showlegend: true,
+            showlegend: false,
             dragmode: false // Disable drag mode entirely
         };
 

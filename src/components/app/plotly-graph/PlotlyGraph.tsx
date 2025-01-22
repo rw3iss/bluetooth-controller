@@ -24,14 +24,14 @@ export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ lay
                 instance.on('plotly_hover', handleGraphHover);
                 instance.on('plotly_unhover', handleGraphUnhover);
 
-                const controlToggle = document.createElement('button');
-                controlToggle.textContent = 'Controls';
-                controlToggle.style.position = 'absolute';
-                controlToggle.style.right = '10px';
-                controlToggle.style.top = '10px';
-                controlToggle.style.zIndex = '1000';
-                controlToggle.addEventListener('click', () => newGraph.toggleControls());
-                graphContainerRef.current?.appendChild(controlToggle);
+                // const controlToggle = document.createElement('button');
+                // controlToggle.textContent = 'Controls';
+                // controlToggle.style.position = 'absolute';
+                // controlToggle.style.right = '10px';
+                // controlToggle.style.top = '10px';
+                // controlToggle.style.zIndex = '1000';
+                // controlToggle.addEventListener('click', () => newGraph.toggleControls());
+                // graphContainerRef.current?.appendChild(controlToggle);
 
                 // Cleanup function
                 return () => {
