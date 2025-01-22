@@ -10,10 +10,7 @@ export function RoastPopup() {
     }
 
     const now = new Date();
-    console.log(`???`, now, roastState.timeStarted);
-
     const runSecs = roastState ? (now.getTime() - roastState.timeStarted.getTime()) : 0;
-    //const runSecs = (roastState?.timeRunningMs || 0) / 1000;
     const runMins = Math.floor(runSecs / 60);
     const remSecs = runSecs - (runMins * 60);
 

@@ -1,9 +1,72 @@
+// :root {
+//     --default-font: "Messina";
+//     --default-radius: 10px;
+//     --default-font-size: 18px;
+//     --default-color: #def;
+//     --default-letter-spacing: 2px;
+//     --default-line-height: 1em;
+//     --default-item-spacing: 2px;
+
+//     --radius-small: 5px;
+//     --radius-medium: 10px;
+//     --radius-large: 15px;
+
+//     --font-default: var(--default-font);
+//     --font-header: "Coffee Green"; //Messina Black";
+//     --font-label: "Coffee Green"; //var(--default-font);
+//     --font-size-header: 24px;
+
+//     --input-font: var(--default-font);
+//     --input-padding: 2px;
+//     --input-font-size: 1.1rem;
+//     --input-color: var(--default-color);
+//     --input-background: #123;
+//     --input-shadow: inset 1px 1px 3px rgba(5, 5, 10, 0.5);
+//     --input-outline: none;
+//     --input-letter-spacing: 3px;
+
+//     // default app bg
+//     --app-bg: #012;
+//     --app-header-bg: #012;
+//     --app-bg-image-size: max(50px, 2vw);
+
+//     // side menu bg for empty part
+//     --panel-bg: #123;
+//     --panel-bg-faded: rgba(17, 34, 51, 1);
+//     --panel-section-bg: rgba(34, 51, 68, 1);
+//     --panel-radius: 10px;
+//     --panel-min-width: 250px;
+//     --panel-animation: 0.2s;
+//     --panel-animation-type: ease;
+//     --panel-padding: 10px;
+
+//     --page-bg: #123;
+//     --page-section-bg: #234;
+
+//     --button-bg: rgb(54, 75, 98);
+//     --button-bg-hover: rgb(65, 92, 122);
+//     --button-bg-active: rgb(67, 93, 118);
+//     --button-bg-active-hover: #486a8d;
+//     --button-height: 30px;
+//     --button-color: rgb(94, 177, 168);
+//     --button-color-hover: rgb(113, 255, 238);
+//     --button-color-active: rgb(90, 242, 224);
+//     --button-color-active-hover: rgb(111, 255, 255);
+//     --button-radius: 5px;
+//     --button-padding: 5px;
+
+//     --label-color: rgb(160, 188, 192);
+
+//     --link-color: rgb(66, 201, 255);
+//     --link-color-hover: rgb(96, 242, 255);
+// }
+
 :root {
     --default-font: "Messina";
     --default-radius: 10px;
     --default-font-size: 18px;
     --default-color: #def;
-    --default-letter-spacing: 2px;
+    --default-letter-spacing: 0px;
     --default-line-height: 1em;
     --default-item-spacing: 2px;
 
@@ -20,43 +83,43 @@
     --input-padding: 2px;
     --input-font-size: 1.1rem;
     --input-color: var(--default-color);
-    --input-background: #123;
-    --input-shadow: inset 1px 1px 3px rgba(5, 5, 10, 0.5);
+    --input-background: #001f3f;
+    --input-shadow: inset 1px 1px 3px rgba(0, 31, 63, 0.5);
     --input-outline: none;
     --input-letter-spacing: 3px;
 
     // default app bg
-    --app-bg: #012;
-    --app-header-bg: #012;
+    --app-bg: #000a1a;
+    --app-header-bg: #000a1a;
     --app-bg-image-size: max(50px, 2vw);
 
     // side menu bg for empty part
-    --panel-bg: #123;
-    --panel-bg-faded: rgba(17, 34, 51, 1);
-    --panel-section-bg: rgba(34, 51, 68, 1);
+    --panel-bg: #001f3f;
+    --panel-bg-faded: rgba(0, 31, 63, 1);
+    --panel-section-bg: rgba(0, 47, 95, 1);
     --panel-radius: 10px;
     --panel-min-width: 250px;
     --panel-animation: 0.2s;
     --panel-animation-type: ease;
     --panel-padding: 10px;
 
-    --page-bg: #123;
-    --page-section-bg: #234;
+    --page-bg: #001f3f;
+    --page-section-bg: #002b59;
 
-    --button-bg: rgb(54, 75, 98);
-    --button-bg-hover: rgb(65, 92, 122);
-    --button-bg-active: rgb(67, 93, 118);
-    --button-bg-active-hover: #486a8d;
+    --button-bg: rgb(0, 60, 120);
+    --button-bg-hover: rgb(0, 72, 144);
+    --button-bg-active: rgb(0, 80, 160);
+    --button-bg-active-hover: #004c99;
     --button-height: 30px;
-    --button-color: rgb(94, 177, 168);
-    --button-color-hover: rgb(113, 255, 238);
-    --button-color-active: rgb(90, 242, 224);
-    --button-color-active-hover: rgb(111, 255, 255);
+    --button-color: rgb(0, 255, 255);
+    --button-color-hover: rgb(100, 255, 255);
+    --button-color-active: rgb(50, 255, 255);
+    --button-color-active-hover: rgb(120, 255, 255);
     --button-radius: 5px;
     --button-padding: 5px;
 
-    --label-color: rgb(160, 188, 192);
+    --label-color: rgb(120, 200, 255);
 
-    --link-color: rgb(66, 201, 255);
-    --link-color-hover: rgb(96, 242, 255);
+    --link-color: rgb(0, 204, 255);
+    --link-color-hover: rgb(0, 255, 255);
 }

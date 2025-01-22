@@ -2,13 +2,14 @@ import { FunctionalComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
 import { LayerManager } from './LayerManager';
-import './PlotlyGraph.scss';
+import './GraphView.scss';
+import { GraphOptions } from './GraphOptions.js';
 
-interface CanvasGraphProps {
+interface GraphViewProps {
     layers: GraphLayer[];
 }
 
-export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ layers }) => {
+export const GraphView: FunctionalComponent<{ layers: GraphLayer[] }> = ({ layers }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
     const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
@@ -44,6 +45,11 @@ export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ lay
         }
     }, [layers]);
 
+    const handleIntervalChange = (interval: number, average: boolean) => {
+        if (graph) {
+            graph.changeInterval(interval, average);
+        }
+    };
     const handleGraphClick = (data: any) => {
         if (data.points && data.points.length > 0) {
             const point = data.points[0];
@@ -67,8 +73,9 @@ export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ lay
     };
 
     return (
-        <div style={{ position: 'relative' }} class="canvas-graph">
+        <div style={{ position: 'relative' }} class="graph-view">
             <div class="graph-wrapper" ref={graphContainerRef} style={{ width: '100%', minHeight: '400px', height: '50vh' }} />
+            {graph && <GraphOptions onIntervalChange={handleIntervalChange} />}
             {graph &&
                 <LayerManager
                     layers={layers}
@@ -81,4 +88,4 @@ export const CanvasGraph: FunctionalComponent<{ layers: GraphLayer[] }> = ({ lay
     );
 };
 
-export default CanvasGraph;
+export default GraphView;

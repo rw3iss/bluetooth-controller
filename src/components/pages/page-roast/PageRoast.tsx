@@ -8,8 +8,8 @@ import { useSavedState } from 'lib/hooks/useSavedState.js';
 import Notification from 'lib/NotificatonService';
 import { capitalize } from 'lib/utils/StrUtils';
 import { useState } from 'preact/hooks';
-import { GraphLayer } from '../../app/plotly-graph/Graph';
-import { CanvasGraph } from '../../app/plotly-graph/PlotlyGraph';
+import { GraphLayer } from '../../app/graph-view/Graph';
+import { GraphView } from '../../app/graph-view/GraphView';
 import { Button } from '../../basic/button/Button';
 import Toggle from '../../basic/toggle/Toggle.js';
 import './PageRoast.scss';
@@ -52,37 +52,7 @@ Other components - useEffect((), [roastState]); - when state changes, the views 
 
 */
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const graphConfig = {
-    style: 'line',
-    axes: {
-        x: {
-            title: "Time"
-        },
-        y: {
-            title: "Value"
-        }
-    },
-    layers: [
-        { id: "temp", visible: true, color: "yellow" },
-        { id: "other", visible: true, color: "blue" }
-    ]
-}
-
 const totalSeconds = 15 * 60; // 15 minutes in seconds
-const dataArray = (): Array<{ time: number; value: number }> => {
-    return Array.from({ length: totalSeconds }, (_, index) => {
-        const time = index; // time in seconds
-        // Here, we'll generate a value that oscillates with some noise for demonstration
-        const value = Math.sin(time / 10) * 50 + (Math.random() - 0.5) * 5; // Oscillating function with noise
-        return { time, value };
-    });
-}
 
 function generateCurvedTemperatureData(totalSeconds: number): Array<{ time: number; value: number }> {
     return Array.from({ length: totalSeconds }, (_, index) => {
@@ -105,30 +75,38 @@ function generateCurvedTemperatureData(totalSeconds: number): Array<{ time: numb
 function graphData() {
     const layers: GraphLayer[] = [
         {
+            name: 'Temperature',
             type: 'data',
             data: generateCurvedTemperatureData(totalSeconds),
-            color: '#fcba03' // Green
+            color: '#fcba03',
         },
+        // {
+        //     name: 'Data 2',
+        //     type: 'data',
+        //     data: generateCurvedTemperatureData(totalSeconds),
+        //     color: '#03adfc'
+        // },
         {
-            type: 'data',
-            data: generateCurvedTemperatureData(totalSeconds),
-            color: '#03adfc' // Red
-        },
-        {
+            name: 'Markers',
             type: 'markers',
             data: [
                 { time: 120, text: 'Event A' },
                 { time: 380, text: 'Event B' }
             ],
-            color: '#bab375'
+            color: 'rgb(209, 199, 106)',
+            dash: true,
+            width: 2
         },
         {
+            name: 'Events',
             type: 'events',
             data: [
                 { time: 200, text: 'Major Update' },
                 { time: 400, text: 'System Overload' }
             ],
-            color: '#68a693'
+            color: 'rgb(100, 212, 178)',
+            dash: false,
+            width: 1
         }
     ];
     return layers;
@@ -234,9 +212,7 @@ export function PageRoast(props) {
 
             <div class="panel-graph">
 
-                <CanvasGraph layers={graphData()} config={graphConfig} />
-
-                {/* <CanvasGraph getData={graphData} config={graphConfig} /> */}
+                <GraphView layers={graphData()} />
 
             </div>
         </div>

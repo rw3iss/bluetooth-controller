@@ -42,7 +42,7 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
                     {layers.map((layer, index) => (
                         <CheckButton
                             key={index}
-                            label={['Data 1', 'Data 2', 'Markers', 'Events'][index]}
+                            label={layer.name || 'Data'}
                             onSelect={() => onSelect(index)}
                             onVisibilityChange={(visible) => this.toggleLayerVisibility(index, visible)}
                             visible={visibility[index]}
