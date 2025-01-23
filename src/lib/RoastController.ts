@@ -47,7 +47,7 @@ export class RoastController {
         const db = IndexedDBManager.getDb();
         if (db && restore) {
             const s: IDbSavedState | undefined = await db.get(STATE_STORE, ROAST_STATE_ID);
-            console.log(`See saved roast state?`, s)
+            //console.log(`See saved roast state?`, s)
             if (s) this.roast = s.state;
             if (this.roast?.isStarted && !this.roast.isPaused) {
                 // resume roasting...

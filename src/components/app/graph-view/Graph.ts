@@ -1,40 +1,5 @@
 import * as Plotly from 'plotly.js-dist';
-
-// Helper function to format seconds into "XhYmZs" format, excluding '0' values
-function formatTime(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    let result = '';
-    if (hours > 0) result += `${hours}h`;
-    if (minutes > 0) result += `${minutes}m`;
-    if (secs > 0 || (hours === 0 && minutes === 0)) result += `${secs}s`;
-
-    return result;
-}
-
-// Helper function to filter data based on interval
-function filterDataByInterval(data: DataPoint[], interval: number, average: boolean): DataPoint[] {
-    if (average) {
-        return data.reduce((acc, _, index) => {
-            if (index % interval === 0) {
-                const start = Math.max(0, index - Math.floor(interval / 2));
-                const end = Math.min(data.length, index + Math.floor(interval / 2) + 1);
-                const valuesToAverage = data.slice(start, end).map(item => item.value || 0);
-                const avgValue = valuesToAverage.reduce((sum, value) => sum + value, 0) / valuesToAverage.length;
-
-                acc.push({
-                    time: data[index].time,
-                    value: avgValue
-                });
-            }
-            return acc;
-        }, [] as DataPoint[]);
-    } else {
-        return data.filter((_, index) => index % interval === 0);
-    }
-}
+import { filterDataByInterval, formatTime } from './graphUtils.js';
 
 export interface GraphLayer {
     type: 'data' | 'markers' | 'events';
@@ -43,19 +8,18 @@ export interface GraphLayer {
     dash?: boolean;
     width?: number;
     name?: string;
+    unitName?: string;
 }
 
-
-interface DataPoint {
+export interface DataPoint {
     time: number;
     value?: number;
     text?: string;
 }
 
 export class Graph {
-    private plotlyInstance: Promise<Plotly.PlotlyHTMLElement>;
+    public plotlyInstance: Promise<Plotly.PlotlyHTMLElement>;
     private layers: GraphLayer[];
-    private originalLayers: GraphLayer[];
     private showControls: boolean = false;
     private currentInterval: number = 5; // Default interval
     private isAveraged: boolean = false;
@@ -81,7 +45,7 @@ export class Graph {
                 name: layer.name,
                 visible: true,
                 showlegend: false,
-                hovertemplate: `<b>${layer.name}: %{y:.2f}</b>`
+                hovertemplate: `<b>%{y:.0f}</b>`
             };
         });
 
@@ -144,9 +108,9 @@ export class Graph {
                 text: 'Roast History',
                 pad: { t: 5 }
             },
-            paper_bgcolor: '#123',
-            plot_bgcolor: '#234',
-            margin: { t: 40, r: 10, b: 80, l: 60 },
+            paper_bgcolor: '#001f3f',
+            plot_bgcolor: '#001f3f',
+            margin: { t: 40, r: 10, b: 60, l: 60 },
             xaxis: {
                 title: 'Time',
                 type: 'linear',
@@ -155,7 +119,7 @@ export class Graph {
                 range: [0, this.maxTime + 50],
                 titlefont: { size: 14 },
                 tickfont: { size: 10 },
-                gridcolor: '#444444',
+                gridcolor: '#234',
                 linecolor: '#666666',
                 tickcolor: '#666666',
                 tickvals: tickVals,
@@ -171,7 +135,7 @@ export class Graph {
                 range: [0, maxTemp + 10],
                 titlefont: { size: 14 },
                 tickfont: { size: 10 },
-                gridcolor: '#444444',
+                gridcolor: '#234',
                 linecolor: '#666666',
                 tickcolor: '#666666',
                 minallowed: 0,
@@ -182,7 +146,7 @@ export class Graph {
             },
             hovermode: 'closest',
             showlegend: false,
-            dragmode: false, // Disable drag mode entirely
+            dragmode: 'pan', // Disable drag mode entirely
             shapes: shapes,
             annotations: annotations
         };
@@ -273,7 +237,7 @@ export class Graph {
     }
 
     // Method to redraw the graph with updated data
-    private async redrawGraph() {
+    public async redrawGraph() {
         const instance = await this.plotlyInstance;
         const data = this.layers.filter(layer => layer.type !== 'markers' && layer.type !== 'events').map((layer, index) => {
             return {

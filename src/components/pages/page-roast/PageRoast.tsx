@@ -76,6 +76,7 @@ function graphData() {
     const layers: GraphLayer[] = [
         {
             name: 'Temperature',
+            unitName: 'Temp',
             type: 'data',
             data: generateCurvedTemperatureData(totalSeconds),
             color: '#fcba03',
@@ -88,6 +89,7 @@ function graphData() {
         // },
         {
             name: 'Markers',
+            unitName: 'Marker',
             type: 'markers',
             data: [
                 { time: 120, text: 'Event A' },
@@ -99,6 +101,7 @@ function graphData() {
         },
         {
             name: 'Events',
+            unitName: 'Event',
             type: 'events',
             data: [
                 { time: 200, text: 'Major Update' },

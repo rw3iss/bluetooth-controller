@@ -11,7 +11,8 @@
     max-height: 100vh;
     max-width: 100vw;
     color: var(--app-color, white);
-    background: var(--app-bg); //var(--app-bg, #123) url("public/images/bean.svg") repeat;
+    background: var(--app-bg, #123) url("public/images/bean.svg") repeat;
+    background-size: var(--app-bg-image-size);
 
     .context {
         display: flex;

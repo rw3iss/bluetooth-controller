@@ -1,6 +1,7 @@
 import { Component } from 'preact';
-import { useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
+import { CheckButton } from 'components/basic/check-button/CheckButton.js';
+import { formatTemp, formatTime } from './graphUtils.js';
 
 interface LayerManagerProps {
     layers: GraphLayer[];
@@ -53,17 +54,17 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Index</th>
-                                            <th>Time</th>
-                                            <th>{layer.type === 'data' ? 'Value' : 'Text'}</th>
+                                            {/* <th class="index">#</th> */}
+                                            <th class="time">Time</th>
+                                            <th class="value">{layer.unitName /*layer.type === 'data' ? 'Value' : 'Text'*/}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {layer.data.map((item, itemIndex) => (
                                             <tr key={itemIndex}>
-                                                <td>{itemIndex}</td>
-                                                <td>{item.time}</td>
-                                                <td>{item.value || item.text}</td>
+                                                {/* <td class="index">{itemIndex}</td> */}
+                                                <td class="time">{formatTime(item.time)}</td>
+                                                <td class="value">{(item.value ? formatTemp(item.value) : item.text)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -98,50 +99,3 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
         );
     }
 }
-
-
-interface CheckButtonProps {
-    label: string;
-    onSelect: () => void;
-    onVisibilityChange: (checked: boolean) => void;
-    visible: boolean;
-}
-
-import { FunctionalComponent } from 'preact';
-
-interface CheckButtonProps {
-    label: string;
-    onSelect: () => void;
-    onVisibilityChange: (checked: boolean) => void;
-    visible: boolean;
-}
-
-export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onSelect, onVisibilityChange, visible }) => {
-    // Use local state to manage the checkbox state
-    const [isChecked, setIsChecked] = useState(visible);
-
-    // Handle click on the button
-    const handleClick = (e) => {
-        if (e.target.type == 'checkbox') return;
-        onSelect();
-    };
-
-    // Handle change on the checkbox
-    const handleCheck = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        setIsChecked(target.checked);
-        onVisibilityChange(target.checked);
-    };
-
-    return (
-        <div class="check-button button"
-            onClick={handleClick}>
-            <div class="label">{label}</div>
-            <input class="checkbox"
-                type="checkbox"
-                checked={isChecked}
-                onChange={handleCheck}
-            />
-        </div>
-    );
-};
