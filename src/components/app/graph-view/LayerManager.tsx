@@ -38,19 +38,42 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
 
         return (
             <div class="layers">
-                <div class="tabs" style={{ marginBottom: '10px' }}>
+
+                <div class="tab-columns">
                     {layers.map((layer, index) => (
-                        <CheckButton
-                            key={index}
-                            label={layer.name || 'Data'}
-                            onSelect={() => onSelect(index)}
-                            onVisibilityChange={(visible) => this.toggleLayerVisibility(index, visible)}
-                            visible={visibility[index]}
-                        />
+                        <div class="column">
+                            <CheckButton
+                                key={index}
+                                label={layer.name || 'Data'}
+                                onSelect={() => onSelect(index)}
+                                onVisibilityChange={(visible) => this.toggleLayerVisibility(index, visible)}
+                                visible={visibility[index]}
+                            />
+                            <div class="table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Index</th>
+                                            <th>Time</th>
+                                            <th>{layer.type === 'data' ? 'Value' : 'Text'}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {layer.data.map((item, itemIndex) => (
+                                            <tr key={itemIndex}>
+                                                <td>{itemIndex}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item.value || item.text}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     ))}
                 </div>
-                <div class="table">
-                    {layers[selectedTab] && (
+
+                {/* {layers[selectedTab] && (
                         <table>
                             <thead>
                                 <tr>
@@ -69,8 +92,8 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
                                 ))}
                             </tbody>
                         </table>
-                    )}
-                </div>
+                    )} */}
+
             </div>
         );
     }
@@ -112,19 +135,12 @@ export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onSe
 
     return (
         <div class="check-button button"
-            onClick={handleClick}
-            style={{ display: 'flex', flex: '1', marginRight: '10px' }}>
-            <div
-                style={{
-                }}
-            >
-                {label}
-            </div>
+            onClick={handleClick}>
+            <div class="label">{label}</div>
             <input class="checkbox"
                 type="checkbox"
-                checked={isChecked} // Use state for checked prop
+                checked={isChecked}
                 onChange={handleCheck}
-                style={{ marginRight: '5px', verticalAlign: 'middle' }}
             />
         </div>
     );
