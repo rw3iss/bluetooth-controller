@@ -1,9 +1,10 @@
 import { FunctionalComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
-import { LayerManager } from './LayerManager';
-import './GraphView.scss';
 import { GraphOptions } from './GraphOptions.js';
+import { LayerManager } from './LayerManager';
+
+import './GraphView.scss';
 
 interface GraphViewProps {
     layers: GraphLayer[];

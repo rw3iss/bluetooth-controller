@@ -24,10 +24,23 @@ export class Graph {
     private currentInterval: number = 5; // Default interval
     private isAveraged: boolean = false;
     private maxTime: number;
+    private resizeObserver: ResizeObserver;
 
     constructor(private container: HTMLDivElement, private originalLayers: GraphLayer[]) {
         this.layers = [...originalLayers]; // Create a copy of the original layers
         this.plotlyInstance = this.createGraph();
+
+
+        // Set up ResizeObserver
+        this.resizeObserver = new ResizeObserver(entries => {
+            console.log(`resize`, entries)
+            for (let entry of entries) {
+                if (entry.contentRect) {
+                    this.updateGraphSize(entry.contentRect.height);
+                }
+            }
+        });
+        this.resizeObserver.observe(this.container);
     }
 
     private async createGraph(): Promise<Plotly.PlotlyHTMLElement> {
@@ -106,18 +119,21 @@ export class Graph {
         const layout: Partial<Plotly.Layout> = {
             title: {
                 text: 'Roast History',
-                pad: { t: 5 }
+                pad: { t: 5 },
+                font: {
+                    weight: 900
+                }
             },
             paper_bgcolor: '#001f3f',
             plot_bgcolor: '#001f3f',
-            margin: { t: 40, r: 10, b: 60, l: 60 },
+            margin: { t: 40, r: 0, b: 50, l: 50 },
             xaxis: {
                 title: 'Time',
                 type: 'linear',
                 autorange: false,
                 //fixedrange: true,
                 range: [0, this.maxTime + 50],
-                titlefont: { size: 14 },
+                titlefont: { size: 14, weight: 900 },
                 tickfont: { size: 10 },
                 gridcolor: '#234',
                 linecolor: '#666666',
@@ -128,12 +144,12 @@ export class Graph {
                 maxallowed: this.maxTime + 50
             },
             yaxis: {
-                title: 'Temp',
+                title: 'Temperature',
                 type: 'linear',
                 autorange: false,
                 //fixedrange: true,
                 range: [0, maxTemp + 10],
-                titlefont: { size: 14 },
+                titlefont: { size: 14, weight: 900 },
                 tickfont: { size: 10 },
                 gridcolor: '#234',
                 linecolor: '#666666',
@@ -166,9 +182,12 @@ export class Graph {
         // Store reference to shapes for later manipulation
         //this.plotlyInstance = Promise.resolve(plotlyInstance);
 
-        //this.updateData(5, false);
-
         return plotlyInstance;
+    }
+
+    private async updateGraphSize(newHeight: number) {
+        const instance = await this.plotlyInstance;
+        Plotly.relayout(instance, { height: newHeight });
     }
 
     // private handleZoom = (eventData: any) => {

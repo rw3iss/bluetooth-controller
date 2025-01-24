@@ -1,4 +1,85 @@
+import { GraphLayer } from './Graph';
 import { DataPoint } from "./Graph.js";
+
+export const graphConfig = {
+    style: 'line',
+    axes: {
+        x: {
+            title: "Time"
+        },
+        y: {
+            title: "Value"
+        }
+    },
+    layers: [
+        { id: "temp", visible: true, color: "yellow" },
+        { id: "other", visible: true, color: "blue" }
+    ]
+}
+
+
+const totalSeconds = 15 * 60; // 15 minutes in seconds
+
+export function generateCurvedTemperatureData(totalSeconds: number): Array<{ time: number; value: number }> {
+    return Array.from({ length: totalSeconds }, (_, index) => {
+        const time = index; // Time in seconds
+        const maxTemp = 400; // Maximum temperature in Fahrenheit, adjusted to 400F
+        const baseTemp = 0; // Starting temperature
+
+        // Use a sigmoid-like function for a curved temperature increase
+        // This function starts slow, rises quickly in the middle, then tapers off
+        const k = 0.005; // Control the steepness of the curve
+        const temperature = maxTemp / (1 + Math.exp(-k * (index - totalSeconds / 2))) + (Math.random() - 0.5) * 5;
+
+        // Clamp the temperature to ensure it stays between baseTemp and maxTemp
+        const finalTemperature = Math.min(maxTemp, Math.max(baseTemp, temperature));
+
+        return { time, value: finalTemperature };
+    });
+}
+
+export function graphData() {
+    const layers: GraphLayer[] = [
+        {
+            name: 'Temperature',
+            unitName: 'Temp',
+            type: 'data',
+            data: generateCurvedTemperatureData(totalSeconds),
+            color: '#fcba03',
+        },
+        // {
+        //     name: 'Data 2',
+        //     type: 'data',
+        //     data: generateCurvedTemperatureData(totalSeconds),
+        //     color: '#03adfc'
+        // },
+        {
+            name: 'Markers',
+            unitName: 'Marker',
+            type: 'markers',
+            data: [
+                { time: 120, text: 'Event A' },
+                { time: 380, text: 'Event B' }
+            ],
+            color: 'rgb(209, 199, 106)',
+            dash: true,
+            width: 2
+        },
+        {
+            name: 'Events',
+            unitName: 'Event',
+            type: 'events',
+            data: [
+                { time: 200, text: 'Major Update' },
+                { time: 400, text: 'System Overload' }
+            ],
+            color: 'rgb(100, 212, 178)',
+            dash: false,
+            width: 1
+        }
+    ];
+    return layers;
+}
 
 export const formatTemp = (v) => {
     return v.toFixed(0);

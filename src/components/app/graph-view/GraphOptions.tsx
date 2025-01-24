@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from 'preact';
+import { FunctionalComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { Button } from '../../basic/button/Button.js';
 
@@ -32,6 +32,7 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onInterva
 
     return (
         <div class="graph-options">
+
             <div class="item interval">
                 <label htmlFor="intervalSelect">Time Interval: </label>
                 <select id="intervalSelect" onChange={handleIntervalChange} value={selectedInterval}>
@@ -51,6 +52,7 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onInterva
             <div class="item expand">
                 <Button onClick={handleExpand}>{isExpanded ? 'Collapse' : 'Expand'}</Button>
             </div>
+
         </div>
     );
 };
