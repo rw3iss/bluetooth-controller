@@ -13,7 +13,7 @@
     flex-grow: 1;
     overflow: hidden;
 
-    .panel-menu {
+    .panel {
         position: relative;
         flex-shrink: 0;
         overflow-y: auto;
@@ -64,8 +64,8 @@
                     border-bottom-left-radius: var(--panel-radius);
                     border-bottom-right-radius: var(--panel-radius);
 
-                    .content-section {
-                        padding: 0px 15px 15px 15px;
+                    .panel-section {
+                        padding: 0px 10px 15px 10px;
                         color: white;
                         font-size: 0.9em;
                         background: var(--panel-section-bg);
@@ -112,7 +112,7 @@
 
         .value-updated {
             .value {
-                margin-left: 5px;
+                margin-left: 2px;
                 font-weight: bold;
                 font-size: 1.25em;
 
@@ -127,7 +127,7 @@
         }
     }
 
-    .panel-graph {
+    .graph {
         flex-grow: 1;
         display: flex;
         overflow: hidden;
@@ -139,59 +139,38 @@
     }
 }
 
-#menu-section-set {
+#panel-set {
     position: relative;
 
-    .label {
-        flex: 1;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        font-weight: bold;
-        color: var(--label-color);
-        text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
-    }
-
-    .toggle {
-        flex: 1 0 auto;
+    .control {
         display: flex;
         width: 100%;
+        padding: calc(var(--default-item-spacing) * 2) 0;
 
         .label {
-            flex: 1 0 auto;
-        }
-    }
-
-    .update-message {
-        background: var(--panel-bg-faded);
-        box-shadow: inset 0px -8px 20px rgba(rgb(226, 236, 84), 0.2);
-        padding: 10px;
-        font-weight: bold;
-        color: var(--button-color-hover);
-        text-align: center;
-        position: absolute;
-        bottom: -15px;
-        right: -15px;
-        left: -15px;
-
-        .i {
-            font-size: 0.7em;
-        }
-
-        .value {
-            margin-top: -2px;
-            display: block;
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
             font-weight: bold;
-            font-size: 1.5em;
-            line-height: 1em;
-            color: rgb(175, 197, 48);
-            padding-left: 2px;
+            color: var(--label-color);
+            text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
+        }
+
+        .toggle {
+            flex: 1 0 auto;
+            display: flex;
+            width: 100%;
+
+            .label {
+                flex: 1 0 auto;
+            }
         }
     }
 }
 
 .read-var,
-.write-var {
+.input-var {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,7 +188,7 @@
     }
 
     .value {
-        flex: 0.5;
+        flex: 0.6;
         display: flex;
         align-items: center;
         justify-content: center;

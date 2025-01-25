@@ -41,7 +41,8 @@ export class RoastController {
     private updateIntervalMs = 1000;
     private updateTimeout; // timeout handle
 
-    constructor() { }
+    constructor() {
+    }
 
     public async init(restore = true) {
         const db = IndexedDBManager.getDb();
@@ -58,13 +59,10 @@ export class RoastController {
         }
     }
 
-    public async save(state) {
-        console.log(`save`, state)
-        if (state) this.roast = state;
+    public async save() {
+        console.log(`save`, this.roast)
         const db = IndexedDBManager.getDb();
-        if (db) {
-            await db.put(STATE_STORE, wrapState(ROAST_STATE_ID, this.roast));
-        }
+        if (db) await db.put(STATE_STORE, wrapState(ROAST_STATE_ID, this.roast));
     }
 
     // public connectDevice(device) {
@@ -78,20 +76,15 @@ export class RoastController {
     //     console.log(`device event`, e)
     // }
 
-    // updates and persists the state, and notifies listeners
-    setState = (key, value, save = false) => {
-        this.roast[key] = value;
-        if (save) this.save(this.roast);
-    };
-
+    // updates and persists the state
     updateState = (state, save = false) => {
-        Object.assign(this.roast, state);
+        this.roast = Object.assign(this.roast, state);
         console.log(`state updated?`, this.roast)
-        if (save) this.save(this.roast);
+        if (save) this.save();
     };
 
     onTick = () => {
-        this.setState('timeRunningMs', this.roast.timeRunningMs + this.updateIntervalMs, false);
+        this.updateState({ timeRunningMs: this.roast.timeRunningMs + this.updateIntervalMs }, false);
         if (!this.roast.isPaused) {
             // check automation actions
         }
@@ -103,13 +96,13 @@ export class RoastController {
         if (this.roast.isStarted) throw "Roast is already started. Stop it first.";
         // todo: set multiple state, default
         this.updateState({
+            isStarted: true,
             timeStarted: new Date(),
             timeRunningMs: 0,
             motorOn: true,
             heaterOn: true,
             ejectOn: false,
-            isPaused: false,
-            isStarted: false
+            isPaused: false
         }, true);
         this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
         this.emitEvent(event('roast-started'));
@@ -117,7 +110,7 @@ export class RoastController {
 
     public togglePause() {
         const paused = !this.roast.isPaused;
-        this.setState('isPaused', paused);
+        this.updateState({ isPaused: paused }, false);
         if (!paused) {
             this.updateTimeout = setInterval(this.onTick, this.updateIntervalMs);
         } else {
@@ -127,7 +120,7 @@ export class RoastController {
     };
 
     public stop() {
-        this.setState('isStarted', false, true);
+        this.updateState({ isStarted: false }, true);
         this.emitEvent(event('roast-stopped'));
         console.log(`roast stopped.`, this.roast)
     };

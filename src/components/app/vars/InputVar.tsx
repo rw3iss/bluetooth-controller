@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 
-export function WriteVar(props) {
+export function InputVar(props) {
     const [value, setValue] = useState(props.value);
     const [dirty, setDirty] = useState(false);
     //const [updated, setUpdated] = useState(false);
@@ -13,12 +13,7 @@ export function WriteVar(props) {
     function renderInputType(type) {
         switch (type) {
             case "number":
-                return <input {...props} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
-            case "boolean":
-            case "checkbox":
-                return <input {...props} checked={value} onChange={(e) => onValueChange(e.target.checked)} />
-            default:
-                return <input {...props} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
+                return <input {...props} value={value} min={props.minValue || 0} max={props.max} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
         }
 
     }
@@ -29,7 +24,7 @@ export function WriteVar(props) {
     }
 
     return (
-        <div class="write-var">
+        <div class="input-var">
             {props.label && <div class="label">{props.label}</div>}
             <div class="value">
                 {renderInputType(props.type)}

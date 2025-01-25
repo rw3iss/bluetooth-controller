@@ -1,6 +1,5 @@
 import Application from 'Application';
 import { ReadVar } from 'components/app/vars/ReadVar';
-import { WriteVar } from 'components/app/vars/WriteVar';
 import { Menu } from 'components/basic/menu/Menu';
 import { MenuItem } from 'components/basic/menu/MenuItem';
 import { useRoastController } from 'lib/hooks/useRoastController.js';
@@ -11,6 +10,7 @@ import { useMemo, useState } from 'preact/hooks';
 import { graphData } from '../../app/graph-view/graphUtils';
 import { GraphView } from '../../app/graph-view/GraphView';
 import { NotificationContext } from '../../app/notification/NotificationContext';
+import { InputVar } from '../../app/vars/InputVar';
 import Toggle from '../../basic/toggle/Toggle.js';
 import './PageRoast.scss';
 
@@ -103,7 +103,7 @@ export function PageRoast(props) {
     const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
-    const [isGraphExpanded, setIsGraphExpanded] = useState(false);
+    const [isGraphExpanded, setIsGraphExpanded] = useState(viewState ? viewState.graph.expanded : false);
 
     const gData = useMemo(() => graphData(), []);
 
@@ -138,7 +138,7 @@ export function PageRoast(props) {
         else console.log(`Eject cancelled.`)
     }
 
-    function renderMenuSection(s) {
+    function renderPanelSection(s) {
         let inner: VNode = undefined;
 
         switch (s) {
@@ -157,9 +157,13 @@ export function PageRoast(props) {
                     {
                         roastControls.map(c => {
                             if (c.type == 'number')
-                                return <WriteVar type="number" value={roastState[c.propName]} min={c.minValue} max={c.maxValue} label={c.label} onPropChanged={(v) => roastPropValChanged(c, v)} />
+                                return <div class="control">
+                                    <InputVar type="number" value={roastState[c.propName]} min={c.minValue} max={c.maxValue} label={c.label} onChanged={(v) => roastPropValChanged(c, v)} />
+                                </div>
                             if (c.type == 'toggle')
-                                return <Toggle label={c.label} onChange={(v) => roastPropValChanged(c, v)}></Toggle>
+                                return <div class="control">
+                                    <Toggle label={c.label} onChange={(v) => roastPropValChanged(c, v)}></Toggle>
+                                </div>
                         })
                     }
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
@@ -184,10 +188,10 @@ export function PageRoast(props) {
                 inner = <>not found</>;
         }
 
-        return <div class="content-section" id={`menu-section-${s}`}>{inner}</div>;
+        return <div class="panel-section" id={`panel-${s}`}>{inner}</div>;
     }
 
-    async function onExpand(v) {
+    const onExpand = async (v) => {
         console.log(`onExpand`, v)
         viewState.graph.expanded = v;
         setIsGraphExpanded(v);
@@ -197,11 +201,11 @@ export function PageRoast(props) {
     return (
         <div class="page" id="roast">
 
-            <div class="panel-menu">
+            <div class="panel">
                 {(viewState && roastState) ? <Menu>
                     {Object.keys(viewState.sections).map(s =>
                         <MenuItem title={capitalize(s)} key={s} id={s} open={viewState.sections[s].isOpen} onClick={s => toggleSection(s)}>
-                            {renderMenuSection(s)}
+                            {renderPanelSection(s)}
                         </MenuItem>
                     )}
                 </Menu> : <></>}
@@ -210,7 +214,7 @@ export function PageRoast(props) {
 
             </div>
 
-            <div class="panel-graph">
+            <div class="graph">
 
                 <GraphView layers={gData} expanded={isGraphExpanded} onExpand={onExpand} />
 

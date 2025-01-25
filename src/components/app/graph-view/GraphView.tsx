@@ -77,7 +77,6 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: bo
     };
 
     const handleExpand = async (val) => {
-        console.log(`handle`, val, graph)
         setIsExpanded(val);
         onExpand(val);
         await graph?.redrawGraph();

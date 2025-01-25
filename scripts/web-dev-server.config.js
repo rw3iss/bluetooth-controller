@@ -8,7 +8,10 @@ module.exports = ({
     open: '/',
     rootDir: './', // cwd
     watch: true,//!hmr,
+    port: 8000,
     hmr: true,
+
+    historyApiFallback: true,
     /** Resolve bare module imports */
     nodeResolve: {
         exportConditions: ['browser', 'development'],

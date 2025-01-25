@@ -23,12 +23,12 @@ export function useRoastController() {
         roastState[prop] = val;
         const newState = { ...roastState };
         if (save) await ctrl.save(newState);
-        setRoastState(ctrl.roast);
+        setRoastState(newState);
     }
 
     const startRoast = () => {
         ctrl.start();
-        updateRoastValue('isStarted', false);
+        //updateRoastValue('isStarted', true);
     }
 
     const togglePause = () => {

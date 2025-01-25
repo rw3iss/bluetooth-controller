@@ -1,33 +1,53 @@
 const path = require('path');
 
-// todo: integrate somehow
 const OUTPUT_DIR = './build';
+const ASSET_DIR = 'public';
 
-// copyPlugin.ts
-// Copy some stuff, anything, after build, if needed.
+/**
+  * esbuil Copy plugin:
+  * Copies general site static assets, if they exist (ie. index page, service worker files, favicon, etc)
+  *
+  * Todo: integrate esbuild config output dir, and list of files to copy.
+*/
+
 module.exports = {
     name: 'copy',
     setup(build) {
         const fse = require('fs-extra');
 
-        // copy static folder to build.
+        // todo: pull in the files to copy from some config....
+
         try {
-            let indexHtml = path.resolve(`./index.html`);
-            if (fse.existsSync(indexHtml)) {
-                fse.copySync(indexHtml, path.resolve(`${OUTPUT_DIR}/index.html`), { overwrite: true }, (err) => {
+            // copy index.html
+            let index = path.resolve(`./index.html`);
+            if (fse.existsSync(index)) {
+                fse.copySync(index, path.resolve(`${OUTPUT_DIR}/index.html`), { overwrite: true }, (err) => {
                     if (err) throw err;
                 });
             } else {
                 console.log(`copyPlugin: index.html doesnt exist`);
             }
 
-            let assetDir = 'public';
-            let assetPath = path.resolve(`./${assetDir}`);
+            // copy SW and manifest
+            let sw = path.resolve(`./src/sw.js`);
+            let mf = path.resolve(`./manifest.json`);
+            if (fse.existsSync(sw)) {
+                fse.copySync(sw, path.resolve(`${OUTPUT_DIR}/sw.js`), { overwrite: true }, (err) => { if (err) throw err; });
+            }
+            if (fse.existsSync(mf)) {
+                fse.copySync(mf, path.resolve(`${OUTPUT_DIR}/manifest.json`), { overwrite: true }, (err) => { if (err) throw err; });
+            }
+
+            // copy favicon
+            let fi = path.resolve(`./favicon.ico`);
+            if (fse.existsSync(fi)) {
+                fse.copySync(fi, path.resolve(`${OUTPUT_DIR}/favicon.ico`), { overwrite: true }, (err) => { if (err) throw err; });
+            }
+
+            // copy /public folder
+            let assetPath = path.resolve(`./${ASSET_DIR}`);
             if (fse.existsSync(assetPath)) {
-                fse.copySync(assetPath, path.resolve(`${OUTPUT_DIR}/${assetDir}`), { overwrite: true }, (err) => {
-                    if (err) throw err;
-                });
-                //fse.copySync(path.resolve('./static/favicon.ico'), path.resolve(`${OUTPUT_DIR}/favicon.ico`), { overwrite: true });
+                fse.copySync(assetPath, path.resolve(`${OUTPUT_DIR}/${ASSET_DIR}`), { overwrite: true }, (err) => { if (err) throw err; });
             } else {
                 console.log(`copyPlugin: public dir doesnt exist`)
             }
