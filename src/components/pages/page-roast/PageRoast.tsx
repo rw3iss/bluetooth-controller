@@ -103,7 +103,6 @@ export function PageRoast(props) {
     const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
-    const [isGraphExpanded, setIsGraphExpanded] = useState(viewState ? viewState.graph.expanded : false);
 
     const gData = useMemo(() => graphData(), []);
 
@@ -194,7 +193,7 @@ export function PageRoast(props) {
     const onExpand = async (v) => {
         console.log(`onExpand`, v)
         viewState.graph.expanded = v;
-        setIsGraphExpanded(v);
+        //setIsGraphExpanded(v);
         await saveViewState({ ...viewState });
     }
 
@@ -216,7 +215,7 @@ export function PageRoast(props) {
 
             <div class="graph">
 
-                <GraphView layers={gData} expanded={isGraphExpanded} onExpand={onExpand} />
+                {viewState && <GraphView layers={gData} expanded={viewState.graph.expanded} onExpand={onExpand} />}
 
             </div>
         </div>
