@@ -1,6 +1,5 @@
 import { RouteContext } from 'components/app/route-context/RouteContext';
 import AppHeader from './app-header/AppHeader';
-import { NotificationContext } from './notification/NotificationContext';
 import { RoastPopup } from './roast-popup/RoastPopup';
 
 import "./App.scss";
@@ -17,8 +16,6 @@ export const App = () => {
             </div>
 
             <RoastPopup />
-
-            <NotificationContext />
 
             {/* <AdminTools /> */}
 

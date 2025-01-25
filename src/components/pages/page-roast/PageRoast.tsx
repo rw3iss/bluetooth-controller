@@ -7,10 +7,10 @@ import { useRoastController } from 'lib/hooks/useRoastController.js';
 import { useSavedState } from 'lib/hooks/useSavedState.js';
 import Notification from 'lib/NotificatonService';
 import { capitalize } from 'lib/utils/StrUtils';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { graphData } from '../../app/graph-view/graphUtils';
 import { GraphView } from '../../app/graph-view/GraphView';
-import { Button } from '../../basic/button/Button';
+import { NotificationContext } from '../../app/notification/NotificationContext';
 import Toggle from '../../basic/toggle/Toggle.js';
 import './PageRoast.scss';
 
@@ -27,6 +27,16 @@ const DEFAULT_VIEW_STATE = {
         },
         "profile": {
             isOpen: true
+        }
+    },
+    "graph": {
+        "expanded": false,
+        "timeInterval": 5,
+        "average": false,
+        "layers": {
+            "temp": true,
+            "markers": true,
+            "events": true
         }
     }
 }
@@ -52,24 +62,61 @@ Other components - useEffect((), [roastState]); - when state changes, the views 
 
 */
 
+const roastControls = [
+    {
+        type: 'number',
+        label: "Temperature",
+        labelShort: "Temp",
+        propName: 'temp',
+        minValue: 0,
+        maxValue: 600
+    }, {
+        type: 'toggle',
+        label: 'Heater',
+        propName: 'heaterOn'
+    }, {
+        type: 'toggle',
+        label: 'Motor',
+        propName: 'motorOn'
+    }, {
+        type: 'toggle',
+        label: 'Exhaust Fan',
+        propName: 'exhaustOn'
+    }, {
+        type: 'toggle',
+        label: 'Eject',
+        propName: 'ejectOn'
+    }, {
+        type: 'toggle',
+        label: 'Cooling Motor',
+        propName: 'coolingMotorOn'
+    }, {
+        type: 'toggle',
+        label: 'Cooling Fan',
+        propName: 'coolingFanOn'
+    }
+]
+
 export function PageRoast(props) {
     const ctrl = Application.roastController;
     const roast = ctrl.roast;
     const { roastState, setRoastState, updateRoastValue, startRoast, togglePause, stopRoast } = useRoastController();
     const { state: viewState, setState: saveViewState } = useSavedState('page-roast', DEFAULT_VIEW_STATE);
     const [updateMessage, setUpdateMessage] = useState(undefined);
+    const [isGraphExpanded, setIsGraphExpanded] = useState(false);
+
+    const gData = useMemo(() => graphData(), []);
 
     // send a new value command to the device
-    function setRoastValue(prop, val) {
-        console.log(`setRoastValue`, prop, val)
-        updateRoastValue(prop, val);
-        //setRoastState({ ...roast });
+    function roastPropValChanged(p, val) {
+        console.log(`roastPropValChanged`, p, val)
+        updateRoastValue(p.propName, val);
         let sVal = val;
-        if (['motorOn', 'exhaustOn', 'ejectOn'].includes(prop)) sVal = val ? 'ON' : 'OFF';
+        if (p.type == 'toggle') sVal = val ? 'ON' : 'OFF';
         Notification.success({
-            title: 'Value Updated',
+            title: `✅ ${p.label} Updated`,
             content:
-                <><span class="i">✅</span> &nbsp;{capitalize(prop)} updated to <div class="number value">{sVal}</div></>
+                <div class="value-updated">{p.label} set to <span class={`value ${sVal}`}>{sVal}</span></div>
         });
     }
 
@@ -107,11 +154,14 @@ export function PageRoast(props) {
 
             case "set":
                 inner = <>
-                    <WriteVar type="number" value={roastState.targetTemp} min="0" max="500" label="Temp" onChanged={(value) => setRoastValue('temp', value)} />
-                    <Toggle label="Heater" onChange={(e) => setRoastValue('heaterOn', e)}></Toggle>
-                    <Toggle label="Motor" onChange={(e) => setRoastValue('motorOn', e)}></Toggle>
-                    <Toggle label="Exhaust" onChange={(e) => setRoastValue('exhaustOn', e)}></Toggle>
-                    <Button onClick={() => confirmEject()}>Eject</Button>
+                    {
+                        roastControls.map(c => {
+                            if (c.type == 'number')
+                                return <WriteVar type="number" value={roastState[c.propName]} min={c.minValue} max={c.maxValue} label={c.label} onPropChanged={(v) => roastPropValChanged(c, v)} />
+                            if (c.type == 'toggle')
+                                return <Toggle label={c.label} onChange={(v) => roastPropValChanged(c, v)}></Toggle>
+                        })
+                    }
                     {updateMessage && <div className="update-message">{updateMessage}</div>}
                 </>
                 break;
@@ -137,6 +187,13 @@ export function PageRoast(props) {
         return <div class="content-section" id={`menu-section-${s}`}>{inner}</div>;
     }
 
+    async function onExpand(v) {
+        console.log(`onExpand`, v)
+        viewState.graph.expanded = v;
+        setIsGraphExpanded(v);
+        await saveViewState({ ...viewState });
+    }
+
     return (
         <div class="page" id="roast">
 
@@ -148,11 +205,14 @@ export function PageRoast(props) {
                         </MenuItem>
                     )}
                 </Menu> : <></>}
+
+                <NotificationContext />
+
             </div>
 
             <div class="panel-graph">
 
-                <GraphView layers={graphData()} />
+                <GraphView layers={gData} expanded={isGraphExpanded} onExpand={onExpand} />
 
             </div>
         </div>

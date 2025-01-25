@@ -1,8 +1,10 @@
 #notification {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     z-index: 101;
+    width: 100%;
 
     .inner {
         display: flex;
@@ -11,14 +13,18 @@
         background: rgb(64, 114, 64);
 
         .title {
-            padding: 5px;
+            display: flex;
+            justify-content: center;
+            padding: 5px 5px 7px 5px;
             width: 100%;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.1em;
             background: rgb(81, 153, 81);
         }
 
         .content {
+            display: flex;
+            justify-content: center;
             padding: 20px;
         }
     }

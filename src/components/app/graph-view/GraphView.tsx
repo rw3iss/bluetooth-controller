@@ -1,21 +1,23 @@
+import { Fn } from 'lib/Types';
 import { FunctionalComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
 import { GraphOptions } from './GraphOptions.js';
-import { LayerManager } from './LayerManager';
-
 import './GraphView.scss';
+import { LayerManager } from './LayerManager';
 
 interface GraphViewProps {
     layers: GraphLayer[];
+    expanded: boolean;
+    onExpand: Fn;
 }
 
-export const GraphView: FunctionalComponent<{ layers: GraphLayer[] }> = ({ layers }: GraphViewProps) => {
+export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: boolean, onExpand: Fn }> = ({ layers, expanded, onExpand }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
     const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
     const [selectedTab, setSelectedTab] = useState(0);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(expanded);
 
     useEffect(() => {
         if (graphContainerRef.current) {
@@ -77,6 +79,7 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[] }> = ({ layer
     const handleExpand = async (val) => {
         console.log(`handle`, val, graph)
         setIsExpanded(val);
+        onExpand(val);
         await graph?.redrawGraph();
     };
 
