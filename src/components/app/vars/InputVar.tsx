@@ -1,33 +1,38 @@
 import { useState } from "preact/hooks";
 
-export function InputVar(props) {
-    const [value, setValue] = useState(props.value);
+export function InputVar({ type, label, value, min, max, onChanged }) {
+    const [editValue, setEditValue] = useState(value);
     const [dirty, setDirty] = useState(false);
     //const [updated, setUpdated] = useState(false);
 
     function onValueChange(value) {
-        setValue(value);
+        setEditValue(value);
         setDirty(true);
+    }
+
+    function onKeyUp(e) {
+        onValueChange(e.target.value)
+        if (e.key == 'Enter') commitValue();
     }
 
     function renderInputType(type) {
         switch (type) {
             case "number":
-                return <input {...props} value={value} min={props.minValue || 0} max={props.max} onKeyUp={(e) => onValueChange(e.target.value)} onChange={(e) => onValueChange(e.target.value)} />
+                return <input type={type} value={editValue} min={min || 0} max={max} onKeyUp={onKeyUp} onChange={(e) => onValueChange(e.target.value)} />
         }
 
     }
 
     function commitValue() {
-        if (props.onChanged) props.onChanged(value);
+        onChanged(editValue);
         setDirty(false);
     }
 
     return (
         <div class="input-var">
-            {props.label && <div class="label">{props.label}</div>}
+            {label && <div class="label">{label}</div>}
             <div class="value">
-                {renderInputType(props.type)}
+                {renderInputType(type)}
             </div>
             <div class="action">
                 <button disabled={!dirty} onClick={(e) => commitValue()}>set</button>

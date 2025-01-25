@@ -85,7 +85,7 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: bo
     return (
         <div class={`${isExpanded ? 'expanded' : ''} graph-view`}>
             <div class="graph-wrapper" ref={graphContainerRef} style={{ width: '100%', minHeight: '400px', height: isExpanded ? 'auto' : '50%' }} />
-            {graph && <GraphOptions onIntervalChange={handleIntervalChange} onExpandChange={handleExpand} />}
+            {graph && <GraphOptions onIntervalChange={handleIntervalChange} onExpandChange={handleExpand} isExpanded={isExpanded} />}
             {graph &&
                 <LayerManager
                     layers={layers}

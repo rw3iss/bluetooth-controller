@@ -22,7 +22,8 @@ export const DEFAULT_ROAST_STATE = () => ({
     motorOn: false,
     exhaustOn: false,
     ejectOn: false,
-    coolingOn: false
+    coolingMotorOn: false,
+    coolingFanOn: false
 });
 
 const ROAST_STATE_ID = 'roast';
@@ -49,7 +50,7 @@ export class RoastController {
         if (db && restore) {
             const s: IDbSavedState | undefined = await db.get(STATE_STORE, ROAST_STATE_ID);
             //console.log(`See saved roast state?`, s)
-            if (s) this.roast = s.state;
+            if (s) this.roast = s.state as any;
             if (this.roast?.isStarted && !this.roast.isPaused) {
                 // resume roasting...
                 //if (confirm("Resume running roast?")) {
@@ -59,10 +60,10 @@ export class RoastController {
         }
     }
 
-    public async save() {
-        console.log(`save`, this.roast)
+    public async save(state?) {
+        console.log(`save`, state || this.roast)
         const db = IndexedDBManager.getDb();
-        if (db) await db.put(STATE_STORE, wrapState(ROAST_STATE_ID, this.roast));
+        if (db) await db.put(STATE_STORE, wrapState(ROAST_STATE_ID, state || this.roast));
     }
 
     // public connectDevice(device) {

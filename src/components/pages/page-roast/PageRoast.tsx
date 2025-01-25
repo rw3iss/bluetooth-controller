@@ -67,7 +67,7 @@ const roastControls = [
         type: 'number',
         label: "Temperature",
         labelShort: "Temp",
-        propName: 'temp',
+        propName: 'targetTemp',
         minValue: 0,
         maxValue: 600
     }, {
@@ -161,7 +161,7 @@ export function PageRoast(props) {
                                 </div>
                             if (c.type == 'toggle')
                                 return <div class="control">
-                                    <Toggle label={c.label} onChange={(v) => roastPropValChanged(c, v)}></Toggle>
+                                    <Toggle value={roastState[c.propName]} label={c.label} onChange={(v) => roastPropValChanged(c, v)}></Toggle>
                                 </div>
                         })
                     }

@@ -5,12 +5,13 @@ import { Button } from '../../basic/button/Button.js';
 interface GraphOptionsProps {
     onIntervalChange: (interval: number, isAveraged: boolean) => void;
     onExpandChange: (isExpanded: boolean) => void;
+    isExpanded: boolean;
 }
 
-export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onIntervalChange, onExpandChange }) => {
+export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onIntervalChange, onExpandChange, isExpanded }) => {
     const [selectedInterval, setSelectedInterval] = useState('5'); // Default to 15 seconds
     const [isAveraged, setIsAveraged] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
+    //const [isExpanded, setIsExpanded] = useState(false);
 
     const handleIntervalChange = (e: Event) => {
         const target = e.target as HTMLSelectElement;
@@ -26,7 +27,7 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onInterva
     };
 
     const handleExpand = (e: Event) => {
-        setIsExpanded(!isExpanded);
+        //setIsExpanded(!isExpanded);
         onExpandChange(!isExpanded);
     };
 

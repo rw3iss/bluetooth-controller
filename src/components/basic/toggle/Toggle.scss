@@ -1,33 +1,17 @@
 // Toggle.scss
 .toggle {
     display: flex;
-    $btnsSize: 16px;
+    $btnSize: 16px;
     $padding: 2px;
 
     .toggle-switch {
-        width: calc((#{$btnsSize} * 2) + (#{$padding}* 2));
-        height: calc((#{$btnsSize}) + (#{$padding}* 2));
+        width: calc((#{$btnSize} * 2) + (#{$padding}* 2));
+        height: calc((#{$btnSize}) + (#{$padding}* 2));
         background: #ccc;
-        border-radius: calc(#{$btnsSize} * 1.5);
+        border-radius: calc(#{$btnSize} * 1.5);
         position: relative;
         cursor: pointer;
         transition: background-color 0.3s;
-
-        &.on {
-            background: #4caf50;
-
-            .toggle-switch {
-                transform: translateX($btnsSize);
-            }
-        }
-
-        &.off {
-            background: #ccc;
-
-            .toggle-switch {
-                transform: translateX(0);
-            }
-        }
 
         &.disabled {
             opacity: 0.5;
@@ -39,14 +23,34 @@
         }
 
         .toggle-handle {
-            width: $btnsSize;
-            height: $btnsSize;
+            width: $btnSize;
+            height: $btnSize;
             background: white;
             border-radius: 50%;
             position: absolute;
             top: $padding;
             left: $padding;
             transition: transform 0.3s;
+        }
+    }
+
+    &.on {
+        .toggle-switch {
+            background: #4caf50;
+
+            .toggle-handle {
+                transform: translateX($btnSize);
+            }
+        }
+
+        &.off {
+            .toggle-switch {
+                background: #ccc;
+
+                .toggle-handle {
+                    transform: translateX(0);
+                }
+            }
         }
     }
 }

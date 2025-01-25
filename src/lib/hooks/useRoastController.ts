@@ -20,10 +20,11 @@ export function useRoastController() {
 
     // saves the new state to idb and triggers a state update
     const updateRoastValue = async (prop, val, save = true) => {
+        console.log(`update`, prop, val)
         roastState[prop] = val;
         const newState = { ...roastState };
-        if (save) await ctrl.save(newState);
         setRoastState(newState);
+        if (save) await ctrl.save(newState);
     }
 
     const startRoast = () => {
