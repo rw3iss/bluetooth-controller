@@ -9,6 +9,7 @@ export function useRoastController() {
 
     useEffect(() => {
         setRoastState(ctrl.roast);
+        console.log(`loaded state`, ctrl.roast)
         ctrl.addListener(onEvent);
         return () => ctrl.removeListener(onEvent);
     }, []);

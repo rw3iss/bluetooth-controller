@@ -190,12 +190,19 @@ export function PageRoast(props) {
         return <div class="panel-section" id={`panel-${s}`}>{inner}</div>;
     }
 
-    const onExpand = async (v) => {
+    const onExpand = (v) => {
         console.log(`onExpand`, v)
         viewState.graph.expanded = v;
         //setIsGraphExpanded(v);
-        await saveViewState({ ...viewState });
+        saveViewState({ ...viewState });
     }
+
+    const onGraphViewChange = (o, v) => {
+        console.log(`onGraphViewChange`, o, v)
+        viewState.graph[o] = v;
+        saveViewState({ ...viewState });
+    }
+    console.log(`view state`, viewState)
 
     return (
         <div class="page" id="roast">
@@ -215,7 +222,7 @@ export function PageRoast(props) {
 
             <div class="graph">
 
-                {viewState && <GraphView layers={gData} expanded={viewState.graph.expanded} onExpand={onExpand} />}
+                {viewState && <GraphView options={viewState.graph} layers={gData} onViewChange={onGraphViewChange} timeInterval={viewState.graph.timeInterval} isAveraged={viewState.graph.average} isExpanded={viewState.graph.expanded} onExpand={onExpand} />}
 
             </div>
         </div>

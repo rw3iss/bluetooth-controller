@@ -3,32 +3,31 @@ import { useState } from 'preact/hooks';
 import { Button } from '../../basic/button/Button.js';
 
 interface GraphOptionsProps {
+    options: {},
+    onOptionChange: (o, v) => void;
+
     onIntervalChange: (interval: number, isAveraged: boolean) => void;
     onExpandChange: (isExpanded: boolean) => void;
+
+    timeInterval: number;
     isExpanded: boolean;
+    isAveraged: boolean;
 }
 
-export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onIntervalChange, onExpandChange, isExpanded }) => {
-    const [selectedInterval, setSelectedInterval] = useState('5'); // Default to 15 seconds
-    const [isAveraged, setIsAveraged] = useState(false);
+export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, onOptionChange, onIntervalChange, onExpandChange, timeInterval, isAveraged, isExpanded }) => {
     //const [isExpanded, setIsExpanded] = useState(false);
 
     const handleIntervalChange = (e: Event) => {
-        const target = e.target as HTMLSelectElement;
-        const intervalValue = target.value;
-        setSelectedInterval(intervalValue);
-        onIntervalChange(Number(intervalValue), isAveraged);
+        onOptionChange('timeInterval', Number(e.target.value));
     };
 
     const handleAverageChange = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        setIsAveraged(target.checked);
-        onIntervalChange(Number(selectedInterval), target.checked);
+        onOptionChange('average', e.target.checked);
     };
 
     const handleExpand = (e: Event) => {
-        //setIsExpanded(!isExpanded);
-        onExpandChange(!isExpanded);
+        console.log(`expand`, e.target)
+        onOptionChange('expanded', !options.expanded);
     };
 
     return (
@@ -36,7 +35,7 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onInterva
 
             <div class="item interval">
                 <label htmlFor="intervalSelect">Time Interval: </label>
-                <select id="intervalSelect" onChange={handleIntervalChange} value={selectedInterval}>
+                <select id="intervalSelect" onChange={handleIntervalChange} value={options.timeInterval}>
                     <option value="1">1 second</option>
                     <option value="5">5 seconds</option>
                     <option value="10">10 seconds</option>
@@ -45,13 +44,13 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ onInterva
                     <option value="60">1 minute</option>
                 </select>
                 <label style={{ marginLeft: '10px' }}>
-                    <input type="checkbox" checked={isAveraged} onChange={handleAverageChange} />
+                    <input type="checkbox" checked={options.average} onChange={handleAverageChange} />
                     Average
                 </label>
             </div>
 
             <div class="item expand">
-                <Button onClick={handleExpand}>{isExpanded ? 'Collapse' : 'Expand'}</Button>
+                <Button onClick={handleExpand}>{options.expanded ? 'Collapse' : 'Expand'}</Button>
             </div>
 
         </div>

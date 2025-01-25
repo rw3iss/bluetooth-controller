@@ -8,16 +8,21 @@ import { LayerManager } from './LayerManager';
 
 interface GraphViewProps {
     layers: GraphLayer[];
-    expanded: boolean;
+    options: {},
+
+
+    isExpanded: boolean;
+    timeInterval: number;
+    isAveraged: boolean;
     onExpand: Fn;
+    onViewChange: Fn;
 }
 
-export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: boolean, onExpand: Fn }> = ({ layers, expanded, onExpand }: GraphViewProps) => {
+export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, isExpanded, onExpand, onViewChange, timeInterval, isAveraged }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
     const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
     const [selectedTab, setSelectedTab] = useState(0);
-    const [isExpanded, setIsExpanded] = useState(expanded);
 
     useEffect(() => {
         if (graphContainerRef.current) {
@@ -49,11 +54,14 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: bo
         }
     }, [layers]);
 
-    const handleIntervalChange = (interval: number, average: boolean) => {
-        if (graph) {
-            graph.changeInterval(interval, average);
+    const handleOptionChange = async (o: string, v: any) => {
+        if (graph && o == 'timeInterval') {
+            graph.changeInterval(v, options.average);
         }
+        onViewChange(o, v);
+        await graph?.redrawGraph();
     };
+
     const handleGraphClick = (data: any) => {
         if (data.points && data.points.length > 0) {
             const point = data.points[0];
@@ -77,7 +85,6 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: bo
     };
 
     const handleExpand = async (val) => {
-        setIsExpanded(val);
         onExpand(val);
         await graph?.redrawGraph();
     };
@@ -85,7 +92,7 @@ export const GraphView: FunctionalComponent<{ layers: GraphLayer[], expanded: bo
     return (
         <div class={`${isExpanded ? 'expanded' : ''} graph-view`}>
             <div class="graph-wrapper" ref={graphContainerRef} style={{ width: '100%', minHeight: '400px', height: isExpanded ? 'auto' : '50%' }} />
-            {graph && <GraphOptions onIntervalChange={handleIntervalChange} onExpandChange={handleExpand} isExpanded={isExpanded} />}
+            {graph && <GraphOptions options={options} onOptionChange={handleOptionChange} onExpandChange={handleExpand} timeInterval={timeInterval} isAveraged={options.average} isExpanded={isExpanded} />}
             {graph &&
                 <LayerManager
                     layers={layers}
