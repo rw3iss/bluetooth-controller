@@ -6,29 +6,30 @@ interface CheckButtonProps {
     onClick?: (e, isChecked: boolean) => void;
     onCheck: (isChecked: boolean) => void;
     checkOnClick?: boolean; // toggle the check when the button is clicked
-    visible: boolean;
+    checked: boolean;
 }
 
 import { FunctionalComponent } from 'preact';
 
-export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onClick, onCheck, checkOnClick, visible }) => {
+export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onClick, onCheck, checkOnClick, checked }) => {
     // Use local state to manage the checkbox state
-    const [isChecked, setIsChecked] = useState(visible);
+    const [isChecked, setIsChecked] = useState(checked);
 
     // Handle click on the button
     const handleClick = (e) => {
         console.log(`click`, e.target);
+        let _checked = isChecked;
         if (e.target.type == 'checkbox') return;
         if (checkOnClick) {
             // find checkbox
             let target = e.target;
             if (target.classList.contains('label')) target = e.target.parentNode;
             const checkbox = target.children[1] as HTMLInputElement;
-            checkbox.checked = !checkbox.checked;
+            checkbox.checked = _checked = !checkbox.checked;
             handleCheck(checkbox);
         }
-        console.log(`isChecked?`, isChecked)
-        if (onClick) onClick(e, isChecked);
+        console.log(`isChecked?`, _checked)
+        if (onClick) onClick(e, _checked);
     };
 
     // Handle change on the checkbox

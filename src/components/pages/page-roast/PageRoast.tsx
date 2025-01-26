@@ -15,7 +15,7 @@ import Toggle from '../../basic/toggle/Toggle.js';
 import './PageRoast.scss';
 
 const DEFAULT_VIEW_STATE = {
-    "sections": {
+    sections: {
         "current": {
             isOpen: true
         },
@@ -29,14 +29,14 @@ const DEFAULT_VIEW_STATE = {
             isOpen: true
         }
     },
-    "graph": {
-        "expanded": false,
-        "timeInterval": 5,
-        "average": false,
-        "layers": {
-            "temp": true,
-            "markers": true,
-            "events": true
+    graph: {
+        isExpanded: false,
+        timeInterval: 5,
+        isAveraged: false,
+        layers: {
+            "Temperature": true,
+            "Markers": true,
+            "Events": true
         }
     }
 }
@@ -88,6 +88,9 @@ export function PageRoast(props) {
     // send a new value command to the device
     function roastPropValChanged(p, val) {
         console.log(`roastPropValChanged`, p, val)
+        if (p.propName === "ejectOn") {
+            if (!confirm("Are you sure you want to eject the roast now?")) return;
+        }
         updateRoastValue(p.propName, val);
         let sVal = val;
         if (p.type == 'toggle') sVal = val ? 'ON' : 'OFF';
@@ -109,11 +112,6 @@ export function PageRoast(props) {
         if (confirm("Are you sure you want to stop the current roast?")) {
             stopRoast();
         }
-    }
-
-    function confirmEject() {
-        if (confirm("Are you sure you want to eject?")) ctrl.eject();
-        else console.log(`Eject cancelled.`)
     }
 
     function renderPanelSection(s) {
@@ -174,6 +172,14 @@ export function PageRoast(props) {
         viewState.graph[o] = v;
         saveViewState({ ...viewState });
     }
+
+
+    const onGraphLayerChange = (name, v) => {
+        console.log(`onGraphLayerChange`, name, v)
+        viewState.graph.layers[name] = v;
+        saveViewState({ ...viewState });
+    }
+
     console.log(`view state`, viewState)
 
     return (
@@ -194,7 +200,7 @@ export function PageRoast(props) {
 
             <div class="graph">
 
-                {viewState && <GraphView options={viewState.graph} layers={gData} onOptionChange={onGraphOptionChange} />}
+                {viewState && <GraphView options={viewState.graph} layers={gData} onOptionChange={onGraphOptionChange} onLayerChange={onGraphLayerChange} />}
 
             </div>
         </div>

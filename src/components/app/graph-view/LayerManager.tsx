@@ -2,12 +2,14 @@ import { CheckButton } from 'components/basic/check-button/CheckButton.js';
 import { Component } from 'preact';
 import { Graph, GraphLayer } from './Graph';
 import { formatTemp, formatTime } from './graphUtils.js';
+import { GraphViewOptions } from './GraphView';
 
 interface LayerManagerProps {
     layers: GraphLayer[];
     graph: Graph;
+    options: GraphViewOptions;
     //selectedTab: number;
-    onToggleLayerVisibility: (index: number, visible: boolean) => void;
+    onToggleLayerVisibility: (name: string, visible: boolean) => void;
 }
 
 interface LayerManagerState {
@@ -15,6 +17,7 @@ interface LayerManagerState {
 }
 
 export class LayerManager extends Component<LayerManagerProps, LayerManagerState> {
+
     constructor(props: LayerManagerProps) {
         super(props);
         this.state = {
@@ -22,34 +25,36 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
         };
     }
 
-    toggleLayerVisibility = (index: number, visible: boolean) => {
+    toggleLayerVisibility = (name: string, visible: boolean) => {
         // Update visibility in Graph
-        this.props.graph.toggleLayerVisibility(index, visible);
-        this.props.onToggleLayerVisibility(index, visible);
+        this.props.graph.toggleLayerVisibility(name, visible);
+        this.props.onToggleLayerVisibility(name, visible);
         // Update local state which will trigger re-render
-        this.setState(prevState => {
-            const newVisibility = [...prevState.visibility];
-            newVisibility[index] = visible;
-            return { visibility: newVisibility };
-        });
+        // this.setState(prevState => {
+        //     const newVisibility = [...prevState.visibility];
+        //     newVisibility[index] = visible;
+        //     return { visibility: newVisibility };
+        // });
     };
 
+
     render() {
-        const { layers } = this.props;
-        const { visibility } = this.state;
+        const { layers, options } = this.props;
+
+        console.log(`layers`, layers, options.layers);
 
         return (
             <div class="layers">
 
                 <div class="tab-columns">
-                    {layers.map((layer, index) => (
+                    {layers.map((layer: GraphLayer, index) => (
                         <div class="column">
                             <CheckButton
                                 key={index}
                                 label={layer.name || 'Data'}
                                 checkOnClick={true}
-                                onCheck={(visible) => this.toggleLayerVisibility(index, visible)}
-                                visible={visibility[index]}
+                                onCheck={(visible) => this.toggleLayerVisibility(layer.name, visible)}
+                                checked={options.layers[layer.name]}
                             />
                             <div class="table">
                                 <table>
@@ -57,7 +62,7 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
                                         <tr>
                                             {/* <th class="index">#</th> */}
                                             <th class="time">Time</th>
-                                            <th class="value">{layer.unitName /*layer.type === 'data' ? 'Value' : 'Text'*/}</th>
+                                            <th class="value">{layer.colName /*layer.type === 'data' ? 'Value' : 'Text'*/}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

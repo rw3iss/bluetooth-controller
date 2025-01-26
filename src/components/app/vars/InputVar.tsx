@@ -1,4 +1,5 @@
 import { useState } from "preact/hooks";
+import { Button } from '../../basic/button/Button';
 
 export function InputVar({ type, label, value, min, max, onChanged }) {
     const [editValue, setEditValue] = useState(value);
@@ -35,7 +36,7 @@ export function InputVar({ type, label, value, min, max, onChanged }) {
                 {renderInputType(type)}
             </div>
             <div class="action">
-                <button disabled={!dirty} onClick={(e) => commitValue()}>set</button>
+                <Button disabled={!dirty} onClick={(e) => commitValue()}>set</Button>
             </div>
         </div>
     );

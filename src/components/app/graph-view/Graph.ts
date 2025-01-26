@@ -4,12 +4,12 @@ import { GraphViewOptions } from './GraphView';
 
 export interface GraphLayer {
     type: 'data' | 'markers' | 'events';
+    name: string;
     data: Array<{ time: number; value?: number; text?: string }>;
     color?: string;
     dash?: boolean;
     width?: number;
-    name?: string;
-    unitName?: string;
+    colName?: string;
 }
 
 export interface DataPoint {
@@ -57,7 +57,7 @@ export class Graph {
                     dash: layer.dash
                 },
                 name: layer.name,
-                visible: true,
+                visible: this.graphOptions.layers[layer.name],
                 showlegend: false,
                 hovertemplate: `<b>%{y:.0f}</b>`
             };
@@ -75,7 +75,7 @@ export class Graph {
                     showarrow: false,
                     ax: 0,
                     ay: -40, // Adjust this to position the tooltip
-                    visible: true,
+                    visible: this.graphOptions.layers[layer.name],
                     // Custom styling for tooltip
                     font: {
                         size: 10,
@@ -106,7 +106,7 @@ export class Graph {
                         width: 2,
                         dash: 'solid'
                     },
-                    visible: true
+                    visible: this.graphOptions.layers[layer.name]
                 };
             });
         });
@@ -180,7 +180,7 @@ export class Graph {
 
         const plotlyInstance = await Plotly.newPlot(this.container, data, layout, config);
 
-        this.updateData(this.graphOptions.timeInterval, this.graphOptions.isAveraged);
+        this.updateData();
 
         // Store reference to shapes for later manipulation
         //this.plotlyInstance = Promise.resolve(plotlyInstance);
@@ -193,36 +193,12 @@ export class Graph {
         Plotly.relayout(instance, { height: newHeight });
     }
 
-    // private handleZoom = (eventData: any) => {
-    //     console.log(`zoom`)
-    //     const { 'xaxis.range[0]': xMin, 'xaxis.range[1]': xMax, 'yaxis.range[0]': yMin, 'yaxis.range[1]': yMax } = eventData;
-
-    //     // Define your min and max zoom levels here
-    //     const minZoomX = 60; // Example: 1 minute minimum zoom level
-    //     const maxZoomX = this.layers.flatMap(layer => layer.data.map(item => item.time)).reduce((a, b) => Math.max(a, b), 0);
-    //     const minZoomY = 10; // Example: minimum y-axis range
-    //     const maxZoomY = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)));
-
-    //     // Check and adjust x-axis zoom
-    //     if (xMax - xMin < minZoomX) {
-    //         Plotly.relayout(this.plotlyInstance, { 'xaxis.range': [xMin, xMin + minZoomX] });
-    //     } else if (xMax - xMin > maxZoomX) {
-    //         Plotly.relayout(this.plotlyInstance, { 'xaxis.range': [0, maxZoomX] });
-    //     }
-
-    //     // Check and adjust y-axis zoom
-    //     if (yMax - yMin < minZoomY) {
-    //         Plotly.relayout(this.plotlyInstance, { 'yaxis.range': [yMin, yMin + minZoomY] });
-    //     } else if (yMax - yMin > maxZoomY) {
-    //         Plotly.relayout(this.plotlyInstance, { 'yaxis.range': [0, maxZoomY] });
-    //     }
-    // }
-
     // Update toggleLayerVisibility to handle annotations
-    public async toggleLayerVisibility(layerIndex: number, visible: boolean) {
+    public async toggleLayerVisibility(layerName: string, visible: boolean) {
         const instance = await this.plotlyInstance;
-        if (layerIndex < this.layers.length) {
-            const layer = this.layers[layerIndex];
+        const layerIndex = this.layers.findIndex(l => l.name == layerName);
+        const layer = this.layers[layerIndex];
+        if (layer) {
             if (['markers', 'events'].includes(layer.type)) {
                 // For markers and events, we need to update the annotations
                 const annotations = instance.layout.annotations as Partial<Plotly.Annotation>[];
@@ -243,12 +219,12 @@ export class Graph {
     }
 
     // Method to update data based on interval
-    private async updateData(interval: number, average: boolean) {
+    private async updateData() {
         this.layers = this.originalLayers.map(layer => {
             if (layer.type === 'data') {
                 return {
                     ...layer,
-                    data: filterDataByInterval(layer.data, interval, average)
+                    data: filterDataByInterval(layer.data, this.graphOptions.timeInterval, this.graphOptions.isAveraged)
                 };
             }
             return layer;
@@ -273,7 +249,7 @@ export class Graph {
                     dash: layer.dash
                 },
                 name: layer.name,
-                visible: true
+                visible: this.graphOptions.layers[layer.name]
             };
         });
 
@@ -297,7 +273,7 @@ export class Graph {
                     borderwidth: 2,
                     borderpad: 4,
                     opacity: 0.8,
-                    visible: true
+                    visible: this.graphOptions.layers[layer.name]
                 };
             });
         });
@@ -321,8 +297,11 @@ export class Graph {
     }
 
     // Public method to change interval
-    public changeInterval(interval: number, average: boolean) {
-        this.updateData(interval, average);
+    public intervalChanged(timeInterval, isAveraged) {
+        this.graphOptions.timeInterval = timeInterval;
+        this.graphOptions.isAveraged = isAveraged;
+        console.log(`interval changed`, this.graphOptions)
+        this.updateData();
     }
 
     public async toggleControls() {

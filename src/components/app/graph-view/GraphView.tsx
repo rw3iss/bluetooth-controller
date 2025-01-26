@@ -5,7 +5,7 @@ import { GraphOptions } from './GraphOptions.js';
 import './GraphView.scss';
 import { LayerManager } from './LayerManager';
 
-interface LayerViewProps {
+export interface LayerViewProps {
     visible: boolean;
 }
 
@@ -20,9 +20,10 @@ interface GraphViewProps {
     layers: GraphLayer[];       // layer data
     options: GraphViewOptions;  // view options
     onOptionChange: (o, v) => void;
+    onLayerChange: (i, v) => void;
 }
 
-export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, onOptionChange }: GraphViewProps) => {
+export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, onOptionChange, onLayerChange }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
     //const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
@@ -58,9 +59,9 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
     }, [layers]);
 
     const handleOptionChange = async (o: string, v: any) => {
-        if (graph && o == 'timeInterval') graph.changeInterval(v, options.isAveraged);
-        if (graph && o == 'isAveraged') graph.changeInterval(options.timeInterval, v);
         onOptionChange(o, v);
+        if (graph && o == 'timeInterval') graph.intervalChanged(v, options.isAveraged);
+        if (graph && o == 'isAveraged') graph.intervalChanged(options.timeInterval, v);
     };
 
     /*
@@ -83,9 +84,10 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
         // };
     */
 
-    const onToggleLayerVisibility = (index: number, visible: boolean) => {
-        console.log(`onToggleLayerVisibility`, index, visible)
+    const onToggleLayerVisibility = (name: string, visible: boolean) => {
+        console.log(`onToggleLayerVisibility`, name, visible)
         //setSelectedTab(index);
+        onLayerChange(name, visible);
     };
 
     return (
@@ -94,8 +96,9 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
             {graph && <GraphOptions options={options} onOptionChange={handleOptionChange} />}
             {graph &&
                 <LayerManager
-                    layers={layers}
                     graph={graph}
+                    layers={layers}
+                    options={options}
                     //selectedTab={selectedTab}
                     onToggleLayerVisibility={onToggleLayerVisibility}
                 />

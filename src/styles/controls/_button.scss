@@ -19,7 +19,7 @@ $btnPadRight: calc(calc(var(--button-height) / 2) + 2px);
     font-family: var(--font-button);
     font-weight: 700;
     padding: var(--button-padding);
-    min-width: 80px;
+    //min-width: 50px;
     // padding-top: $padFix;
     min-height: var(--button-height);
     height: var(--button-height);

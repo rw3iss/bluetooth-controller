@@ -6,46 +6,65 @@ const NOTIFICATION_TIMEOUT_MS = 3000;
 
 // todo: should handle array/multiple notices.
 
-let timeout;
+type NotificationType = 'notice' | 'error';
+
+interface Notification {
+    type: NotificationType;
+    title?: string;
+    content: any;
+}
+
 export const NotificationContext = (props) => {
     const [show, setShow] = useState(false);
     const [type, setType] = useState(undefined);
     const [title, setTitle] = useState(undefined);
     const [content, setContent] = useState(undefined);
+    const [notifications, setNotifications] = useState(new Array<Notification>());
 
     useEffect(() => {
         EventService.subscribe('notification', onNotification);
         return () => EventService.unsubscribe('notification', onNotification);
     }, []);
 
-    function onNotification(e) {
+    const onNotification = (e) => {
         if (e.target) {
-            if (timeout) clearInterval(timeout);
-            setShow(true);
-            setType(e.target.type || 'notice');
-            setTitle(e.target.title);
-            setContent(e.target.content);
-            timeout = setTimeout(() => {
-                setShow(false);
-            }, e.target.duration || NOTIFICATION_TIMEOUT_MS);
+            const t = e.target;
+            const n = {
+                type: t.type,
+                title: t.title,
+                content: t.content
+            }
+            console.log(`add notification`, n, notifications)
+            notifications.unshift(n);
+            setNotifications([...notifications]);
+            //if (timeout) clearInterval(timeout);
+            setTimeout(() => {
+                popNotification(n);
+            }, NOTIFICATION_TIMEOUT_MS);
         }
     }
 
+    const popNotification = (n) => {
+        console.log(`POP`, n)
+        setNotifications(notifications.filter(_n => _n.title != n.title));
+    }
+
     return (
-        <>
-            {show ?
-                <div id="notification" class={type}>
-                    <div class="inner">
-                        <div class="title">
-                            {title || "Notice"}
-                        </div>
-                        <div class="content">
-                            {content}
+        notifications.length > 0 && (
+            <div id="notifications">
+                {notifications.map((n: Notification) => (
+                    <div class={`notification ${n.type}`}>
+                        <div class="inner">
+                            <div class="title">
+                                {n.title || "Notice"}
+                            </div>
+                            <div class="content">
+                                {n.content}
+                            </div>
                         </div>
                     </div>
-                </div>
-                : undefined
-            }
-        </>
-    );
+                ))}
+            </div>
+        )
+    )
 }

@@ -1,25 +1,7 @@
 import { GraphLayer } from './Graph';
 import { DataPoint } from "./Graph.js";
 
-export const graphConfig = {
-    style: 'line',
-    axes: {
-        x: {
-            title: "Time"
-        },
-        y: {
-            title: "Value"
-        }
-    },
-    layers: [
-        { id: "temp", visible: true, color: "yellow" },
-        { id: "other", visible: true, color: "blue" }
-    ]
-}
-
-
-const totalSeconds = 15 * 60; // 15 minutes in seconds
-
+const totalSeconds = 15 * 60; // 15 minutes in seconds for sample
 export function generateCurvedTemperatureData(totalSeconds: number): Array<{ time: number; value: number }> {
     return Array.from({ length: totalSeconds }, (_, index) => {
         const time = index; // Time in seconds
@@ -42,7 +24,7 @@ export function graphData() {
     const layers: GraphLayer[] = [
         {
             name: 'Temperature',
-            unitName: 'Temp',
+            colName: 'Temp',
             type: 'data',
             data: generateCurvedTemperatureData(totalSeconds),
             color: '#fcba03',
@@ -55,7 +37,7 @@ export function graphData() {
         // },
         {
             name: 'Markers',
-            unitName: 'Marker',
+            colName: 'Marker',
             type: 'markers',
             data: [
                 { time: 120, text: 'Event A' },
@@ -67,7 +49,7 @@ export function graphData() {
         },
         {
             name: 'Events',
-            unitName: 'Event',
+            colName: 'Event',
             type: 'events',
             data: [
                 { time: 200, text: 'Major Update' },

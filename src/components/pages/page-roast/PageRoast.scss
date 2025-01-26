@@ -139,6 +139,11 @@
     }
 }
 
+$labelShadow: 1px 1px 3px rgba(0, 0, 10, 1);
+$labelAnim:
+    color 0.5s ease-out,
+    text-shadow 0.5s ease-out;
+
 #panel-set {
     position: relative;
 
@@ -152,9 +157,10 @@
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
-            font-weight: bold;
+            font-weight: 900;
             color: var(--label-color);
             text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
+            transition: $labelAnim;
         }
 
         .toggle {
@@ -164,13 +170,19 @@
 
             .label {
                 flex: 1 0 auto;
-                font-weight: 100;
+            }
+
+            &.off {
+                .label {
+                    transition: $labelAnim;
+                }
             }
 
             &.on {
                 .label {
-                    font-weight: 900;
-                    text-shadow: 0px 0px 10px rgba(244, 253, 70, 0.8);
+                    text-shadow: 0px 0px 10px rgba(198, 255, 63, 0.5);
+                    color: rgb(96, 255, 155);
+                    transition: $labelAnim;
                 }
             }
         }
@@ -192,14 +204,16 @@
         justify-content: flex-start;
         font-weight: bold;
         color: var(--label-color);
-        text-shadow: 1px 1px 3px rgba(0, 0, 10, 1);
+        text-shadow: $labelShadow;
+        letter-spacing: 1px;
     }
 
     .value {
         flex: 0.6;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end;
+        text-align: right;
         font-weight: bold;
         font-size: var(--input-font-size);
 
