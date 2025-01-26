@@ -1,5 +1,6 @@
 import * as Plotly from 'plotly.js-dist';
 import { filterDataByInterval, formatTime } from './graphUtils.js';
+import { GraphViewOptions } from './GraphView';
 
 export interface GraphLayer {
     type: 'data' | 'markers' | 'events';
@@ -22,11 +23,10 @@ export class Graph {
     private layers: GraphLayer[];
     private showControls: boolean = false;
     private currentInterval: number = 5; // Default interval
-    private isAveraged: boolean = false;
     private maxTime: number;
     private resizeObserver: ResizeObserver;
 
-    constructor(private container: HTMLDivElement, private originalLayers: GraphLayer[]) {
+    constructor(private container: HTMLDivElement, private originalLayers: GraphLayer[], private graphOptions: GraphViewOptions) {
         this.layers = [...originalLayers]; // Create a copy of the original layers
         this.plotlyInstance = this.createGraph();
 
@@ -44,6 +44,7 @@ export class Graph {
     }
 
     private async createGraph(): Promise<Plotly.PlotlyHTMLElement> {
+        console.log(`createGraph()`, this.graphOptions)
         const data = this.layers.filter(layer => layer.type !== 'markers' && layer.type !== 'events').map((layer, index) => {
             return {
                 x: layer.data.map(item => item.time),
@@ -179,6 +180,8 @@ export class Graph {
 
         const plotlyInstance = await Plotly.newPlot(this.container, data, layout, config);
 
+        this.updateData(this.graphOptions.timeInterval, this.graphOptions.isAveraged);
+
         // Store reference to shapes for later manipulation
         //this.plotlyInstance = Promise.resolve(plotlyInstance);
 
@@ -240,7 +243,7 @@ export class Graph {
     }
 
     // Method to update data based on interval
-    private updateData(interval: number, average: boolean) {
+    private async updateData(interval: number, average: boolean) {
         this.layers = this.originalLayers.map(layer => {
             if (layer.type === 'data') {
                 return {
@@ -250,9 +253,9 @@ export class Graph {
             }
             return layer;
         });
-        this.currentInterval = interval;
-        this.isAveraged = average;
-        this.redrawGraph();
+        // this.currentInterval = interval;
+        // this.isAveraged = average;
+        await this.redrawGraph();
     }
 
     // Method to redraw the graph with updated data
@@ -326,11 +329,6 @@ export class Graph {
         this.showControls = !this.showControls;
         const instance = await this.plotlyInstance;
         Plotly.relayout(instance, { 'modebar.display': this.showControls });
-    }
-
-    public async updateLayerVisibility(index: number, visible: boolean) {
-        const instance = await this.plotlyInstance;
-        Plotly.restyle(instance, { visible: visible ? true : 'legendonly' }, [index]);
     }
 
     public async updateHighlight(traceIndex: number, pointIndex?: number) {

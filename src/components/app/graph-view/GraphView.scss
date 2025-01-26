@@ -17,6 +17,16 @@
 
         .expand {
             margin: 0 0 0 auto;
+
+            .button {
+                min-width: 40px;
+                width: 40px;
+                padding: 5px;
+            }
+
+            img {
+                height: 100%;
+            }
         }
     }
 

@@ -61,7 +61,7 @@ export class RoastController {
     }
 
     public async save(state?) {
-        console.log(`save`, state || this.roast)
+        //console.log(`save`, state || this.roast)
         const db = IndexedDBManager.getDb();
         if (db) await db.put(STATE_STORE, wrapState(ROAST_STATE_ID, state || this.roast));
     }
@@ -80,7 +80,6 @@ export class RoastController {
     // updates and persists the state
     updateState = (state, save = false) => {
         this.roast = Object.assign(this.roast, state);
-        console.log(`state updated?`, this.roast)
         if (save) this.save();
     };
 
@@ -93,7 +92,6 @@ export class RoastController {
     };
 
     public start = () => {
-        console.log(`start roast`);
         if (this.roast.isStarted) throw "Roast is already started. Stop it first.";
         // todo: set multiple state, default
         this.updateState({

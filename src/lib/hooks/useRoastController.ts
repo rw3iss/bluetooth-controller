@@ -9,7 +9,7 @@ export function useRoastController() {
 
     useEffect(() => {
         setRoastState(ctrl.roast);
-        console.log(`loaded state`, ctrl.roast)
+        //console.log(`loaded state`, ctrl.roast)
         ctrl.addListener(onEvent);
         return () => ctrl.removeListener(onEvent);
     }, []);
@@ -21,9 +21,10 @@ export function useRoastController() {
 
     // saves the new state to idb and triggers a state update
     const updateRoastValue = async (prop, val, save = true) => {
-        console.log(`update`, prop, val)
-        roastState[prop] = val;
-        const newState = { ...roastState };
+        //console.log(`update`, prop, val);
+        const currState = ctrl.roast;
+        currState[prop] = val;
+        const newState = { ...currState };
         setRoastState(newState);
         if (save) await ctrl.save(newState);
     }

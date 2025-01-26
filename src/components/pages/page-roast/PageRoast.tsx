@@ -41,27 +41,6 @@ const DEFAULT_VIEW_STATE = {
     }
 }
 
-// {
-//     isStarted: false,
-//     isPaused: false,
-//     timeStarted: undefined,
-//     timeRunningMs: 0,
-//     currentTemp: 0,
-//     targetTemp: 0,
-//     heaterOn: false,
-//     motorOn: false,
-//     exhaustOn: false,
-//     ejectOn: false,
-//     coolingOn: false
-// }
-
-/*
-RoastController - instantiated and state auto-loaded on App start.
-
-Other components - useEffect((), [roastState]); - when state changes, the views will be updated.
-
-*/
-
 const roastControls = [
     {
         type: 'number',
@@ -190,15 +169,8 @@ export function PageRoast(props) {
         return <div class="panel-section" id={`panel-${s}`}>{inner}</div>;
     }
 
-    const onExpand = (v) => {
-        console.log(`onExpand`, v)
-        viewState.graph.expanded = v;
-        //setIsGraphExpanded(v);
-        saveViewState({ ...viewState });
-    }
-
-    const onGraphViewChange = (o, v) => {
-        console.log(`onGraphViewChange`, o, v)
+    const onGraphOptionChange = (o, v) => {
+        console.log(`onGraphOptionChange`, o, v)
         viewState.graph[o] = v;
         saveViewState({ ...viewState });
     }
@@ -222,7 +194,7 @@ export function PageRoast(props) {
 
             <div class="graph">
 
-                {viewState && <GraphView options={viewState.graph} layers={gData} onViewChange={onGraphViewChange} timeInterval={viewState.graph.timeInterval} isAveraged={viewState.graph.average} isExpanded={viewState.graph.expanded} onExpand={onExpand} />}
+                {viewState && <GraphView options={viewState.graph} layers={gData} onOptionChange={onGraphOptionChange} />}
 
             </div>
         </div>

@@ -1,4 +1,3 @@
-import { Fn } from 'lib/Types';
 import { FunctionalComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
@@ -6,99 +5,99 @@ import { GraphOptions } from './GraphOptions.js';
 import './GraphView.scss';
 import { LayerManager } from './LayerManager';
 
-interface GraphViewProps {
-    layers: GraphLayer[];
-    options: {},
+interface LayerViewProps {
+    visible: boolean;
+}
 
-
+export interface GraphViewOptions {
     isExpanded: boolean;
     timeInterval: number;
     isAveraged: boolean;
-    onExpand: Fn;
-    onViewChange: Fn;
+    layers: LayerViewProps;
 }
 
-export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, isExpanded, onExpand, onViewChange, timeInterval, isAveraged }: GraphViewProps) => {
+interface GraphViewProps {
+    layers: GraphLayer[];       // layer data
+    options: GraphViewOptions;  // view options
+    onOptionChange: (o, v) => void;
+}
+
+export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, onOptionChange }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
-    const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
-    const [selectedTab, setSelectedTab] = useState(0);
+    //const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
+    //const [selectedTab, setSelectedTab] = useState(0);
 
     useEffect(() => {
         if (graphContainerRef.current) {
-            const newGraph = new Graph(graphContainerRef.current, layers);
+            const newGraph = new Graph(graphContainerRef.current, layers, options);
             setGraph(newGraph);
+            // newGraph.plotlyInstance.then(instance => {
+            //     //instance.on('plotly_click', handleGraphClick);
+            //     // instance.on('plotly_hover', handleGraphHover);
+            //     // instance.on('plotly_unhover', handleGraphUnhover);
 
-            newGraph.plotlyInstance.then(instance => {
-                instance.on('plotly_click', handleGraphClick);
-                instance.on('plotly_hover', handleGraphHover);
-                instance.on('plotly_unhover', handleGraphUnhover);
+            //     // const controlToggle = document.createElement('button');
+            //     // controlToggle.textContent = 'Controls';
+            //     // controlToggle.style.position = 'absolute';
+            //     // controlToggle.style.right = '10px';
+            //     // controlToggle.style.top = '10px';
+            //     // controlToggle.style.zIndex = '1000';
+            //     // controlToggle.addEventListener('click', () => newGraph.toggleControls());
+            //     // graphContainerRef.current?.appendChild(controlToggle);
 
-                // const controlToggle = document.createElement('button');
-                // controlToggle.textContent = 'Controls';
-                // controlToggle.style.position = 'absolute';
-                // controlToggle.style.right = '10px';
-                // controlToggle.style.top = '10px';
-                // controlToggle.style.zIndex = '1000';
-                // controlToggle.addEventListener('click', () => newGraph.toggleControls());
-                // graphContainerRef.current?.appendChild(controlToggle);
-
-                // Cleanup function
-                return () => {
-                    instance.removeAllListeners('plotly_click');
-                    instance.removeAllListeners('plotly_hover');
-                    instance.removeAllListeners('plotly_unhover');
-                    //graphContainerRef.current?.removeChild(controlToggle);
-                };
-            });
+            //     // Cleanup function
+            //     return () => {
+            //         instance.removeAllListeners('plotly_click');
+            //         // instance.removeAllListeners('plotly_hover');
+            //         // instance.removeAllListeners('plotly_unhover');
+            //         //graphContainerRef.current?.removeChild(controlToggle);
+            //     };
+            // });
         }
     }, [layers]);
 
     const handleOptionChange = async (o: string, v: any) => {
-        if (graph && o == 'timeInterval') {
-            graph.changeInterval(v, options.average);
-        }
-        onViewChange(o, v);
-        await graph?.redrawGraph();
+        if (graph && o == 'timeInterval') graph.changeInterval(v, options.isAveraged);
+        if (graph && o == 'isAveraged') graph.changeInterval(options.timeInterval, v);
+        onOptionChange(o, v);
     };
 
-    const handleGraphClick = (data: any) => {
-        if (data.points && data.points.length > 0) {
-            const point = data.points[0];
-            setSelectedItem({ layerIndex: point.curveNumber, itemIndex: point.pointNumber });
-        }
-    };
+    /*
+        // const handleGraphClick = (data: any) => {
+        //     if (data.points && data.points.length > 0) {
+        //         const point = data.points[0];
+        //         setSelectedItem({ layerIndex: point.curveNumber, itemIndex: point.pointNumber });
+        //     }
+        // };
 
-    const handleGraphHover = (data: any) => {
-        if (data.points && data.points.length > 0) {
-            const point = data.points[0];
-            graph?.updateHighlight(point.curveNumber, point.pointNumber);
-        }
-    };
+        // const handleGraphHover = (data: any) => {
+        //     if (data.points && data.points.length > 0) {
+        //         const point = data.points[0];
+        //         graph?.updateHighlight(point.curveNumber, point.pointNumber);
+        //     }
+        // };
 
-    const handleGraphUnhover = () => {
-        graph?.updateHighlight(selectedItem?.layerIndex || 0);
-    };
+        // const handleGraphUnhover = () => {
+        //     graph?.updateHighlight(selectedItem?.layerIndex || 0);
+        // };
+    */
 
-    const handleSelect = (index: number) => {
-        setSelectedTab(index);
-    };
-
-    const handleExpand = async (val) => {
-        onExpand(val);
-        await graph?.redrawGraph();
+    const onToggleLayerVisibility = (index: number, visible: boolean) => {
+        console.log(`onToggleLayerVisibility`, index, visible)
+        //setSelectedTab(index);
     };
 
     return (
-        <div class={`${isExpanded ? 'expanded' : ''} graph-view`}>
-            <div class="graph-wrapper" ref={graphContainerRef} style={{ width: '100%', minHeight: '400px', height: isExpanded ? 'auto' : '50%' }} />
-            {graph && <GraphOptions options={options} onOptionChange={handleOptionChange} onExpandChange={handleExpand} timeInterval={timeInterval} isAveraged={options.average} isExpanded={isExpanded} />}
+        <div class={`${options.isExpanded ? 'expanded' : ''} graph-view`}>
+            <div class="graph-wrapper" ref={graphContainerRef} style={{ width: '100%', minHeight: '400px', height: options.isExpanded ? 'auto' : '50%' }} />
+            {graph && <GraphOptions options={options} onOptionChange={handleOptionChange} />}
             {graph &&
                 <LayerManager
                     layers={layers}
                     graph={graph}
-                    selectedTab={selectedTab}
-                    onSelect={handleSelect}
+                    //selectedTab={selectedTab}
+                    onToggleLayerVisibility={onToggleLayerVisibility}
                 />
             }
         </div>

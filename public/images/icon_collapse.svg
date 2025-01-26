@@ -1,0 +1,4 @@
+<svg id="expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+    <path fill="#a8adb3" d="M29,15H17V3l4,4,4-4,4,4-4,4ZM15,29l-4-4L7,29,3,25l4-4L3,17H15Z"
+        transform="translate(-3 -3)" />
+</svg>

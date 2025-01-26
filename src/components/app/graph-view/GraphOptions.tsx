@@ -1,20 +1,20 @@
 import { FunctionalComponent } from 'preact';
-import { useState } from 'preact/hooks';
 import { Button } from '../../basic/button/Button.js';
+import { GraphViewOptions } from './GraphView';
 
 interface GraphOptionsProps {
-    options: {},
+    options: GraphViewOptions,
     onOptionChange: (o, v) => void;
 
-    onIntervalChange: (interval: number, isAveraged: boolean) => void;
-    onExpandChange: (isExpanded: boolean) => void;
+    // onIntervalChange: (interval: number, isAveraged: boolean) => void;
+    // onExpandChange: (isExpanded: boolean) => void;
 
-    timeInterval: number;
-    isExpanded: boolean;
-    isAveraged: boolean;
+    // timeInterval: number;
+    // isExpanded: boolean;
+    // isAveraged: boolean;
 }
 
-export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, onOptionChange, onIntervalChange, onExpandChange, timeInterval, isAveraged, isExpanded }) => {
+export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, onOptionChange }) => {
     //const [isExpanded, setIsExpanded] = useState(false);
 
     const handleIntervalChange = (e: Event) => {
@@ -22,12 +22,12 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, 
     };
 
     const handleAverageChange = (e: Event) => {
-        onOptionChange('average', e.target.checked);
+        onOptionChange('isAveraged', e.target.checked);
     };
 
     const handleExpand = (e: Event) => {
         console.log(`expand`, e.target)
-        onOptionChange('expanded', !options.expanded);
+        onOptionChange('isExpanded', !options.isExpanded);
     };
 
     return (
@@ -44,13 +44,13 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, 
                     <option value="60">1 minute</option>
                 </select>
                 <label style={{ marginLeft: '10px' }}>
-                    <input type="checkbox" checked={options.average} onChange={handleAverageChange} />
+                    <input type="checkbox" checked={options.isAveraged} onChange={handleAverageChange} />
                     Average
                 </label>
             </div>
 
             <div class="item expand">
-                <Button onClick={handleExpand}>{options.expanded ? 'Collapse' : 'Expand'}</Button>
+                <Button onClick={handleExpand}>{options.isExpanded ? <img src="/public/images/icon_collapse.svg" /> : <img src="/public/images/expand-icon.svg" />}</Button>
             </div>
 
         </div>

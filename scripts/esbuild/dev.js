@@ -19,7 +19,7 @@ const copyPlugin = require("./plugins/copyPlugin.ts");
 const { createServer } = require("http");
 const postcss = require('postcss');
 const autoprefixer = require('autoprefixer');
-//const gzipPlugin = require('@luncheon/esbuild-plugin-gzip');
+const { cleanAndRun } = require('./utils/buildUtils');
 
 // Config params (relative to where npm/script is called from):
 const GLOBAL_NAME = 'CoffeeController';
@@ -135,44 +135,4 @@ async function dev() {
 
 }
 
-// copies any imports or paths that start with /static to the build folder.
-// todo: also needs to parse file contents for references to /static?
-// let copyStaticPlugin = {
-//     name: 'copy-static',
-//     setup(build) {
-
-//         function _findEnvFile(dir) {
-//             if (!fs.existsSync(dir))
-//                 return false;
-//             let filePath = `${dir}/.env`;
-//             if ((fs.existsSync(filePath))) {
-//                 return filePath;
-//             } else {
-//                 return _findEnvFile(path.resolve(dir, '../'));
-//             }
-//         }
-
-//         build.onResolve({ filter: /^static$/ }, async (args) => {
-//             // find a .env file in current directory or any parent:
-//             return ({
-//                 path: _findEnvFile(args.resolveDir),
-//                 namespace: 'env-ns',
-//             })
-//         })
-
-//         build.onLoad({ filter: /.*/, namespace: 'env-ns' }, async (args) => {
-//             // read in .env file contents and combine with regular .env:
-//             let data = await fs.promises.readFile(args.path, 'utf8')
-//             const buf = Buffer.from(data)
-//             const config = require('dotenv').parse(buf);
-
-//             return ({
-//                 contents: JSON.stringify({ ...process.env, ...config }),
-//                 loader: 'json'
-//             });
-//         })
-//     }
-// }
-
-// call build for main app bundle
-dev();
+cleanAndRun(OUTPUT_DIR, dev);

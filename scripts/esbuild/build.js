@@ -18,6 +18,7 @@ const copyPlugin = require("./plugins/copyPlugin.ts");
 const { createServer } = require("http");
 const postcss = require('postcss');
 const autoprefixer = require('autoprefixer');
+const { cleanAndRun } = require('./utils/buildUtils');
 
 //const gzipPlugin = require('@luncheon/esbuild-plugin-gzip');
 
@@ -125,5 +126,4 @@ async function build() {
     console.log(`Build finished.`)
 }
 
-// call build for main app bundle
-build();
+cleanAndRun(build);

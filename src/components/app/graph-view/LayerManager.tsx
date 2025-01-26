@@ -1,13 +1,13 @@
+import { CheckButton } from 'components/basic/check-button/CheckButton.js';
 import { Component } from 'preact';
 import { Graph, GraphLayer } from './Graph';
-import { CheckButton } from 'components/basic/check-button/CheckButton.js';
 import { formatTemp, formatTime } from './graphUtils.js';
 
 interface LayerManagerProps {
     layers: GraphLayer[];
     graph: Graph;
-    selectedTab: number;
-    onSelect: (index: number) => void;
+    //selectedTab: number;
+    onToggleLayerVisibility: (index: number, visible: boolean) => void;
 }
 
 interface LayerManagerState {
@@ -25,6 +25,7 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
     toggleLayerVisibility = (index: number, visible: boolean) => {
         // Update visibility in Graph
         this.props.graph.toggleLayerVisibility(index, visible);
+        this.props.onToggleLayerVisibility(index, visible);
         // Update local state which will trigger re-render
         this.setState(prevState => {
             const newVisibility = [...prevState.visibility];
@@ -34,7 +35,7 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
     };
 
     render() {
-        const { layers, selectedTab, onSelect } = this.props;
+        const { layers } = this.props;
         const { visibility } = this.state;
 
         return (
@@ -46,8 +47,8 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
                             <CheckButton
                                 key={index}
                                 label={layer.name || 'Data'}
-                                onSelect={() => onSelect(index)}
-                                onVisibilityChange={(visible) => this.toggleLayerVisibility(index, visible)}
+                                checkOnClick={true}
+                                onCheck={(visible) => this.toggleLayerVisibility(index, visible)}
                                 visible={visibility[index]}
                             />
                             <div class="table">

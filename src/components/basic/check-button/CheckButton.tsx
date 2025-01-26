@@ -3,35 +3,41 @@ import { useState } from 'preact/hooks';
 
 interface CheckButtonProps {
     label: string;
-    onSelect: () => void;
-    onVisibilityChange: (checked: boolean) => void;
+    onClick?: (e, isChecked: boolean) => void;
+    onCheck: (isChecked: boolean) => void;
+    checkOnClick?: boolean; // toggle the check when the button is clicked
     visible: boolean;
 }
 
 import { FunctionalComponent } from 'preact';
 
-interface CheckButtonProps {
-    label: string;
-    onSelect: () => void;
-    onVisibilityChange: (checked: boolean) => void;
-    visible: boolean;
-}
-
-export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onSelect, onVisibilityChange, visible }) => {
+export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onClick, onCheck, checkOnClick, visible }) => {
     // Use local state to manage the checkbox state
     const [isChecked, setIsChecked] = useState(visible);
 
     // Handle click on the button
     const handleClick = (e) => {
+        console.log(`click`, e.target);
         if (e.target.type == 'checkbox') return;
-        onSelect();
+        if (checkOnClick) {
+            // find checkbox
+            let target = e.target;
+            if (target.classList.contains('label')) target = e.target.parentNode;
+            const checkbox = target.children[1] as HTMLInputElement;
+            checkbox.checked = !checkbox.checked;
+            handleCheck(checkbox);
+        }
+        console.log(`isChecked?`, isChecked)
+        if (onClick) onClick(e, isChecked);
     };
 
     // Handle change on the checkbox
-    const handleCheck = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        setIsChecked(target.checked);
-        onVisibilityChange(target.checked);
+    const handleCheck = (el: HTMLInputElement) => {
+        console.log(`CB?`, el)
+        if (el) {
+            setIsChecked(el.checked);
+            onCheck(el.checked);
+        }
     };
 
     return (
@@ -40,7 +46,7 @@ export const CheckButton: FunctionalComponent<CheckButtonProps> = ({ label, onSe
             <input class="checkbox"
                 type="checkbox"
                 checked={isChecked}
-                onChange={handleCheck}
+                onChange={(e) => handleCheck(e.target)}
             />
         </div>
     );
