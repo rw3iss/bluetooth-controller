@@ -29,20 +29,43 @@ export function useRoastController() {
         if (save) await ctrl.save(newState);
     }
 
+    // saves the new state to idb and triggers a state update
+    const updateRoastState = async (state, save = true) => {
+        //console.log(`update`, prop, val);
+        const currState = ctrl.roast;
+        Object.assign(currState, state);
+        const newState = { ...currState };
+        setRoastState(newState);
+        if (save) await ctrl.save(newState);
+    }
     const startRoast = () => {
         ctrl.start();
         //updateRoastValue('isStarted', true);
+        updateRoastState({
+            isStarted: true,
+            isPaused: false,
+            heaterOn: true,
+            motorOn: true
+        });
     }
 
     const togglePause = () => {
         ctrl.togglePause();
-        updateRoastValue('isPaused', ctrl.roast.isPaused);
+        updateRoastState({
+            isPaused: ctrl.roast.isPaused,
+            heaterOn: !ctrl.roast.isPaused,
+            motorOn: !ctrl.roast.isPaused
+        });
     }
 
     const stopRoast = () => {
         ctrl.stop();
-        updateRoastValue('isPaused', false);
-        updateRoastValue('isStarted', false);
+        updateRoastState({
+            isPaused: false,
+            isStarted: false,
+            heaterOn: false,
+            ejectOn: true
+        });
     }
 
     return {

@@ -1,5 +1,8 @@
 @use "src/styles/vars";
 
+$colorOn: rgb(96, 255, 155);
+$colorOff: rgb(235, 148, 111);
+
 #roast {
     display: flex;
     // flex: 1 0 100%;
@@ -28,12 +31,13 @@
 
                 .title {
                     position: relative;
-                    padding: 10px 10px 10px 15px;
+                    padding: 10px 10px 10px 10px;
                     font-weight: bold;
                     background: var(--button-bg);
                     color: var(--button-color);
                     border-top-left-radius: var(--panel-radius);
                     border-top-right-radius: var(--panel-radius);
+                    letter-spacing: 2px;
                     //border-bottom-left-radius: var(--panel-radius);
                     //border-bottom-right-radius: var(--panel-radius);
 
@@ -110,20 +114,36 @@
             }
         }
 
-        .value-updated {
+        .notification {
             .value {
                 margin-left: 2px;
                 font-weight: bold;
                 font-size: 1.25em;
+                text-shadow: 1px 1px 1px rgb(42, 43, 44);
 
-                &.ON {
-                    color: rgb(150, 236, 150);
+                &.on {
+                    color: $colorOn;
                 }
 
-                &.OFF {
-                    color: rgb(237, 137, 137);
+                &.off {
+                    color: rgb(230, 168, 127); //$colorOff;
                 }
             }
+
+            &.warning {
+                .inner {
+                    background: rgb(124, 114, 96);
+
+                    .title {
+                        background: rgb(161, 138, 116);
+                    }
+                }
+            }
+        }
+
+        #notifications {
+            position: absolute;
+            bottom: 0;
         }
     }
 
@@ -216,11 +236,20 @@ $labelAnim:
         text-align: right;
         font-weight: bold;
         font-size: var(--input-font-size);
+        text-shadow: 1px 1px 1px rgb(17, 17, 17);
 
         input {
             width: 100%;
             font-weight: bold;
             margin-right: 4px;
+        }
+
+        &.on {
+            color: $colorOn;
+        }
+
+        &.off {
+            color: $colorOff;
         }
     }
 

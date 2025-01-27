@@ -50,7 +50,7 @@ export const GraphOptions: FunctionalComponent<GraphOptionsProps> = ({ options, 
             </div>
 
             <div class="item expand">
-                <Button onClick={handleExpand}>{options.isExpanded ? <img src="/public/images/icon_collapse.svg" /> : <img src="/public/images/expand-icon.svg" />}</Button>
+                <Button onClick={handleExpand}>{options.isExpanded ? <img src="/public/images/icon_table.svg" /> : <img src="/public/images/icon_collapse.svg" />}</Button>
             </div>
 
         </div>

@@ -41,8 +41,6 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
     render() {
         const { layers, options } = this.props;
 
-        console.log(`layers`, layers, options.layers);
-
         return (
             <div class="layers">
 

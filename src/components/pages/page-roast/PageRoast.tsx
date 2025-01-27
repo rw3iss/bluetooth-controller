@@ -87,18 +87,35 @@ export function PageRoast(props) {
 
     // send a new value command to the device
     function roastPropValChanged(p, val) {
-        console.log(`roastPropValChanged`, p, val)
-        if (p.propName === "ejectOn") {
+        //console.log(`roastPropValChanged`, p, val)
+        if (p.propName === "ejectOn" && val == true) {
             if (!confirm("Are you sure you want to eject the roast now?")) return;
         }
         updateRoastValue(p.propName, val);
-        let sVal = val;
-        if (p.type == 'toggle') sVal = val ? 'ON' : 'OFF';
-        Notification.success({
-            title: `✅ ${p.label} Updated`,
+        let method = Notification.success;
+        let title = `✅ ${p.label} Updated`;
+        if (typeof val == 'boolean') {
+            if (!val) {
+                method = Notification.warning;
+                title = `🚫 ${p.label} Disabled`;
+            } else {
+                title = `✅ ${p.label} Enabled`;
+            }
+        }
+        method.call(Notification, ({
+            title,
             content:
-                <div class="value-updated">{p.label} set to <span class={`value ${sVal}`}>{sVal}</span></div>
-        });
+                <div class="value-updated">{p.label} set to {renderValue(val, p.type)}</div>
+        }));
+    }
+
+    function renderValue(val, type?) {
+        let sClass = '', sVal = val;
+        if (type == 'toggle' || typeof val == 'boolean') {
+            sVal = val ? 'ON' : 'OFF';
+            sClass = val ? 'on' : 'off';
+        }
+        return <span class={`value ${sClass}`}>{sVal}</span>
     }
 
     async function toggleSection(s) {
@@ -108,9 +125,40 @@ export function PageRoast(props) {
         }
     }
 
+    function onStartRoast() {
+        startRoast();
+        Notification.success({
+            title: `✅ Roast Started`,
+            content:
+                <div class="value-updated">Roast has started!</div>
+        });
+    }
+
+    function onPauseRoast(paused) {
+        togglePause();
+        if (!paused) {
+            Notification.warning({
+                title: `⚠️ Roast Paused`,
+                content:
+                    <div class="value-updated">Roast has paused!</div>
+            });
+        } else {
+            Notification.success({
+                title: `✅ Roast Resumed`,
+                content:
+                    <div class="value-updated">Roast has resumed!</div>
+            });
+        }
+    }
+
     function confirmStop() {
         if (confirm("Are you sure you want to stop the current roast?")) {
             stopRoast();
+            Notification.error({
+                title: `🛑 Roast Stopped`,
+                content:
+                    <div class="value-updated">Roast stopped!</div>
+            });
         }
     }
 
@@ -122,9 +170,12 @@ export function PageRoast(props) {
                 inner = <>
                     <ReadVar label="Current Temp" value={roastState.currentTemp} />
                     <ReadVar label="Target Temp" value={roastState.targetTemp} />
-                    <ReadVar label="Motor" value={roastState.motorOn} />
-                    <ReadVar label="Exhaust" value={roastState.exhaustOn} />
-                    <ReadVar label="Eject" value={roastState.ejectOn} />
+                    <ReadVar label="Heater" value={renderValue(roastState.heaterOn)} />
+                    <ReadVar label="Motor" value={renderValue(roastState.motorOn)} />
+                    <ReadVar label="Exhaust Fan" value={renderValue(roastState.exhaustOn)} />
+                    <ReadVar label="Eject" value={renderValue(roastState.ejectOn)} />
+                    <ReadVar label="Cooling Motor" value={renderValue(roastState.coolingMotorOn)} />
+                    <ReadVar label="Cooling Fan" value={renderValue(roastState.coolingFanOn)} />
                 </>
                 break;
 
@@ -154,8 +205,8 @@ export function PageRoast(props) {
 
             case "profile":
                 inner = <>
-                    {!roastState.isStarted && <button onClick={() => startRoast()}>Start Roast</button>}
-                    {roastState.isStarted && <button onClick={() => togglePause()}>{roastState.isPaused ? 'Play' : 'Pause'}</button>}
+                    {!roastState.isStarted && <button onClick={() => onStartRoast()}>Start Roast</button>}
+                    {roastState.isStarted && <button onClick={() => onPauseRoast(roastState.isPaused)}>{roastState.isPaused ? 'Play' : 'Pause'}</button>}
                     {roastState.isStarted && <button onClick={() => confirmStop()}>Stop Roast</button>}
                 </>
                 break;
@@ -168,19 +219,16 @@ export function PageRoast(props) {
     }
 
     const onGraphOptionChange = (o, v) => {
-        console.log(`onGraphOptionChange`, o, v)
+        //console.log(`onGraphOptionChange`, o, v)
         viewState.graph[o] = v;
         saveViewState({ ...viewState });
     }
 
-
     const onGraphLayerChange = (name, v) => {
-        console.log(`onGraphLayerChange`, name, v)
+        //console.log(`onGraphLayerChange`, name, v)
         viewState.graph.layers[name] = v;
         saveViewState({ ...viewState });
     }
-
-    console.log(`view state`, viewState)
 
     return (
         <div class="page" id="roast">

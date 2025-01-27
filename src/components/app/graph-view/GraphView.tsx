@@ -85,7 +85,7 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
     */
 
     const onToggleLayerVisibility = (name: string, visible: boolean) => {
-        console.log(`onToggleLayerVisibility`, name, visible)
+        //console.log(`onToggleLayerVisibility`, name, visible)
         //setSelectedTab(index);
         onLayerChange(name, visible);
     };

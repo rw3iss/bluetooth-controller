@@ -23,6 +23,10 @@ class NotificationService {
         this._notice('success', n.title || 'Success', n.content, n.duration || 3000);
     }
 
+    warning(n: INotificationProps) {
+        this._notice('warning', n.title || 'Warning', n.content, n.duration || 3000);
+    }
+
     error(n: INotificationProps) {
         this._notice('error', n.title || 'Error', n.content, n.duration || 3000);
     }

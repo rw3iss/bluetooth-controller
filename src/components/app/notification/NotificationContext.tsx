@@ -4,8 +4,6 @@ import "./Notification.scss";
 
 const NOTIFICATION_TIMEOUT_MS = 3000;
 
-// todo: should handle array/multiple notices.
-
 type NotificationType = 'notice' | 'error';
 
 interface Notification {
@@ -14,11 +12,12 @@ interface Notification {
     content: any;
 }
 
-export const NotificationContext = (props) => {
-    const [show, setShow] = useState(false);
-    const [type, setType] = useState(undefined);
-    const [title, setTitle] = useState(undefined);
-    const [content, setContent] = useState(undefined);
+interface INotificationProps {
+    singular?: boolean;
+}
+
+let timeout;
+export const NotificationContext = (props: INotificationProps) => {
     const [notifications, setNotifications] = useState(new Array<Notification>());
 
     useEffect(() => {
@@ -34,19 +33,21 @@ export const NotificationContext = (props) => {
                 title: t.title,
                 content: t.content
             }
-            console.log(`add notification`, n, notifications)
+            if (props.singular) {
+                if (timeout) clearTimeout(timeout);
+                notifications.pop();
+            }
             notifications.unshift(n);
             setNotifications([...notifications]);
-            //if (timeout) clearInterval(timeout);
-            setTimeout(() => {
+            timeout = setTimeout(() => {
                 popNotification(n);
             }, NOTIFICATION_TIMEOUT_MS);
         }
     }
 
     const popNotification = (n) => {
-        console.log(`POP`, n)
-        setNotifications(notifications.filter(_n => _n.title != n.title));
+        notifications.pop();
+        setTimeout(() => setNotifications([...notifications]));
     }
 
     return (

@@ -22,7 +22,6 @@ export class Graph {
     public plotlyInstance: Promise<Plotly.PlotlyHTMLElement>;
     private layers: GraphLayer[];
     private showControls: boolean = false;
-    private currentInterval: number = 5; // Default interval
     private maxTime: number;
     private resizeObserver: ResizeObserver;
 
@@ -36,7 +35,7 @@ export class Graph {
             console.log(`resize`, entries)
             for (let entry of entries) {
                 if (entry.contentRect) {
-                    this.updateGraphSize(entry.contentRect.height);
+                    this.updateGraphSize(entry.contentRect.height, entry.contentRect.width);
                 }
             }
         });
@@ -44,7 +43,7 @@ export class Graph {
     }
 
     private async createGraph(): Promise<Plotly.PlotlyHTMLElement> {
-        console.log(`createGraph()`, this.graphOptions)
+        //console.log(`createGraph()`, this.graphOptions)
         const data = this.layers.filter(layer => layer.type !== 'markers' && layer.type !== 'events').map((layer, index) => {
             return {
                 x: layer.data.map(item => item.time),
@@ -113,7 +112,7 @@ export class Graph {
 
         this.maxTime = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)));
         const maxTemp = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.value || 0)));
-        const tickDiv = this.currentInterval < 15 ? 20 : this.currentInterval;
+        const tickDiv = this.graphOptions.timeInterval < 10 ? 15 : this.graphOptions.timeInterval; // default tick val is 15, lowest val we let is 10.
         const tickVals = Array.from({ length: Math.ceil(this.maxTime / tickDiv) + 1 }, (_, i) => i * tickDiv);
         const tickText = tickVals.map(formatTime);
 
@@ -129,12 +128,22 @@ export class Graph {
             plot_bgcolor: '#001f3f',
             margin: { t: 40, r: 0, b: 50, l: 50 },
             xaxis: {
-                title: 'Time',
+                title: {
+                    font: {
+                        size: 14, weight: 900
+                    },
+                    text: 'Time',
+                    xanchor: 'left',
+                    x: 0,
+                    y: -15,
+                    standoff: 15,
+                    // Ensure the title is not centered
+                    side: 'bottom'
+                },
                 type: 'linear',
                 autorange: false,
                 //fixedrange: true,
                 range: [0, this.maxTime + 50],
-                titlefont: { size: 14, weight: 900 },
                 tickfont: { size: 10 },
                 gridcolor: '#234',
                 linecolor: '#666666',
@@ -188,9 +197,9 @@ export class Graph {
         return plotlyInstance;
     }
 
-    private async updateGraphSize(newHeight: number) {
+    private async updateGraphSize(newHeight: number, newWidth: number) {
         const instance = await this.plotlyInstance;
-        Plotly.relayout(instance, { height: newHeight });
+        Plotly.relayout(instance, { height: newHeight, width: newWidth });
     }
 
     // Update toggleLayerVisibility to handle annotations
@@ -229,8 +238,6 @@ export class Graph {
             }
             return layer;
         });
-        // this.currentInterval = interval;
-        // this.isAveraged = average;
         await this.redrawGraph();
     }
 
@@ -285,7 +292,8 @@ export class Graph {
         };
 
         //const maxTime = Math.max(...this.layers.flatMap(layer => layer.data.map(item => item.time)));
-        const tickDiv = this.currentInterval < 15 ? 20 : this.currentInterval;
+
+        const tickDiv = this.graphOptions.timeInterval < 10 ? 15 : this.graphOptions.timeInterval;
         const tickVals = Array.from({ length: Math.ceil(this.maxTime / tickDiv) + 1 }, (_, i) => i * tickDiv);
         const tickText = tickVals.map(formatTime);
 
@@ -294,13 +302,14 @@ export class Graph {
 
         // Redraw the graph with updated data and layout
         Plotly.react(instance, data, layout);
+        Plotly.restyle(instance, data, layout);
     }
 
     // Public method to change interval
     public intervalChanged(timeInterval, isAveraged) {
         this.graphOptions.timeInterval = timeInterval;
         this.graphOptions.isAveraged = isAveraged;
-        console.log(`interval changed`, this.graphOptions)
+        //console.log(`interval changed`, this.graphOptions)
         this.updateData();
     }
 
