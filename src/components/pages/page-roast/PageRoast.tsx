@@ -13,6 +13,7 @@ import { NotificationContext } from '../../app/notification/NotificationContext'
 import { InputVar } from '../../app/vars/InputVar';
 import Toggle from '../../basic/toggle/Toggle.js';
 import './PageRoast.scss';
+import { Automations } from './RoastControls';
 
 const DEFAULT_VIEW_STATE = {
     sections: {
@@ -199,7 +200,7 @@ export function PageRoast(props) {
 
             case "automation":
                 inner = <>
-                    AUTOMATION
+                    <Automations automations={roastState.automations} />
                 </>
                 break;
 

@@ -2,28 +2,34 @@ import { FunctionalComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Graph, GraphLayer } from './Graph';
 import { GraphOptions } from './GraphOptions.js';
-import './GraphView.scss';
 import { LayerManager } from './LayerManager';
 
-export interface LayerViewProps {
+import './GraphView.scss';
+
+export interface LayerProps {
     visible: boolean;
 }
 
-export interface GraphViewOptions {
+export interface GraphOptions {
     isExpanded: boolean;
     timeInterval: number;
     isAveraged: boolean;
-    layers: LayerViewProps;
+    layers: LayerProps;
+}
+
+export interface GraphData {
+    layers: GraphLayer[];
+    automations: [];
 }
 
 interface GraphViewProps {
-    layers: GraphLayer[];       // layer data
-    options: GraphViewOptions;  // view options
+    graphData: GraphData;
+    options: GraphOptions;  // view options
     onOptionChange: (o, v) => void;
     onLayerChange: (i, v) => void;
 }
 
-export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options, onOptionChange, onLayerChange }: GraphViewProps) => {
+export const GraphView: FunctionalComponent<GraphViewProps> = ({ graphData, options, onOptionChange, onLayerChange }: GraphViewProps) => {
     const graphContainerRef = useRef<HTMLDivElement>(null);
     const [graph, setGraph] = useState<Graph | null>(null);
     //const [selectedItem, setSelectedItem] = useState<{ layerIndex: number; itemIndex: number } | null>(null);
@@ -31,7 +37,7 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
 
     useEffect(() => {
         if (graphContainerRef.current) {
-            const newGraph = new Graph(graphContainerRef.current, layers, options);
+            const newGraph = new Graph(graphContainerRef.current, graphData.layers, options);
             setGraph(newGraph);
             // newGraph.plotlyInstance.then(instance => {
             //     //instance.on('plotly_click', handleGraphClick);
@@ -56,7 +62,7 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
             //     };
             // });
         }
-    }, [layers]);
+    }, [graphData.layers]);
 
     const handleOptionChange = async (o: string, v: any) => {
         onOptionChange(o, v);
@@ -97,7 +103,7 @@ export const GraphView: FunctionalComponent<GraphViewProps> = ({ layers, options
             {graph &&
                 <LayerManager
                     graph={graph}
-                    layers={layers}
+                    graphData={graphData}
                     options={options}
                     //selectedTab={selectedTab}
                     onToggleLayerVisibility={onToggleLayerVisibility}

@@ -60,12 +60,25 @@ export function graphData() {
             width: 1
         }
     ];
-    return layers;
+
+    const automations = [
+        {
+            when: 'time',
+            is: '12:00',
+            do: 'set-temperature',
+            arg: 380
+        },
+        {
+            when: 'temp',
+            is: 300,
+            do: 'set-motor',
+            arg: 'off'
+        }
+    ];
+
+    return { layers, automations };
 }
 
-export const formatTemp = (v) => {
-    return v.toFixed(0);
-}
 
 // Helper function to format seconds into "XhYmZs" format, excluding '0' values
 export function formatTime(seconds: number): string {
@@ -79,6 +92,10 @@ export function formatTime(seconds: number): string {
     if (secs > 0 || (hours === 0 && minutes === 0)) result += `${secs}s`;
 
     return result;
+}
+
+export function formatTemp(temp: number): string {
+    return temp;
 }
 
 // Helper function to filter data based on interval

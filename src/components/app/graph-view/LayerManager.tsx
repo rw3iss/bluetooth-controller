@@ -2,12 +2,12 @@ import { CheckButton } from 'components/basic/check-button/CheckButton.js';
 import { Component } from 'preact';
 import { Graph, GraphLayer } from './Graph';
 import { formatTemp, formatTime } from './graphUtils.js';
-import { GraphViewOptions } from './GraphView';
+import { GraphData, GraphOptions } from './GraphView';
 
 interface LayerManagerProps {
-    layers: GraphLayer[];
     graph: Graph;
-    options: GraphViewOptions;
+    graphData: GraphData;
+    options: GraphOptions;
     //selectedTab: number;
     onToggleLayerVisibility: (name: string, visible: boolean) => void;
 }
@@ -39,7 +39,8 @@ export class LayerManager extends Component<LayerManagerProps, LayerManagerState
 
 
     render() {
-        const { layers, options } = this.props;
+        const { graphData, options } = this.props;
+        const { layers, automations } = graphData;
 
         return (
             <div class="layers">
